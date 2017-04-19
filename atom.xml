@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.lchml.com/"/>
-  <updated>2017-04-19T07:41:03.000Z</updated>
+  <updated>2017-04-19T07:46:16.000Z</updated>
   <id>http://www.lchml.com/</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>jekyll迁移Hexo</title>
+    <title>Jekyll迁移Hexo</title>
     <link href="http://www.lchml.com/technology/jekyll-hexo/"/>
     <id>http://www.lchml.com/technology/jekyll-hexo/</id>
     <published>2017-04-19T07:07:06.000Z</published>
-    <updated>2017-04-19T07:41:03.000Z</updated>
+    <updated>2017-04-19T07:46:16.000Z</updated>
     
     <content type="html"><![CDATA[<p>拖了大半年，这次终于下定决心动手把博客jekyll迁移到Hexo。为什么要迁移，就不细说了，反正就是因为被Hexo的各种优点所吸引。整个迁移花了两天时间。下载安装hexo这些都比较简单，官方文档就够用了。主要说说踩到的坑以及建议。</p>
 <p>第一次push到github，一定要先将github上原jekyll博客的内容清空，再push新的内容。还有，由于原本的博客内容已经比较多，加上游记中有大量的图片，导致第一次往github push时，文件数量多，容量大。容易失败，最好选择在够快够稳定的网络环境中进行。</p>
