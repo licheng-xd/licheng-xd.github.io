@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.lchml.com/"/>
-  <updated>2017-04-19T02:15:03.000Z</updated>
+  <updated>2017-04-19T07:41:03.000Z</updated>
   <id>http://www.lchml.com/</id>
   
   <author>
@@ -14,6 +14,43 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>jekyll迁移Hexo</title>
+    <link href="http://www.lchml.com/technology/jekyll-hexo/"/>
+    <id>http://www.lchml.com/technology/jekyll-hexo/</id>
+    <published>2017-04-19T07:07:06.000Z</published>
+    <updated>2017-04-19T07:41:03.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>拖了大半年，这次终于下定决心动手把博客jekyll迁移到Hexo。为什么要迁移，就不细说了，反正就是因为被Hexo的各种优点所吸引。整个迁移花了两天时间。下载安装hexo这些都比较简单，官方文档就够用了。主要说说踩到的坑以及建议。</p>
+<p>第一次push到github，一定要先将github上原jekyll博客的内容清空，再push新的内容。还有，由于原本的博客内容已经比较多，加上游记中有大量的图片，导致第一次往github push时，文件数量多，容量大。容易失败，最好选择在够快够稳定的网络环境中进行。</p>
+<p>默认的主题非常一般，Hexo有大量的主题可供选择，不一样的主题还有不一样的功能，这里推荐一个简洁大方的主题：<a href="https://github.com/tufu9441/maupassant-hexo" target="_blank" rel="external">Maupassant</a></p>
+<p>Hexo默认没有启用RSS订阅功能，需要单独安装插件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-generator-feed --save</div></pre></td></tr></table></figure><br>然后在根目录的_config.yml中配置：<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#RSS订阅</span></div><div class="line"><span class="attr">plugin:</span></div><div class="line"><span class="bullet">-</span> <span class="string">hexo-generator-feed</span></div><div class="line"><span class="comment">#Feed Atom</span></div><div class="line"><span class="attr">feed:</span></div><div class="line"><span class="attr">type:</span> <span class="string">atom</span></div><div class="line"><span class="attr">path:</span> <span class="string">atom.xml</span></div><div class="line"><span class="attr">limit:</span> <span class="number">20</span></div></pre></td></tr></table></figure></p>
+<p>Maupassant主题自带了时间线（timeline）功能，只需要在主题的_config.yml中配置好timeline，并在menu中配置对应的页面即可。</p>
+<p>在关于页面中通过iframe内嵌了donate页面，由开源实现<a href="https://github.com/Kaiyuan/donate-page" target="_blank" rel="external">https://github.com/Kaiyuan/donate-page</a>提供。</p>
+<p>将title字体改为思源宋体的过程中发现怎么改都不生效，最后发现，原来思源宋体并不是系统自带的字体，需要通过javascript加载后才能在网页中使用。在/themes/maupassant/layout/_partial/head.jade中添加字体加载：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">script(type=&apos;text/javascript&apos;, src=&apos;https://use.typekit.net/cwj3gfk.js&apos;)</div><div class="line">script(type=&apos;text/javascript&apos;).</div><div class="line">    try&#123;Typekit.load(&#123; async: true &#125;);&#125;catch(e)&#123;&#125;</div></pre></td></tr></table></figure></p>
+<p>最后，通过对layout中的jade文件修改，可以实现大部分的个性化需求。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;拖了大半年，这次终于下定决心动手把博客jekyll迁移到Hexo。为什么要迁移，就不细说了，反正就是因为被Hexo的各种优点所吸引。整个迁移花了两天时间。下载安装hexo这些都比较简单，官方文档就够用了。主要说说踩到的坑以及建议。&lt;/p&gt;
+&lt;p&gt;第一次push到github
+    
+    </summary>
+    
+      <category term="technology" scheme="http://www.lchml.com/categories/technology/"/>
+    
+    
+      <category term="LC" scheme="http://www.lchml.com/tags/LC/"/>
+    
+      <category term="Hexo" scheme="http://www.lchml.com/tags/Hexo/"/>
+    
+      <category term="Jekyll" scheme="http://www.lchml.com/tags/Jekyll/"/>
+    
+      <category term="博客" scheme="http://www.lchml.com/tags/%E5%8D%9A%E5%AE%A2/"/>
+    
+  </entry>
   
   <entry>
     <title>家庭网络，科学上网</title>
@@ -1226,51 +1263,6 @@ private static void contextInitialized() {
       <category term="HML" scheme="http://www.lchml.com/tags/HML/"/>
     
       <category term="黄山" scheme="http://www.lchml.com/tags/%E9%BB%84%E5%B1%B1/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>巴厘——香港</title>
-    <link href="http://www.lchml.com/life/bali/"/>
-    <id>http://www.lchml.com/life/bali/</id>
-    <published>2015-11-29T16:00:00.000Z</published>
-    <updated>2017-04-18T02:10:47.000Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote>
-<p>碧海蓝天，异国风情；购物天堂，东方之珠                   —— HML</p>
-</blockquote>
-<p>时间：2015.11.20凌晨四点起床出发。6点多达到机场，飞往香港转机。<br><img src="/life/bali/bali1.jpg" alt="出发" title="出发"></p>
-<p>9点多抵达香港，在机场等着转机，香港国际机场果然够大。吃了点东西，12点继续飞往巴厘岛。在巴厘岛机场入境的时候，要给签证官小费，10块人民币就行了（在巴厘岛，要随时注意给小费）。巴厘岛机场不允许拍照，否则会被罚款的。顺利入境，经过高速收费站（印度尼西亚是靠左行驶的）。<br><img src="bali3.jpg" alt=""><br>抵达<strong>撒努尔天堂酒店酒店</strong>已是七八点。坐了一天飞机，吃点东西就抓紧休息了。<br><img src="bali2.jpg" alt=""></p>
-<p>第二天一大早，吃完酒店自助餐（很不错），当地向导带着我们去了<strong>南湾</strong>，南湾有各种水上游乐项目，但是价钱略贵（后面会有便宜的），所以不建议玩。<br><img src="bali4.jpg" alt=""></p>
-<p>中午去了一家中式餐厅AKAME吃饭，还算吃的习惯吧。吃完饭直接出发去<strong>情人崖</strong>。<br>真的很美！不过在情人崖有许多猴子会抓人抢东西，所以要稍加小心。<br><img src="bali5-1.jpg" alt=""><br><img src="bali5-2.jpg" alt=""><br><img src="bali5.jpg" alt=""></p>
-<p>逛完情人崖，由于时间还充裕，向导带着大家去了金兔子咖啡工厂，说真的，那边的咖啡味道确实不错，喜欢喝咖啡的可以考虑买一些。<br>紧接着去<strong>金巴兰海滩</strong>看日落，第一次看到海上落日，真是美爆了！美中不足的是那里的烧烤晚餐简直不能吃，只能晚上回酒店再自己觅食了。<br><img src="bali6.jpg" alt=""><br><img src="bali7.jpg" alt=""><br>吃完晚饭就回酒店了，由于巴厘岛比较落后，因此没有什么夜景可言，晚上就老实在酒店待着吧。</p>
-<p>第三天时间依旧充裕，早上起来在酒店游泳池泡泡，然后吃早饭。差不多11点出发去<strong>海神庙</strong>，由于距离较远，一直到中午一点才抵达。午饭在海神庙附近的一家自助餐厅吃饭，虽然吃的依旧很烂，但是环境却挺有意思。吃完饭走去海神庙，依旧是很美很美！<br><img src="bali9.jpg" alt=""><br><img src="bali10.jpg" alt=""><br><img src="bali11.jpg" alt=""></p>
-<p>海神庙范围不大，2个小时左右足够走完看完了，接着继续去<strong>乌布皇宫</strong>，附近有乌布市场，这应该算是所有景点里最没意思的了。皇宫本身不大，而且有一大部分区域还有人居住，所以可以看的也就只有一点点。<br><img src="bali12.jpg" alt=""><br>稍微转悠一下，就直接出发去吃晚餐，号称当地著名特色<strong>脏鸭餐</strong>，还是跟之前一样，味道不怎么样，环境倒是很不错。吃完直接回酒店。<br><img src="bali13.jpg" alt=""><br><img src="bali19-0.jpg" alt=""></p>
-<p>第四天自由行时间，在淘宝上订了<strong>蓝梦岛</strong>一日游的行程，吃过早饭有当地向导来接车，直接到码头，反正巴厘岛真是到处都很美，连个码头都这么美！<br><img src="bali14.jpg" alt=""><br><img src="bali15.jpg" alt=""><br>从码头坐快艇，大约一个小时抵达蓝梦岛。行程中包含了<strong>浮潜</strong>、<strong>海底漫步</strong>、<strong>香蕉船</strong>三个水上项目，还是很好玩的。然后就是上岸吃饭。蓝梦岛这个名字名副其实，蓝色梦幻之岛，美美美！<br><img src="bali16-1.jpg" alt=""><br><img src="bali16-2.jpg" alt=""><br><img src="bali16.jpg" alt=""><br><img src="bali17.jpg" alt=""><br><img src="bali18.jpg" alt=""><br>在岛上还有一个当地乡村游项目，其实就是坐着小破车在岛上转悠一圈，看看岛上环境，也挺不错。行程结束，坐快艇回程，下午4点左右回到酒店，晚餐自理，一天下来已经很累，所以直接在附近的肯德基吃了。晚上在酒店休息。</p>
-<p>第五天，下午飞往香港，早上自由活动时间，大家都在酒店游泳池泡着，躺着晒晒太阳，惬意度过。中午出发去机场，在机场附近随便找个饭店都是无敌海景，吃完逛了一下，就去候机了。<br><img src="bali19-1.jpg" alt=""><br><img src="bali19-2.jpg" alt=""><br><img src="bali19.jpg" alt=""><br><img src="bali20.jpg" alt=""><br>抵达香港已经是凌晨1点多，五个小时的飞机实在太累，直奔<strong>香港如心海景酒店</strong>，睡下已经是3点多了。</p>
-<p>第六天早上8点左右起床（只睡了5个小时左右），香港地方很小，坐地铁一会就到了尖沙咀，出来就是著名的维多利亚港和星光大道，可惜星光大道施工封闭了。香港这个地方，除了买买买，剩下的就是满脑子港剧和TVB的画面了，什么铜锣湾扛把子啦，旺角卡门啦，西九龙重案组啦等等。哦，还有吃的东西也还不错。去了香港理工大学找同学，去了中环苹果店（人太多，没进去），去了旺角，红磡等等。<br><img src="bali21.jpg" alt=""><br><img src="bali22.jpg" alt=""><br>逛到下午五六点，到酒店集合，出发回杭州！凌晨1点左右抵达萧山机场（第二天还要上班）。。。</p>
-<p>时间匆忙，就记了个流水账吧，很多巴厘岛有意思的的异国风土人情都没来的及写。总结一下：巴厘岛值得一去，香港除了去买买买，别的就算了吧。<br><img src="bali23.jpg" alt=""><br><img src="bali24.jpg" alt=""></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;碧海蓝天，异国风情；购物天堂，东方之珠                   —— HML&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;时间：2015.11.20凌晨四点起床出发。6点多达到机场，飞往香港转机。&lt;br&gt;&lt;img src=&quot;/life/b
-    
-    </summary>
-    
-      <category term="life" scheme="http://www.lchml.com/categories/life/"/>
-    
-    
-      <category term="巴厘岛" scheme="http://www.lchml.com/tags/%E5%B7%B4%E5%8E%98%E5%B2%9B/"/>
-    
-      <category term="香港" scheme="http://www.lchml.com/tags/%E9%A6%99%E6%B8%AF/"/>
-    
-      <category term="游记" scheme="http://www.lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
-    
-      <category term="HML" scheme="http://www.lchml.com/tags/HML/"/>
     
   </entry>
   
