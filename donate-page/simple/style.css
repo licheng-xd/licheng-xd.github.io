@@ -217,48 +217,48 @@ a{
 #MainBox.showQR {
 	opacity: 1;
     animation-name:showQR;
-    animation-duration:3s;
+    animation-duration:0.51s;
     animation-timing-function:ease-in-out;
     animation-iteration-count:1;
     animation-fill-mode:forwards;
-    -webkit-animation:showQR 3s ease-in-out 0s 1 normal forwards;
+    -webkit-animation:showQR 0.5s ease-in-out 0s 1 normal forwards;
 }
 @keyframes showQR {
 	from {
 		transform: rotateX(90deg);
 	}
-	8% {
+/*	8% {
 		opacity: 1;
 		transform: rotateX(-60deg);
-	}
-	18% {
+	}*/
+/*	18% {
 		opacity: 1;
 		transform: rotateX(40deg);
-	}
-	34% {
+	}*/
+/*	34% {
 		opacity: 1;
 		transform: rotateX(-28deg);
-	}
-	44% {
+	}*/
+/*	44% {
 		opacity: 1;
 		transform: rotateX(18deg);
-	}
-	58% {
+	}*/
+/*	58% {
 		opacity: 1;
 		transform: rotateX(-12deg);
-	}
-	72% {
+	}*/
+/*	72% {
 		opacity: 1;
 		transform: rotateX(9deg);
-	}
-	88% {
+	}*/
+/*	88% {
 		opacity: 1;
 		transform: rotateX(-5deg);
-	}
-	96% {
+	}*/
+/*	96% {
 		opacity: 1;
 		transform: rotateX(2deg);
-	}
+	}*/
 	to {
 		opacity: 1;
 	}
