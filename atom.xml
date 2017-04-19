@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.lchml.com/"/>
-  <updated>2017-04-16T01:50:23.000Z</updated>
+  <updated>2017-04-19T02:15:03.000Z</updated>
   <id>http://www.lchml.com/</id>
   
   <author>
@@ -20,10 +20,11 @@
     <link href="http://www.lchml.com/technology/nas-netgear/"/>
     <id>http://www.lchml.com/technology/nas-netgear/</id>
     <published>2016-11-16T16:00:00.000Z</published>
-    <updated>2017-04-16T01:50:23.000Z</updated>
+    <updated>2017-04-19T02:15:03.000Z</updated>
     
     <content type="html"><![CDATA[<p>前段时间，360网盘即将关停服务的消息在网上引起了不小的风波，这已经不是第一次出现互联网免费服务突然关停了，相信也不会是最后一次，毕竟大家都是出来做企业的，没有义务一直为你提供免费的服务，当确定在这一领域没有盈利可期时，服务关停也就是必然的事了。</p>
-<p>这里我们不去讨论和批判所谓的互联网文化，我们说点做点更务实的事情。既然免费云存储是不可靠不安全的，那么作为个人用户，还有什么更好的数据存储选择呢？这就是我们今天要说的主角：家庭网络存储，也就是家用NAS（Network Attached Storage）。话不多说，先上家里的网络架构图。<br><img src="/technology/nas-netgear/nas1.png" alt="网络架构图" title="网络架构图"></p>
+<p>这里我们不去讨论和批判所谓的互联网文化，我们说点做点更务实的事情。既然免费云存储是不可靠不安全的，那么作为个人用户，还有什么更好的数据存储选择呢？这就是我们今天要说的主角：家庭网络存储，也就是家用NAS（Network Attached Storage）。话不多说，先上家里的网络架构图。</p>
+<p><img src="nas1.png" alt=""></p>
 <h2 id="路由"><a href="#路由" class="headerlink" title="路由"></a>路由</h2><p>从图中可以看出，路由器在整个架构中是核心的存在，科学上网（翻墙）靠它，双拨（贷款翻倍）靠它，稳定可隔离的无线网络也靠它。所以尽量买个好点的吧，这里推荐网件R7000或华硕AC68U，活动期间买，价格应该在600到1000之间。由于我们要把路由器刷成梅林系统，所有购买其他型号之前先在<a href="http://firmware.koolshare.cn/" target="_blank" rel="external">http://firmware.koolshare.cn</a>这里确认一下硬件是否支持对应的系统。</p>
 <h2 id="刷机"><a href="#刷机" class="headerlink" title="刷机"></a>刷机</h2><p>拿到路由器后，先按照说明书操作，进入Netgear的管理页面，默认的用户名密码写在路由器的背面。自带的系统界面如下，看起来确实比较没有档次。不过反正马上就要再见了，无所谓啦。<br><img src="nas2.png" alt=""></p>
 <p>刷机的教程网上有很多，这里就不赘述了，推荐参照这个帖子进行刷机：<br><a href="http://koolshare.cn/thread-49247-1-1.html" target="_blank" rel="external">R7000刷改版梅林 http://koolshare.cn/thread-49247-1-1.html</a><br>刷机完成，成功联网后你会看到如下界面。<br><img src="nas3.png" alt=""></p>
@@ -65,19 +66,21 @@
     <link href="http://www.lchml.com/life/cosmic-dream/"/>
     <id>http://www.lchml.com/life/cosmic-dream/</id>
     <published>2016-10-16T16:00:00.000Z</published>
-    <updated>2017-04-18T03:28:24.000Z</updated>
+    <updated>2017-04-19T02:16:21.000Z</updated>
     
-    <content type="html"><![CDATA[<p>今日清晨 2016-10-17 7:30 神州十一号飞船成功发射，两名宇航员进入太空。<br><img src="/life/cosmic-dream/shenzhou.png" alt="神州十一号发射" title="神州十一号发射"></p>
+    <content type="html"><![CDATA[<p>今日清晨 2016-10-17 7:30 神州十一号飞船成功发射，两名宇航员进入太空。</p>
 <p>对于从小就有着探索太空梦想的我，这是一件激动人心的事。虽然梦想没能自己实现，但只要看到人类踏上宇宙的征程，内心总会澎湃不已。总会想起《星际迷航》中的经典台词：</p>
 <p><strong>Space: the final frontier. These are the voyages of the starship Enterprise. Its continuing mission: to explore strange new worlds, to seek out new lifes and new civilizations, to boldly go where no one has gone before.</strong></p>
 <p><strong>宇宙，人类最后的边疆。这是星舰“企业号”的航程。它继续的任务，是去探索未知的新世界，找寻新的生命和新的文明，勇敢地航向前人所未至的领域。</strong></p>
 <p>这是每一部《星际迷航》片头都会出现的一段话，它代表了人类对未来、未知的渴求。<br><img src="enterprise.jpg" alt=""></p>
+<p><img src="shenzhou.png" alt="神州十一号发射"></p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;今日清晨 2016-10-17 7:30 神州十一号飞船成功发射，两名宇航员进入太空。&lt;br&gt;&lt;img src=&quot;/life/cosmic-dream/shenzhou.png&quot; alt=&quot;神州十一号发射&quot; title=&quot;神州十一号发射&quot;&gt;&lt;/p&gt;
-&lt;p&gt;对于从小就有着探索
+      &lt;p&gt;今日清晨 2016-10-17 7:30 神州十一号飞船成功发射，两名宇航员进入太空。&lt;/p&gt;
+&lt;p&gt;对于从小就有着探索太空梦想的我，这是一件激动人心的事。虽然梦想没能自己实现，但只要看到人类踏上宇宙的征程，内心总会澎湃不已。总会想起《星际迷航》中的经典台词：&lt;/p&gt;
+&lt;p
     
     </summary>
     
@@ -632,12 +635,13 @@
     <link href="http://www.lchml.com/life/travel-in-japan-2/"/>
     <id>http://www.lchml.com/life/travel-in-japan-2/</id>
     <published>2016-05-17T16:00:00.000Z</published>
-    <updated>2017-04-18T01:20:27.000Z</updated>
+    <updated>2017-04-19T02:16:56.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>新干线呼啸而过——是时光机在穿梭。   ——HML</p>
 </blockquote>
-<p>都说关西才是旅游者的天堂，来日第四天我们才开始这一段旅程。久负盛名的新干线自然是没让我们失望（隐约觉得新干线的头有点像蜡笔小新的脸，我是肿么了）。只是差点坐错，新干线分三种，时速不同，最快的一班是不能用JR PASS的。我们花了大价钱买的最快的のぞみ只需要2个多小时就飞跃关东到达关西，带我们走入历史的痕迹。<br><img src="/life/travel-in-japan-2/japan-29.jpg" alt="新干线" title="新干线"></p>
+<p>都说关西才是旅游者的天堂，来日第四天我们才开始这一段旅程。久负盛名的新干线自然是没让我们失望（隐约觉得新干线的头有点像蜡笔小新的脸，我是肿么了）。只是差点坐错，新干线分三种，时速不同，最快的一班是不能用JR PASS的。我们花了大价钱买的最快的のぞみ只需要2个多小时就飞跃关东到达关西，带我们走入历史的痕迹。</p>
+<p><img src="japan-29.jpg" alt=""></p>
 <h2 id="大阪"><a href="#大阪" class="headerlink" title="大阪"></a>大阪</h2><p>大阪，古名“难波”，是日本仅次于东京的大都市。<br>在大阪逗留了两天，除了笨笨给我设计的美美樱花写真，大阪给我留下的是bad impression。有以下几点原因：<br>1.樱花季大阪酒店不仅贵，而且名不副实。小到转不过身来的卫生间、前台招待相比同行不到位的服务、不舒服的床、以及各种老旧设施，导致没有美美的睡过一觉。<br>2.除了大阪城，其他景点基调就是买买买，没落的新世界商业街、正热的道顿崛心斋桥人头攒动挤不过身的药妆店。<br>3.四天王寺等寺庙修缮、通天塔等景点排长队，到处是商业气息。</p>
 <h3 id="日本印象三"><a href="#日本印象三" class="headerlink" title="日本印象三"></a>日本印象三</h3><p><strong>这里最喜欢的还是大阪城的樱花和新世界的元祖炸串。大阪地区较有名的是大阪烧和炸串，大阪烧其实类似国内看到的章鱼小丸子稍作包装修改，炸串就是鸡肉牛肉虾等食材裹上面粉油炸出来，在新世界到处可以看到吃炸串和大阪烧的小摊和门店，有点类似我们这里的垃圾街，只是更卫生更明亮。元祖炸串人气很高，店面外排长队，价格也比其他店贵不少。但是很神奇，这里的炸串真的是油而不腻，超级好吃。章鱼小丸子也吃了，和国内略不同，面粉更糊更软粘牙，但鱿鱼等用料不含糊。在新世界商业街方便是个动物园，好早就限制旅客入内了，晚上回去的时候路过，发现园内一颗大树上停着一树的白色猫头鹰，很壮观，很和谐。</strong></p>
 <p>和元祖串串大叔的合影<br><img src="japan-30.jpg" alt=""></p>
