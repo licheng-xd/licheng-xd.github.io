@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.lchml.com/"/>
-  <updated>2017-04-19T07:46:16.000Z</updated>
+  <updated>2017-06-18T06:07:30.000Z</updated>
   <id>http://www.lchml.com/</id>
   
   <author>
@@ -14,6 +14,60 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>GRPC丢包之路</title>
+    <link href="http://www.lchml.com/technology/grpc-trap/"/>
+    <id>http://www.lchml.com/technology/grpc-trap/</id>
+    <published>2017-06-17T16:00:00.000Z</published>
+    <updated>2017-06-18T06:07:30.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>GRPC是Google开源的一个高性能、跨语言的RPC框架，基于HTTP2协议，基于protobuf-3.x，基于Netty-4.x。</p>
+<p>最近开发一个公司的游戏项目，采用分布式的服务器架构，内部服务之间均采用GRPC进行通信。但是在测试过程中发现一个重大的bug，<strong>偶现丢包</strong>。</p>
+<p>前置信息：ServerA（作为grpc的client端）通过futureStub异步调用ServerB（作为server端）。</p>
+<p>查看日志发现，client中有调用发送请求的日志，但server端却没有任何收到请求的日志。于是怀疑server在接收请求的过程中吃掉了异常，对整个过程加上try-catch，然而并没有任何发现，于是怀疑根本没有收到请求。通过tcpdump抓包后发现确实是client没发包到网络层，由此确定了是client端问题。</p>
+<p>怀疑是grpc的futureStub有bug，于是在finally中加入future.get()打印出调用结果。结果一天下来一直没有发现任何丢包，”完美“。懵逼了，去掉finally中的future get以后又出现丢包。这个时候，直觉判断，由于调用futue.get()会block当前线程，所以不会出现丢包，而不block就会丢包。有种接近真相的感觉。检查代码后发现client端创建stub的时候没有指定线程池，grpc会默认使用当前线程，结合偶现的表现，觉得非常像是线程在异步发送的过程中被销毁导致。</p>
+<p>然而，指定线程池以后，依旧发现丢包。无奈之下只有开始查看grpc源码，并打印出grpc的日志。在日志中发现了如下错误：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">----------------OUTBOUND--------------------</div><div class="line">[id: 0x7dee8b32, L:/10.82.7.14:60365 - R:/10.82.7.14:9001] RST_STREAM: streamId=4025, errorCode=8</div><div class="line">------------------------------------</div></pre></td></tr></table></figure>
+<p>看到errorCode=8，并结合grpc源码中对io.grpc.Status的定义：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Some resource has been exhausted, perhaps a per-user quota, or</div><div class="line"> * perhaps the entire file system is out of space.</div><div class="line"> */</div><div class="line">RESOURCE_EXHAUSTED(<span class="number">8</span>),</div></pre></td></tr></table></figure>
+<p>推断是由于系统文件句柄资源耗尽导致，查看服务器系统文件句柄限制为65535，而进程打开的限制远不止这么多。于是找sa将文件句柄限制改为100w，然后信心满满的重启了全部服务，重新进行测试。结果很快又发现了丢包，内心崩溃！</p>
+<p>由于当future.get()方法阻塞线程时，就不会出现丢包，无法重现。于是想到把futureStub改为stub，在保持异步的同时，通过observer回调来观察调用结果,这次在回调的onError方法中发现了如下异常：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">CANCELLED,</div><div class="line">io.grpc.Status.asRuntimeException(Status.java:<span class="number">543</span>), </div><div class="line">io.grpc.stub.ClientCalls$StreamObserverToCallListenerAdapter.onClose(ClientCalls.java:<span class="number">395</span>), </div><div class="line">io.grpc.internal.ClientCallImpl.closeObserver(ClientCallImpl.java:<span class="number">426</span>), </div><div class="line">io.grpc.internal.ClientCallImpl.access$<span class="number">100</span>(ClientCallImpl.java:<span class="number">76</span>), </div><div class="line">io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.close(ClientCallImpl.java:<span class="number">512</span>), </div><div class="line">io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.access$<span class="number">700</span>(ClientCallImpl.java:<span class="number">429</span>), </div><div class="line">io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl$<span class="number">1</span>StreamClosed.runInContext(ClientCallImpl.java:<span class="number">544</span>), </div><div class="line">io.grpc.internal.ContextRunnable.run(ContextRunnable.java:<span class="number">52</span>), </div><div class="line">io.grpc.internal.SerializingExecutor.run(SerializingExecutor.java:<span class="number">117</span>), </div><div class="line">java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:<span class="number">1142</span>), </div><div class="line">java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:<span class="number">617</span>), </div><div class="line">java.lang.Thread.run(Thread.java:<span class="number">745</span></div></pre></td></tr></table></figure>
+<p>终于发现原来是这个call被grpc在底层cancel掉了。查代码发现原来上面的errorCode=8是指http2的code定义：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Mapped to call cancellation when sent by a client. </div><div class="line"> * Mapped to CANCELLED when sent by a server. </div><div class="line"> * Note that servers should only use this mechanism when they need to cancel a call but the payload byte sequence is incomplete.</div><div class="line"> */</div><div class="line">CANCEL(<span class="number">8</span>)</div></pre></td></tr></table></figure>
+<p>知道了是由于被cancel才导致的丢包，那么就要查找为什么会被cancel，由于grpc的stub调用是通过异步的线性执行器执行io.grpc.ClientCall。所以堆栈中无法看到整个调用过程，只能通过源码来看。不管是哪种stub的调用，最后都会走到ClientCalls.startCall()方法中，然后进ClientCallImpl.start()中，在这个方法中，可以看到与cancel有关的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (context.isCancelled()) &#123;</div><div class="line">  <span class="comment">// Context is already cancelled so no need to create a real stream, just notify the observer</span></div><div class="line">  <span class="comment">// of cancellation via callback on the executor</span></div><div class="line">  stream = NoopClientStream.INSTANCE;</div><div class="line">  <span class="class"><span class="keyword">class</span> <span class="title">ClosedByContext</span> <span class="keyword">extends</span> <span class="title">ContextRunnable</span> </span>&#123;</div><div class="line">    ClosedByContext() &#123;</div><div class="line">      <span class="keyword">super</span>(context);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runInContext</span><span class="params">()</span> </span>&#123;</div><div class="line">      closeObserver(observer, statusFromCancelled(context), <span class="keyword">new</span> Metadata());</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  callExecutor.execute(<span class="keyword">new</span> ClosedByContext());</div><div class="line">  <span class="keyword">return</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以看出来cancel的原因是由于context.isCancelled()的结果为true</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isCancelled</span><span class="params">()</span> </span>&#123;</div><div class="line">  <span class="keyword">if</span> (parent == <span class="keyword">null</span> || !cascadesCancellation) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">return</span> parent.isCancelled();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以看出，如果parent==null，则不可能为true，所以必然是由于parent.isCancelled()为true导致的。由此我们基本可以猜测出来，当前的ClientCall被cancel的原因是由于它的parent context canceled导致。</p>
+<p>回到ClientCallImpl中，可以看到this.context = Context.current();表明每个ClientCall被创建的时候，context都会被赋值为Context.current()</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Context <span class="title">current</span><span class="params">()</span> </span>&#123;</div><div class="line">  Context current = storage().current();</div><div class="line">  <span class="keyword">if</span> (current == <span class="keyword">null</span>) &#123;</div><div class="line">    <span class="keyword">return</span> ROOT;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> current;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果当前没有context，则用ROOT作为context</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * The logical root context which is the ultimate ancestor of all contexts. This context</div><div class="line"> * is not cancellable and so will not cascade cancellation or retain listeners.</div><div class="line"> *</div><div class="line"> * Never assume this is the default context for new threads, because &#123;<span class="doctag">@link</span> Storage&#125; may define</div><div class="line"> * a default context that is different from ROOT.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Context ROOT = <span class="keyword">new</span> Context(<span class="keyword">null</span>);</div></pre></td></tr></table></figure>
+<p>在注释中可以看出，ROOT是不可以被cancel的，所以可以判断，当前必然有一个grpc的context存在。</p>
+<p>最后联想到由于业务代码中，ClientCall是在ServerA处理grpc请求的过程中执行的，那么这个Context必然是由GrpcServer处理请求的时候生成的，并赋值给了ClientCall。而由于ClientCall是线性执行器中异步执行，当真正执行ContextRunnable的时候，GrpcServer的context可能已经被cancel，导致当前ClientCall被cancel。</p>
+<p>解决办法：可以对当前context进行fork，或者把每个call都封装为Runnable，通过Context提供的run静态方法执行。</p>
+<p>至此，终于弄清楚了grpc丢包的原因。虽然，这个问题通过业务层代码可以避免掉，但是我觉得grpc在底层默默的把这件事做了，并且没有往上层抛出任何信息，这对开发者是非常不友好的。同时，这个cancel逻辑的处理上，我觉得也有待商榷。毕竟在GrpcServer中异步的去执行GrpcCall是一个非常普遍合理的模型。也许以后Google会改吧。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;GRPC是Google开源的一个高性能、跨语言的RPC框架，基于HTTP2协议，基于protobuf-3.x，基于Netty-4.x。&lt;/p&gt;
+&lt;p&gt;最近开发一个公司的游戏项目，采用分布式的服务器架构，内部服务之间均采用GRPC进行通信。但是在测试过程中发现一个重大的bug
+    
+    </summary>
+    
+      <category term="technology" scheme="http://www.lchml.com/categories/technology/"/>
+    
+    
+      <category term="LC" scheme="http://www.lchml.com/tags/LC/"/>
+    
+      <category term="GRPC" scheme="http://www.lchml.com/tags/GRPC/"/>
+    
+      <category term="java" scheme="http://www.lchml.com/tags/java/"/>
+    
+  </entry>
   
   <entry>
     <title>Jekyll迁移Hexo</title>
@@ -1227,42 +1281,6 @@ private static void contextInitialized() {
       <category term="LC" scheme="http://www.lchml.com/tags/LC/"/>
     
       <category term="转载" scheme="http://www.lchml.com/tags/%E8%BD%AC%E8%BD%BD/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>水墨黄山</title>
-    <link href="http://www.lchml.com/life/huangshan/"/>
-    <id>http://www.lchml.com/life/huangshan/</id>
-    <published>2015-12-13T16:00:00.000Z</published>
-    <updated>2017-04-18T02:04:29.000Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote>
-<p>五岳归来不看山，黄山归来不看岳。</p>
-</blockquote>
-<p>时间2015.12.12，又是凌晨4点起床，楼下买了过夜的肯德基汉堡，直奔公司与另外三位同事会合。5点多一点从公司出发，陈老师一路飙车，8点赶到黄山市，与大部队（徒游户外）会合。然后坐小巴经过半个多小时，达到汤口镇，也就是黄山脚下。领队统一买好车票门票，坐景区大巴抵达第一站<strong>云谷寺</strong>。</p>
-<p><img src="hs1.jpg" alt=""><br><img src="hs2.jpg" alt=""><br><img src="hs3.jpg" alt=""><br>接着就开始漫长的登山，由于当天雾气较大，所以一路都是雾蒙蒙，没什么可看。经过两个多小时，终于抵达第一站<strong>白鹅岭</strong>，把行李放到酒店<strong>白鹅山庄</strong>。刚到酒店，天气突变，雾气散去。第一次领略到了黄山云海奇观！<br><img src="hs4.jpg" alt=""><br><img src="hs5.jpg" alt=""><br>稍作休整（也就是吃了一碗泡面）后，继续出发，前往下一站<strong>狮子峰</strong>，途经<strong>始信峰</strong>、<strong>石猴观海</strong>等一路美景。到下午5点左右，突然天气开始变化，雾气重新上来，本来去排云亭看日出的行程取消，改为去丹霞峰。后来经验证，排云亭比丹霞峰更值得一去，没有看到日落略有遗憾。丹霞峰下来6点左右已经开始天黑，一路摸黑走回酒店，大约7点多重新回到白鹅山庄，吃了酒店的快餐（50一份）。住的是山下铺的大通铺，所以晚上比较吵闹。<br><img src="hs6.jpg" alt=""><br><img src="hs7.jpg" alt=""><br><img src="hs8.jpg" alt=""><br><img src="hs9.jpg" alt=""><br><img src="hs10.jpg" alt=""><br><img src="hs11.jpg" alt=""></p>
-<p>第二天早上由于还在下雨，所以没有日出可看，睡到8点起床。大家洗漱完毕吃过早饭后，再次出发。由于下雨，所以一路几乎就是闷头走，走过光明的，莲花峰，到达玉屏峰，看到了小时候每个人家里都会挂在墙上的迎客松。由于天气实在太差，所以没有景色可言，直接从玉屏索道下山。<br><img src="hs12.jpg" alt=""><br><img src="hs13.jpg" alt=""><br><img src="hs14.jpg" alt=""><br>回到汤口镇上是12点多，大家在附近吃了徽菜，可能是景区附近的原因吧，味道一般。最后坐小巴到黄山市，自驾回到杭州。</p>
-<p>虽然大部分时间天气不好，但也领略到了黄山云海的奇观！其实前山的风景应该会更好，下次有机会再去吧。四个字总结：不虚此行。<br><img src="hs15.jpg" alt=""><br><img src="hs16.jpg" alt=""></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;五岳归来不看山，黄山归来不看岳。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;时间2015.12.12，又是凌晨4点起床，楼下买了过夜的肯德基汉堡，直奔公司与另外三位同事会合。5点多一点从公司出发，陈老师一路飙车，8点赶到黄山市，与大部队（徒游户外）
-    
-    </summary>
-    
-      <category term="life" scheme="http://www.lchml.com/categories/life/"/>
-    
-    
-      <category term="游记" scheme="http://www.lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
-    
-      <category term="HML" scheme="http://www.lchml.com/tags/HML/"/>
-    
-      <category term="黄山" scheme="http://www.lchml.com/tags/%E9%BB%84%E5%B1%B1/"/>
     
   </entry>
   
