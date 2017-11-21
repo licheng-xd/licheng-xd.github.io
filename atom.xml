@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.lchml.com/"/>
-  <updated>2017-11-14T09:01:30.000Z</updated>
+  <updated>2017-11-21T11:14:15.000Z</updated>
   <id>http://www.lchml.com/</id>
   
   <author>
@@ -14,6 +14,60 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Webcat文档</title>
+    <link href="http://www.lchml.com/technology/webcat-doc/"/>
+    <id>http://www.lchml.com/technology/webcat-doc/</id>
+    <published>2017-11-23T12:00:00.000Z</published>
+    <updated>2017-11-21T11:14:15.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Webcat是一个基于netty的简单、高性能服务端框架，目前提供http和websocket两种协议的快速开发模式。webcat采用spring进行对象管理，因此工程需要依赖spring框架，<a href="https://github.com/licheng-xd/webcat" target="_blank" rel="external">Github地址</a>。可以直接运行WebcatServerTest启动http和websocket服务，然后通过pytest文件夹中的两个python脚本对服务进行测试。</p>
+<h3 id="HTTP-Server-使用"><a href="#HTTP-Server-使用" class="headerlink" title="HTTP Server 使用"></a>HTTP Server 使用</h3><p>在spring的配置中,加上对webcat的package扫描:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">"com.lchml.webcat"</span>/&gt;</span></div></pre></td></tr></table></figure></p>
+<p>设置端口并启动:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> WebcatStartException </span>&#123;</div><div class="line">    HttpServer httpServer = context.getBean(WebcatHttpServer.class);</div><div class="line">    httpServer.setPort(<span class="number">8080</span>);</div><div class="line">    httpServer.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>添加自己的controller:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">"com.lchml.test"</span>/&gt;</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@HttpController</span>(path = <span class="string">"/test"</span>)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestController</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@HttpRequestMapping</span>(path = <span class="string">"/hello"</span>, consumes = &#123;<span class="string">"text/plain"</span>&#125;)</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">testHello</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"hello webcat"</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@HttpRequestMapping</span>(path = <span class="string">"/bodytest"</span>, method = &#123;ReqMethod.POST&#125;)</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">testBody</span><span class="params">(@ReqBody String body)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"hello webcat "</span> + body;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@HttpRequestMapping</span>(path = <span class="string">"/redirect"</span>, method = &#123;ReqMethod.GET&#125;)</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testRedirect</span><span class="params">(FullHttpResponse response)</span> </span>&#123;</div><div class="line">        ResponseUtil.redirect(response, <span class="string">"http://lchml.com"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>logEnable，默认会打开所有websocket请求的日志。</li>
+<li>logResponse，默认日志中不会输入response内容。</li>
+<li>defaultProduce，默认返回content-type为application/json;charset=utf-8。</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"com.lchml.webcat.config.WebcatHttpConf"</span> <span class="attr">id</span>=<span class="string">"webcatConf"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"logEnable"</span> <span class="attr">value</span>=<span class="string">"true"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"logResponse"</span> <span class="attr">value</span>=<span class="string">"true"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultProduce"</span> <span class="attr">value</span>=<span class="string">"application/json;charset=utf-8"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="Websocket-Server-使用"><a href="#Websocket-Server-使用" class="headerlink" title="Websocket Server 使用"></a>Websocket Server 使用</h3><p>在spring的配置中,加上对webcat的package扫描:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">"com.lchml.webcat"</span>/&gt;</span></div></pre></td></tr></table></figure></p>
+<p>设置端口，设置连接初始化和断开的监听回调并启动:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> WebcatStartException </span>&#123;</div><div class="line">    WebcatWsServer wsServer = context.getBean(WebcatWsServer.class);</div><div class="line">    wsServer.setPort(<span class="number">8081</span>);</div><div class="line">    wsServer.setChannelConnectListener(<span class="keyword">new</span> ChannelConnectListener() &#123;</div><div class="line">        <span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">connect</span><span class="params">(ChannelInfo channelInfo)</span> </span>&#123;</div><div class="line">            System.out.println(channelInfo.getClientIp() + <span class="string">" connect"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">        wsServer.setChannelDisconnectListener(<span class="keyword">new</span> ChannelDisconnectListener() &#123;</div><div class="line">            <span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">disconnect</span><span class="params">(ChannelInfo channelInfo)</span> </span>&#123;</div><div class="line">                System.out.println(channelInfo.getClientIp() + <span class="string">" disconnect"</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line"></div><div class="line">    wsServer.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>添加自己的controller:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">"com.lchml.test"</span>/&gt;</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@WsController</span>(path = <span class="string">"/test"</span>)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestWsController</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@WsRequestMapping</span>(path = <span class="string">"/hello"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">testHello</span><span class="params">(String name)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"hello webcat "</span> + name;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>heartbeat，默认心跳为15s，超过15s没有收到客户端心跳则视为连接断开。</li>
+<li>useProxy，默认没有使用代理，则直接使用RemoteAddress作为客户端ip，如果设置为true，会从路由信息中获取真实客户端ip地址。</li>
+<li>wsPath，默认path为/webcat，可以自行修改。</li>
+<li>logEnable，默认会打开所有websocket请求的日志。</li>
+<li>logResponse，默认日志中不会输入response内容。</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"com.lchml.webcat.config.WebcatWsConf"</span> <span class="attr">id</span>=<span class="string">"webcatConf"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"heartbeat"</span> <span class="attr">value</span>=<span class="string">"15"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"useProxy"</span> <span class="attr">value</span>=<span class="string">"false"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"logResponse"</span> <span class="attr">value</span>=<span class="string">"true"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultProduce"</span> <span class="attr">value</span>=<span class="string">"application/json;charset=utf-8"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Webcat是一个基于netty的简单、高性能服务端框架，目前提供http和websocket两种协议的快速开发模式。webcat采用spring进行对象管理，因此工程需要依赖spring框架，&lt;a href=&quot;https://github.com/licheng-xd/w
+    
+    </summary>
+    
+      <category term="technology" scheme="http://www.lchml.com/categories/technology/"/>
+    
+    
+      <category term="LC" scheme="http://www.lchml.com/tags/LC/"/>
+    
+      <category term="Java" scheme="http://www.lchml.com/tags/Java/"/>
+    
+      <category term="Webcat" scheme="http://www.lchml.com/tags/Webcat/"/>
+    
+      <category term="HTTP" scheme="http://www.lchml.com/tags/HTTP/"/>
+    
+      <category term="websocket" scheme="http://www.lchml.com/tags/websocket/"/>
+    
+  </entry>
   
   <entry>
     <title>java虚拟机 - 并发</title>
@@ -1156,130 +1210,6 @@
       <category term="LC" scheme="http://www.lchml.com/tags/LC/"/>
     
       <category term="随想" scheme="http://www.lchml.com/tags/%E9%9A%8F%E6%83%B3/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>配置中心</title>
-    <link href="http://www.lchml.com/technology/disconf/"/>
-    <id>http://www.lchml.com/technology/disconf/</id>
-    <published>2016-04-21T16:00:00.000Z</published>
-    <updated>2017-04-18T01:25:19.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>作为服务器开发人员，对配置文件一定不陌生，也一定曾经踩过很多配置文件的坑。当服务器集群数量较少，系统采用all in one的架构时，我们可以采用每台服务器单独使用本地配置的方法，配置文件跟发布包一起采用用VCS管理。但是随着服务器集群的扩展，当服务器数量变的庞大时，all in one的架构会变的笨重臃肿，带来更新发布流程复杂，雪崩风险升高等问题。这时all in one的架构就不那么适用了。我们需要考虑对系统进行改造，做微服务化的分解。这时配置文件和配置项等就不再适合使用前面的方案。而是需要一个独立的配置中心对所有微服务的配置进行控制。</p>
-<p>目前开源世界中已经有许多成熟的配置中心实现方案，如阿里的Diamond、360的QConf、spring的Cloud Config、百度的disconf等等。其中的区别这里就不一一对比了，每个都能完成对应的任务，选择适合自己情况的即可。由于我们服务90%是基于java的，disconf的推模式比Diamond的拉模式在效率上要高一些，同时disconf也更便于做二次开发，所以选择了disconf。</p>
-<h2 id="实现配置中心"><a href="#实现配置中心" class="headerlink" title="实现配置中心"></a>实现配置中心</h2><p>配置中心的功能很简单，一句话概括就是：负责管理所有服务的配置。</p>
-<h3 id="源码编译打包"><a href="#源码编译打包" class="headerlink" title="源码编译打包"></a>源码编译打包</h3><p>首先到github上找到disconf的源码，并fork一份到自己的git仓库（这样可以便于自己调试开发），然后在用于部署配置中心的服务器上clone一份源码。目录结构如下：</p>
-<pre><code>/Users/lc/disconf/
-    + disconf-src
-    + resources
-    + war
-    + deploy.sh
-</code></pre><p>disconf-src是源码目录，resources是配置目录，包含以下四个配置文件：</p>
-<ul>
-<li>jdbc-mysql.properties (数据库配置)</li>
-<li>redis-config.properties (Redis配置)</li>
-<li>zoo.properties (Zookeeper配置)</li>
-<li>application.properties (应用配置）</li>
-</ul>
-<p>war是部署目录。deploy.sh是打包脚本，内容如下：</p>
-<pre><code>ONLINE_CONFIG_PATH=/Users/lc/disconf/resources
-WAR_ROOT_PATH=/Users/lc/disconf/war
-export ONLINE_CONFIG_PATH
-export WAR_ROOT_PATH
-cd disconf-src/disconf-web
-sh deploy/deploy.sh
-</code></pre><p>运行deploy.sh脚本进行编译打包，最后会在war文件夹中生成部署用的文件。</p>
-<h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><p>部署之前需要先安装依赖的软件：MySQL、Tomcat、Nginx、zookeeper、Redis（如果是线上环境使用，那么这些依赖软件的部署需要考虑高可用问题），具体安装过程这里就不说了。</p>
-<h4 id="数据库准备"><a href="#数据库准备" class="headerlink" title="数据库准备"></a>数据库准备</h4><p>安装完mysql之后，需要对数据库进行初始化。先后执行disconf-src/disconf-web/sql中的sql文件：</p>
-<ul>
-<li>1-init_table.sql                主要是生成tables</li>
-<li>2-data.sql                      主要是生成测试数据</li>
-<li>20141201/disconf.sql            升级，支持 管理员角色、用户邮箱</li>
-<li>20141226/disconf.sql            升级，支持 URL权限控制</li>
-<li>20150101/disconf.sql            增加一个测试数据</li>
-<li>20150320/disconf.sql            增加reloadable config的测试文件</li>
-</ul>
-<h4 id="zookeeper准备"><a href="#zookeeper准备" class="headerlink" title="zookeeper准备"></a>zookeeper准备</h4><p>安装好zookeeper集群后，在resources目录下的zoo.properties中配置好所有的zookeeper地址，并指定路径前缀:</p>
-<pre><code>hosts=127.0.0.1:8581 # 测试用，所以只配置了一台zookeeper
-zookeeper_url_prefix=/disconf
-</code></pre><h4 id="redis准备"><a href="#redis准备" class="headerlink" title="redis准备"></a>redis准备</h4><p>redis在这里只作为账号登录缓存使用，所以没有也没关系，可以先不部署。</p>
-<h4 id="tomcat部署"><a href="#tomcat部署" class="headerlink" title="tomcat部署"></a>tomcat部署</h4><p>数据库准备好之后，接着部署tomcat，在server.xml文件的host节点下增加Context：<code>&lt;Context path=&quot;&quot; docBase=&quot;/Users/lc/disconf/war&quot;/&gt;</code>设定好tomcat端口后启动tomcat</p>
-<h4 id="nginx部署"><a href="#nginx部署" class="headerlink" title="nginx部署"></a>nginx部署</h4><p>disconf-web的部署采用了前后端完全分离的模式，所以前端页面直接通过nginx访问。在nginx中增加如下配置：</p>
-<pre><code>upstream disconf {
-    server 127.0.0.1:8085;
-}
-
-server {
-    listen       8081;
-    server_name  localhost;
-
-    location / {
-        root /Users/lc/disconf/war/html;
-        if ($query_string) {
-            expires max;
-        }
-    }
-
-    location ~ ^/(api|export) {
-        proxy_pass_header Server;
-        proxy_set_header Host $http_host;
-        proxy_redirect off;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Scheme $scheme;
-        proxy_pass http://disconf;
-    }
-}
-</code></pre><h4 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h4><p>上述过程完成后，访问nginx的监听地址即可进入disconf的管理页面。</p>
-<h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><p>部署完disconf-web，接下来我们需要在自己的服务中集成disconf-clent实现配置管理。disconf-client分为注解式注入和xml配置文件注入两种方式，并且两种方式都支持配置文件和配置项的管理。通过disconf-spring-boot-web可以感受简单的使用示例，只需要修改配置文件disconf.properties中的conf_server_host为上面部署的nginx地址然后运行，成功获取到配置中心的配置后，在disconf-web上对应的配置实例列表可以看到。</p>
-<p>由于是系统的改造过程，所以并不适合采用demo中的直接在JavaBean的get方法上注解每个配置项的方法。为了适应原有系统的逻辑，我们需要的是配置文件的统一管理，同时又能让配置及时生效。因此结合disconf的特性和原有系统的特性，选择用基于注解的配置类和回调类实现配置文件的管理。首先在pom文件中增加disconf-client的依赖，然后在工程中增加WebApiConfig和WebApiConfigCallback两个类：</p>
-<pre><code>@Service
-@DisconfFile(filename = &quot;web-api.xml&quot;)
-public class WebApiConfig {
-
-}
-
-@DisconfUpdateService(classes = { WebApiConfig.class}, confFileKeys = {&quot;testJson.json&quot;})
-public class WebApiConfigCallback implements IDisconfUpdate {
-
-    public void reload() throws Exception {
-        System.out.println(&quot;config update callback, do reload here&quot;); // 回调重载配置
-    }
-
-}
-</code></pre><p>对于基于springmvc的web工程，由于disconf必须在最先启动，所以在web.xml的最前面增加如下配置：</p>
-<pre><code>&lt;context-param&gt;
-    &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
-    &lt;param-value&gt;classpath*:disconf.xml&lt;/param-value&gt;
-&lt;/context-param&gt;
-
-&lt;listener&gt;
-    &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
-&lt;/listener&gt;
-</code></pre><p>同时在classpath下增加disconf.properties和disconf.xml两个配置文件。具体配置这里就不贴了，看demo就知道了。最后启动应用时（别忘了在log4j的配置中增加com.baidu的log）就可以看到应用会先从配置中心下载web-api.xml文件到classpath，然后开始初始化进程。接着我们来测试回调的使用，在disconf页面上找到对应的配置文件web-api.xml，修改它的内容就可以看到所有使用该配置的服务触发了回调方法。</p>
-<p>上面的使用都是基于spring的应用，如果原工程是非spring的怎么办呢？很简单，手动载入disconf即可。在main方法的最前面调用如下方法：</p>
-<pre><code>// 初始化disconf
-private static void contextInitialized() {
-    String[] fn = new String[] {&quot;disconf.xml&quot;};
-    new ClassPathXmlApplicationContext(fn);
-}
-</code></pre><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>配置中心的部署实现相对比较简单，但是它是微服务化过程中不可缺少的一部分。在实践过程中我们需要考虑怎么使用配置中心才能最合理的适配原有的系统，哪些配置文件和配置项适合用或应该用配置中心管理，disconf的功能能否满足系统的需求，是否需要做二次开发等等，这些问题都应该充分考虑到。同时在学习使用disconf的过程中，可以想想有哪些优秀的架构设计可以学习借鉴。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;作为服务器开发人员，对配置文件一定不陌生，也一定曾经踩过很多配置文件的坑。当服务器集群数量较少，系统采用all in one的架构时，我们可以采用每台服务器单独使用本地配置的方法，配置文件跟发布包一起采用用VCS管理。但是随着服务器集群的扩展，当服务器数量变的庞大时，all
-    
-    </summary>
-    
-      <category term="technology" scheme="http://www.lchml.com/categories/technology/"/>
-    
-    
-      <category term="LC" scheme="http://www.lchml.com/tags/LC/"/>
-    
-      <category term="disconf" scheme="http://www.lchml.com/tags/disconf/"/>
-    
-      <category term="服务发现" scheme="http://www.lchml.com/tags/%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/"/>
     
   </entry>
   
