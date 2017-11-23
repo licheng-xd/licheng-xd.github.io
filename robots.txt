@@ -1,21 +1,3 @@
 User-agent: *
 Allow: /
-Disallow: /about/
-Disallow: /guestbook/
-Disallow: /archives/
-Disallow: /history/
-Disallow: /page/*/
-Disallow: /categories/*/
-Disallow: /tags/*/
-Disallow: /js/
-Disallow: /img/
-Disallow: /css/
-Disallow: /images/
-Disallow: /*.jpg$
-Disallow: /*.jpeg$
-Disallow: /*.gif$
-Disallow: /*.png$
-Disallow: /*.bmp$
-Disallow: /atom.xml
-Disallow: /search.xml
 
