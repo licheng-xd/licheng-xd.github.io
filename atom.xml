@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.lchml.com/"/>
-  <updated>2018-03-13T10:51:46.000Z</updated>
+  <updated>2018-07-06T15:15:25.744Z</updated>
   <id>http://www.lchml.com/</id>
   
   <author>
@@ -14,6 +14,149 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Java常见知识点</title>
+    <link href="http://www.lchml.com/technology/java-brief/"/>
+    <id>http://www.lchml.com/technology/java-brief/</id>
+    <published>2018-07-05T16:00:00.000Z</published>
+    <updated>2018-07-06T15:15:25.744Z</updated>
+    
+    <content type="html"><![CDATA[<p>Java是解释执行还是编译运行？其实这个问题本身就是一个错误的问题，以现在jvm的发展来说，jvm在执行字节码时，本身就融合了解释和编译两种方式，部分代码由jvm解释执行，部分代码会由JIT一次性编译成机器指令直接运行。</p>
+<h3 id="泛型、反射原理"><a href="#泛型、反射原理" class="headerlink" title="泛型、反射原理"></a>泛型、反射原理</h3><p>泛型擦除，反射实现动态创建对象。动态编译</p>
+<h3 id="Java-IO"><a href="#Java-IO" class="headerlink" title="Java IO"></a>Java IO</h3><p>根据处理数据类型的不同分为：字符流、字节流。根据数据流向不同分为：输出流、输入流。常用的IO对象：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">JavaIO</div><div class="line">    |--字符流</div><div class="line">        --Reader</div><div class="line">            --BufferedReader</div><div class="line">            --InputStreamReader</div><div class="line">                --FileReader</div><div class="line">            -- ......</div><div class="line">        --Writer</div><div class="line">            --BufferedWriter</div><div class="line">            --OutputSteamWriter</div><div class="line">                --FileWriter</div><div class="line">            -- ......</div><div class="line">    |--字节流</div><div class="line">        --InputStream</div><div class="line">            --FileInputStream</div><div class="line">            --FilterInputStream</div><div class="line">                --BufferedInputStream</div><div class="line">            -- ......</div><div class="line">        --OutputStream</div><div class="line">            --FileOutputStream</div><div class="line">            --FilterOutputStream</div><div class="line">                --BufferedOutputStream</div><div class="line">            -- ......</div></pre></td></tr></table></figure>
+<h3 id="JVM：内存、GC、动态编译、类加载、字节码指令、工具"><a href="#JVM：内存、GC、动态编译、类加载、字节码指令、工具" class="headerlink" title="JVM：内存、GC、动态编译、类加载、字节码指令、工具"></a>JVM：内存、GC、动态编译、类加载、字节码指令、工具</h3><ul>
+<li>内存管理：直接内存、程序计数器、虚拟机栈、本地方法栈、堆、方法区、运行时常量池</li>
+<li>内存模型：主内存、工作内存。</li>
+<li>GC算法：标记清除算法、复制算法、标记整理算法</li>
+<li>GC策略：Serial、ParNew、Paralle Scavenge、Serial Old、Paralle Old、CMS、G1</li>
+<li>类加载过程：加载、验证、准备、解析、初始化、使用、卸载</li>
+<li>类加载器：双亲委派模型、双亲委派模型逆向</li>
+<li>字节码方法调用指令：invokestatic、invokespecial、invokevirtual、invokeinterface、invokedynamic。</li>
+<li>调用分类：解析调用（Resolution）、分派调用（Dispatch）</li>
+<li>类型分类：静态类型（Static Type）、实际类型（Actual Type）</li>
+<li>常用工具：jps、jstat、jmap、jstack</li>
+</ul>
+<h3 id="哪些情况会引起OutOfMemoryError"><a href="#哪些情况会引起OutOfMemoryError" class="headerlink" title="哪些情况会引起OutOfMemoryError"></a>哪些情况会引起OutOfMemoryError</h3><p>在上面说的内存管理中，除了虚拟机栈和本地方法栈溢出时是StackOverflowError，其他内存区域的溢出都是OutOfMemoryError。</p>
+<h3 id="wait，sleep区别"><a href="#wait，sleep区别" class="headerlink" title="wait，sleep区别"></a>wait，sleep区别</h3><ol>
+<li>wait是Object的成员方法，sleep是Thread的静态方法</li>
+<li>wait会释放锁，而sleep会一直持有锁。</li>
+<li>两者都可以让线程暂停一段时间，但本质的区别是，sleep是线程运行状态的控制，而wait是线程之间通信的问题。wait可以把一个线程挂起，直到超时或同一个对象调用notify或notifyAll方法唤醒。wait，notify，notifyAll方法都只能在同步控制方法或代码块中使用。</li>
+<li>sleep必须catch异常</li>
+</ol>
+<h3 id="Synchronized和ReentrantLock有什么区别，什么是偏向锁、自旋锁，什么是锁升级，膨胀，JUC中除了ReentrantLock外还有哪些锁？"><a href="#Synchronized和ReentrantLock有什么区别，什么是偏向锁、自旋锁，什么是锁升级，膨胀，JUC中除了ReentrantLock外还有哪些锁？" class="headerlink" title="Synchronized和ReentrantLock有什么区别，什么是偏向锁、自旋锁，什么是锁升级，膨胀，JUC中除了ReentrantLock外还有哪些锁？"></a>Synchronized和ReentrantLock有什么区别，什么是偏向锁、自旋锁，什么是锁升级，膨胀，JUC中除了ReentrantLock外还有哪些锁？</h3><p><a href="http://www.importnew.com/21933.html" target="_blank" rel="external">锁相关知识点</a></p>
+<ol>
+<li>Synchronized是java关键字，语言层面的同步实现，Lock是一个锁的抽象类，把同步控制交由用户处理</li>
+<li>当发生异常时Synchronized会自动释放锁。Lock必须手动在finally中释放锁。</li>
+<li>Synchronized无法判断当前锁的状态，Lock可以</li>
+<li>Synchronized可重入，不可中断，非公平。Lock可重入，可中断，可以自由选择是否公平锁。</li>
+</ol>
+<h3 id="volatile关键字"><a href="#volatile关键字" class="headerlink" title="volatile关键字"></a>volatile关键字</h3><p>保证变量对所有线程的可见性。禁止指令重排序优化。由于java里的运算不是原子操作，所以volatile变量的运算在并发下依旧是不安全的。</p>
+<h3 id="jvm配置大内存时需要注意什么"><a href="#jvm配置大内存时需要注意什么" class="headerlink" title="jvm配置大内存时需要注意什么"></a>jvm配置大内存时需要注意什么</h3><p>JVM配置大内存的问题主要是FullGC发生的频率和时间的控制。越大的内存，触发FullGC时需要的时间越长。根据业务需求，如果注重吞吐量，忽略延时。那么可以将FullGC的阈值调大。如果延时敏感，则要控制好FullGC发生时的时间。</p>
+<h3 id="XX-UseCompressedOops参数作用"><a href="#XX-UseCompressedOops参数作用" class="headerlink" title="-XX:-UseCompressedOops参数作用"></a>-XX:-UseCompressedOops参数作用</h3><p>在64位JVM中采用32位的寻址方式，压缩指针，减少内存开销。实现方式是在机器码中植入压缩与解压指令，当对象被读取时，解压，存入heap时，压缩。</p>
+<h3 id="ThreadPoolExecutor的线程池工作方式"><a href="#ThreadPoolExecutor的线程池工作方式" class="headerlink" title="ThreadPoolExecutor的线程池工作方式"></a>ThreadPoolExecutor的线程池工作方式</h3><p>从JDK的源码注释就可以知道。</p>
+<ul>
+<li>corePoolSize： the number of threads to keep in the pool, even if they are idle, unless {@code allowCoreThreadTimeOut} is set</li>
+<li>maximumPoolSize： the maximum number of threads to allow in the pool</li>
+<li>keepAliveTime： when the number of threads is greater than the core, this is the maximum time that excess idle threads will wait for new tasks before terminating.</li>
+<li>workQueue： the queue to use for holding tasks before they are executed.  This queue will hold only the {@code Runnable} tasks submitted by the {@code execute} method.</li>
+<li>threadFactory： the factory to use when the executor creates a new thread</li>
+<li>handler： the handler to use when execution is blocked because the thread bounds and queue capacities are reached</li>
+</ul>
+<h3 id="Exception、Error、Throwable、RuntimeException区别"><a href="#Exception、Error、Throwable、RuntimeException区别" class="headerlink" title="Exception、Error、Throwable、RuntimeException区别"></a>Exception、Error、Throwable、RuntimeException区别</h3><p>Throwable是Error和Exception的父类，RuntimeException是Exception的子类</p>
+<h3 id="JDK动态代理和cglib的实现方式有何不同"><a href="#JDK动态代理和cglib的实现方式有何不同" class="headerlink" title="JDK动态代理和cglib的实现方式有何不同"></a>JDK动态代理和cglib的实现方式有何不同</h3><p>JDK动态代理是基于反射实现的，被代理类必须实现接口。cglib是通过继承实现的，所以可以不实现接口，所以final类，private方法都无法被代理。</p>
+<h3 id="BIO、NIO、AIO区别。poll和epoll有什么区别。"><a href="#BIO、NIO、AIO区别。poll和epoll有什么区别。" class="headerlink" title="BIO、NIO、AIO区别。poll和epoll有什么区别。"></a>BIO、NIO、AIO区别。poll和epoll有什么区别。</h3><p>简单的理解：BIO一个请求对应一个线程，服务器线程资源会很紧张，导致服务能力上不去。NIO是事件驱动模型，由一个线程处理系统IO事件，上层应用只有在事件发生时才需要处理。AIO与NIO最大的区别是，NIO当有读写事件时，会通知上层做读写操作，而AIO会有系统先完成读写，数据存到缓冲去中，通知上层时数据已经准备好。</p>
+<h3 id="数据库：事物隔离级别，表锁和行锁，联合索引，聚簇索引"><a href="#数据库：事物隔离级别，表锁和行锁，联合索引，聚簇索引" class="headerlink" title="数据库：事物隔离级别，表锁和行锁，联合索引，聚簇索引"></a>数据库：事物隔离级别，表锁和行锁，联合索引，聚簇索引</h3><p>InnoDB中的四种事务隔离级别：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">隔离级别</th>
+<th style="text-align:left">脏读（Dirty Read）</th>
+<th style="text-align:left">不可重复读（NonRepeatable Read）</th>
+<th style="text-align:left">幻读（Phantom Read）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">未提交读（Read uncommitted）</td>
+<td style="text-align:left">可能</td>
+<td style="text-align:left">可能</td>
+<td style="text-align:left">可能</td>
+</tr>
+<tr>
+<td style="text-align:left">已提交读（Read committed）</td>
+<td style="text-align:left">不可能</td>
+<td style="text-align:left">可能</td>
+<td style="text-align:left">可能</td>
+</tr>
+<tr>
+<td style="text-align:left">可重复读（Repeatable read）</td>
+<td style="text-align:left">不可能</td>
+<td style="text-align:left">不可能</td>
+<td style="text-align:left">可能</td>
+</tr>
+<tr>
+<td style="text-align:left">可串行化（Serializable ）</td>
+<td style="text-align:left">不可能</td>
+<td style="text-align:left">不可能</td>
+<td style="text-align:left">不可能</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>未提交读(Read Uncommitted)：允许脏读，也就是可能读取到其他会话中未提交事务修改的数据</li>
+<li>提交读(Read Committed)：只能读取到已经提交的数据。Oracle等多数数据库默认都是该级别 (不重复读)</li>
+<li>可重复读(Repeated Read)：可重复读。在同一个事务内的查询都是事务开始时刻一致的，InnoDB默认级别。在SQL标准中，该隔离级别消除了不可重复读，但是还存在幻象读</li>
+<li>串行读(Serializable)：完全串行化的读，每次读都需要获得表级共享锁，读写相互都会阻塞</li>
+</ul>
+<p>MySQL的存储引擎是从MyISAM到InnoDB，锁从表锁到行锁。后者的出现从某种程度上是弥补前者的不足。比如：MyISAM不支持事务，InnoDB支持事务。表锁虽然开销小，锁表快，但高并发下性能低。行锁虽然开销大，锁表慢，但高并发下相比之下性能更高。事务和行锁都是在确保数据准确的基础上提高并发的处理能力。MySQL常用的存储引擎是InnoDB，相对于MyISAM而言。InnoDB更适合高并发场景，同时也支持事务处理。</p>
+<p>联合索引的最左原则，如果where中是or条件，则对应的联合索引不起作用。<br>mysql的聚簇索引是指innodb引擎的特性，mysiam并没有，如果需要该索引，只要将索引指定为主键（primary key）就可以了。聚簇索引的叶节点就是数据节点，而非聚簇索引的叶节点仍然是索引节点，并保留一个链接指向对应数据块。聚簇索引主键的插入速度要比非聚簇索引主键的插入速度慢很多。相比之下，聚簇索引适合排序，非聚簇索引（也叫二级索引）不适合用在排序的场合。 </p>
+<h3 id="redis、memcached区别，内存实现。如何实现高可用。"><a href="#redis、memcached区别，内存实现。如何实现高可用。" class="headerlink" title="redis、memcached区别，内存实现。如何实现高可用。"></a>redis、memcached区别，内存实现。如何实现高可用。</h3><p>redis内存管理采用了自己实现的zmalloc.c，在内存管理上比C的malloc性能要好得多。memcache利用Slab Allocator机制管理内存。预先吧内存划分成数个大小IM的slab class仓库，再把每个仓库分成不同尺寸的块。C语言原生的malloc在不断的申请释放过程中会产生很多内存碎片，降低内存的使用率和访问效率。<br>高可用实现，redis本身已经支持cluster和sentinel模式。redis，memcached都可以通过Twemproxy(又称为nutcracker)实现高可用。也可以自己采用一致性哈希的方式实现。<br><a href="https://yikun.github.io/2016/06/09/%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95%E7%9A%84%E7%90%86%E8%A7%A3%E4%B8%8E%E5%AE%9E%E8%B7%B5/" target="_blank" rel="external">一致性哈希的原理</a> </p>
+<h3 id="tcp-timewaiting状态"><a href="#tcp-timewaiting状态" class="headerlink" title="tcp timewaiting状态"></a>tcp timewaiting状态</h3><p><img src="tcp.png" alt="1"></p>
+<p><a href="https://github.com/BeginMan/BookNotes/blob/master/Unix/Unix-Network-Programming-Volume-1-The-Sockets-Networking-API-3rd-Edition/top2.md" target="_blank" rel="external">TCP相关知识</a><br>TIME_WAIT的产生条件：主动关闭方在发送四次挥手的最后一个ACK会变为TIME_WAIT状态，保留次状态的时间为两个MSL（linux里一个MSL为30s，是不可配置的）<br>TIME_WAIT两个MSL的作用：可靠安全的关闭TCP连接。比如网络拥塞，主动方最后一个ACK被动方没收到，这时被动方会对FIN开启TCP重传，发送多个FIN包，在这时尚未关闭的TIME_WAIT就会把这些尾巴问题处理掉，不至于对新连接及其它服务产生影响。<br>TIME_WAIT占用的资源：少量内存（大约4K，tcp socket buffer）和一个fd。<br>TIME_WAIT关闭的危害：1、  网络情况不好时，如果主动方无TIME_WAIT等待，关闭前个连接后，主动方与被动方又建立起新的TCP连接，这时被动方重传或延时过来的FIN包过来后会直接影响新的TCP连接；2、  同样网络情况不好并且无TIME_WAIT等待，关闭连接后无新连接，当接收到被动方重传或延迟的FIN包后，会给被动方回一个RST包，可能会影响被动方其它的服务连接。<br>TCP: time wait bucket table overflow产生原因及影响：原因是超过了linux系统tw数量的阀值。危害是超过阀值后﹐系统会把多余的time-wait socket 删除掉，并且显示警告信息，如果是NAT网络环境又存在大量访问，会产生各种连接不稳定断开的情况。<br>两个重要参数间net.ipv4.tcp_fin_timeout=30，默认是60s。tcp_max_tw_buckets=256000，最大允许的time_wait数量 </p>
+<h3 id="spring-bean的生命周期，spring源码，beanfactory和factorybean区别"><a href="#spring-bean的生命周期，spring源码，beanfactory和factorybean区别" class="headerlink" title="spring bean的生命周期，spring源码，beanfactory和factorybean区别"></a>spring bean的生命周期，spring源码，beanfactory和factorybean区别</h3><p>spring bean生命周期很多地方都有<a href="https://www.jianshu.com/p/3944792a5fff" target="_blank" rel="external">详细的说明</a>。FactoryBean是用来生成Bean的工厂类接口，比如Mybatis中的SqlSessionFactoryBean，用于生产SqlSessionFactory类。BeanFactory是所有Spring容器的接口。</p>
+<h3 id="jdk序列化原理，fastjson为什么序列化会更快。"><a href="#jdk序列化原理，fastjson为什么序列化会更快。" class="headerlink" title="jdk序列化原理，fastjson为什么序列化会更快。"></a>jdk序列化原理，fastjson为什么序列化会更快。</h3><p>jdk序列化最重要的两个类，ObjectInputStream和ObjectOutputStream，其中writeObject()是序列化方法，readObject是反序列化方法，注意集合类必须自己实现这两个方法。每个类也可以自己实现这两方法来自定义序列化。<br>fastjson序列化的核心方法是serializer.write(object)。<br>序列化的主要优化有：<br>SerializeWriter.class实现了类似StringBuilder的功能，可以减少数组越界检查，可以性能更好的实现字符串拼接。<br>使用ThreadLocal缓存buf提升性能<br>引入ASM可以避免通过java反射的方式获取属性值，可以提升性能。<br>json的object是一种key/value结构，正常的hashmap是无序的，fastjson默认是排序输出的，这是为deserialize优化做准备。<br>反序列化的主要优化有：<br>JSONScanner中预测下一个值的方法nextToken()<br>fastjson自己实现了一个特别的IdentityHashMap，去掉transfer操作的IdentityHashMap，能够在并发时工作，但是不会导致死循环。<br>fastjson的serialize是按照key的顺序进行的，于是fastjson做deserializer时候，采用一种优化算法，就是假设key/value的内容是有序的，读取的时候只需要做key的匹配，而不需要把key从输入中读取出来。通过这个优化，使得fastjson在处理json文本的时候，少读取超过50%的token，这个是一个十分关键的优化算法。基于这个算法，使用asm实现，性能提升十分明显，超过300％的性能提升。<br>deserialize的时候，会使用asm来构造对象，并且做batch set，也就是说合并连续调用多个setter方法，而不是分散调用，这个能够提升性能。<br>我们看xml或者javac的parser实现，经常会看到有一个这样的东西symbol table，它就是把一些经常使用的关键字缓存起来，在遍历char[]的时候，同时把hash计算好，通过这个hash值在hashtable中来获取缓存好的symbol，避免创建新的字符串对象。这种优化在fastjson里面用在key的读取，以及enum value的读取。这是也是parse性能优化的关键算法之一。 </p>
+<h3 id="rabbitmq怎么保证有序"><a href="#rabbitmq怎么保证有序" class="headerlink" title="rabbitmq怎么保证有序"></a>rabbitmq怎么保证有序</h3><p>在正常使用mq的场景中大多数都是不需要消息的有序的，如果要保证消息绝对有序，那么可以通过hash把需要保证有序的消息全部都分发到同一个队列中，队列只允许有一个消费者，尽量把消息拆多个有序的分组，提高处理速度。</p>
+<h3 id="什么是零拷贝"><a href="#什么是零拷贝" class="headerlink" title="什么是零拷贝"></a>什么是零拷贝</h3><p>传统意义的零拷贝：Zero-Copy describes computer operations in which the CPU does not perform the task of copying data from one memory area to another.</p>
+<p>传统方式需要四次数据拷贝和四次上下文切换：   </p>
+<ol>
+<li>数据从磁盘读取到内核的read buffer </li>
+<li>数据从内核缓冲区拷贝到用户缓冲区 </li>
+<li>数据从用户缓冲区拷贝到内核的socket buffer </li>
+<li>数据从内核的socket buffer拷贝到网卡接口的缓冲区</li>
+</ol>
+<p>明显上面的第二步和第三步是没有必要的，<br>通过java的FileChannel.transferTo方法（NIO），可以避免上面两次多余的拷贝（当然这需要底层操作系统支持） </p>
+<ol>
+<li>调用transferTo,数据从文件由DMA引擎拷贝到内核read buffer </li>
+<li>接着DMA从内核read buffer将数据拷贝到网卡接口buffer</li>
+</ol>
+<p>上面的两次操作都不需要CPU参与，所以就达到了零拷贝。</p>
+<p>Netty的零拷贝体现在三个方面： </p>
+<ol>
+<li>Netty的接收和发送ByteBuffer采用DIRECT BUFFERS，使用堆外直接内存进行Socket读写，不需要进行字节缓冲区的二次拷贝。如果使用传统的堆内存（HEAP BUFFERS）进行Socket读写，JVM会将堆内存Buffer拷贝一份到直接内存中，然后才写入Socket中。相比于堆外直接内存，消息在发送过程中多了一次缓冲区的内存拷贝。</li>
+<li>Netty提供了组合Buffer对象，可以聚合多个ByteBuffer对象，用户可以像操作一个Buffer那样方便的对组合Buffer进行操作，避免了传统通过内存拷贝的方式将几个小Buffer合并成一个大的Buffer。 </li>
+<li>Netty的文件传输采用了transferTo方法，它可以直接将文件缓冲区的数据发送到目标Channel，避免了传统通过循环write方式导致的内存拷贝问题。 </li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Java是解释执行还是编译运行？其实这个问题本身就是一个错误的问题，以现在jvm的发展来说，jvm在执行字节码时，本身就融合了解释和编译两种方式，部分代码由jvm解释执行，部分代码会由JIT一次性编译成机器指令直接运行。&lt;/p&gt;
+&lt;h3 id=&quot;泛型、反射原理&quot;&gt;&lt;a hr
+    
+    </summary>
+    
+      <category term="technology" scheme="http://www.lchml.com/categories/technology/"/>
+    
+    
+      <category term="LC" scheme="http://www.lchml.com/tags/LC/"/>
+    
+      <category term="java" scheme="http://www.lchml.com/tags/java/"/>
+    
+      <category term="面试" scheme="http://www.lchml.com/tags/%E9%9D%A2%E8%AF%95/"/>
+    
+  </entry>
   
   <entry>
     <title>碎片化思维</title>
@@ -1104,61 +1247,6 @@
       <category term="服务发现" scheme="http://www.lchml.com/tags/%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/"/>
     
       <category term="Eureka" scheme="http://www.lchml.com/tags/Eureka/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>带XML去旅行之日本（下）</title>
-    <link href="http://www.lchml.com/life/travel-in-japan-3/"/>
-    <id>http://www.lchml.com/life/travel-in-japan-3/</id>
-    <published>2016-05-25T16:00:00.000Z</published>
-    <updated>2017-04-18T01:20:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote>
-<p>最美的风景，在眼内，在心间。   ——HML</p>
-</blockquote>
-<h2 id="东京"><a href="#东京" class="headerlink" title="东京"></a>东京</h2><p>看遍了大阪、奈良和京都，又回到了东京。一方面是因为行程失策，导致我们走了回头路，另一方面，确实在东京我还有很多没有来得及写。</p>
-<h2 id="迪士尼"><a href="#迪士尼" class="headerlink" title="迪士尼"></a>迪士尼</h2><p>东京的三天我们安排了迪士尼和买买买。从来都没去过迪士尼的我们，光凭想象和如雷贯耳的大名总觉得这是一个童话的王国。之前一直因为大阪影视城和迪士尼选哪个而纠结，毕竟认为前者更刺激更适合，而后者更童话更梦幻。最后还是被一颗华丽丽的虚荣心给击败了——东京有世界上唯一的Disney sea，怎么的也得去见见世面——哈哈哈哈。</p>
-<p>7-11购买的迪斯尼海洋入园券<br><img src="japan-70.jpg" alt=""></p>
-<p>很遗憾，去disney这天光顾着玩，没拍几张照片来记录。现在想来有点后悔，不过就像我题记说的那样，无论是自然风光还是人文景观，最美的，永远永远都留在你的脑海里。Tokyo Disney历来是人满为患，统计看来现在Disney Sea的人气逾旺，因此我们特意看了攻略，也实践了攻略，所以，一定意义上这一段算是攻略贴。读者收好不谢，哈。</p>
-<p>Disney Resort Line<br><img src="japan-71.jpg" alt=""></p>
-<p>Disney Sea 英文版地图<br><img src="japan-72.jpg" alt=""></p>
-<p>可以看到这张地图被我们蹂躏得有些过分了。Disney Sea 分7个主题区域，每个都用不同颜色标注出来，事实证明最里面的失落三角洲已经左下角的美国海滨比较刺激。各片区域之间有小火车和游船相连，游客可以自由乘坐。我认为最好玩的项目是惊魂古塔，没有之二，无论是里面的设计摆设还是营造的气氛，以及带给人的游玩感受都是最棒的。其次是玩具总动员项目的4D游戏，还有地心探险之旅和愤怒双神、风暴骑士。我们几乎是循着“fastpass”的脚步，奔走在路上。何为fastpass？就是you can pass faster with this card的意思。热门的景点（也就是好玩的景点）都会有这样的券。我们的策略就是先尽可能多的拿到fastpass，这样后面就不用排队了。当然fastpass是有时效和领用限制的，在你的前一张fastpass领用时会有下一张可领时间和本张使用时效标注，而且一天当中数量也是限定的，太晚就拿不到了。由于惊魂古塔太好玩，我们在最后又去领了一次fastpass，可惜时间安排到晚上9点多，等不及只能作罢。</p>
-<p>Fastpass for magic lamp theater<br><img src="japan-73.jpg" alt=""></p>
-<p>似乎是运气好我们去的这日游客看起来并不很多，各个项目几乎没排队，当然也得益于我们的fastpass，到最后主会场表演时可以证明游客并不少。<br>在连续拿了多个fastpass并顺利玩完几乎所有项目之后，我们在阿拉伯海岸吃了一顿咖喱汤饭，很美味，相对日本的物价来说乐园里的食物真的不贵，相比上海刚开业的Disney 50元一个鸡腿的物价来说，很幸福。</p>
-<p>和高飞的合影<br><img src="japan-74.jpg" alt=""></p>
-<p>在Columbia号的合影<br><img src="japan-75.jpg" alt=""></p>
-<p>童话世界<br><img src="japan-76.jpg" alt=""></p>
-<p>忘了是美人鱼岛还是阿拉伯海岸<br><img src="japan-77.jpg" alt=""></p>
-<p>但愿没记错——失落三角洲<br><img src="japan-78.jpg" alt=""></p>
-<p>从地中海港湾看美国海滨<br><img src="japan-79.jpg" alt=""></p>
-<p>Mickey and Mickey——还是他们有魅力<br><img src="japan-80.jpg" alt=""></p>
-<p>整个过程，最后Disney Sea 15周年的表演最激动人心，其实来游玩的大部分是日本人。相对来说，Disney周边的价格略高，但日本人对这些很是热衷，每个人身上都会带走几只Mickey，大概对他们来说便宜也是一个原因。</p>
-<h2 id="银座"><a href="#银座" class="headerlink" title="银座"></a>银座</h2><p>日本是有名的买买买圣地，之前的几篇我也提到了药妆，除了药妆之外，专柜的日妆、电子产品、机器人以及大红大紫的马桶圈都是国人争相购买的热门。而所到之处无非也就是那么几个：新宿、池袋、秋叶原、银座。最著名的也就是银座了，这个超大型购物天堂。<br><img src="japan-81.jpg" alt=""></p>
-<p>可惜我本不是个购物狂，甚至连喜欢都算不上，所以这地方对我没有吸引力，要是有个谁求代购倒是难为我了，毕竟不擅长费心费力。不过无论是走到各大商场专柜前还是街道广场上，倒是都能听到中国话，这一刻我感受到国人强大的购买力和熟悉的“亲切感”。</p>
-<h3 id="日本印象七"><a href="#日本印象七" class="headerlink" title="日本印象七"></a>日本印象七</h3><p>在东京常常可以看到，无论是电铁还是街道中时刻穿梭着匆忙行走的人，他们中很多带着大大的口罩，几乎遮住整张脸只剩下眼睛。当时感到奇异，回头想来这也是一种文化。就像流行的起源有的真的是出于现实的需求。日本樱花遍布全国，春季也是大量花粉症爆发的季节，因此早期的口罩是为了预防花粉症，发展到今天，最初的目的已经越来越弱了，更多的是为了遮掩一些面部的不完美，有的甚至只是追赶潮流，谁说不是呢，明星不都戴口罩吗？<br>日本电铁等站内到处遍布化妆室，而不是洗手间。里面除了卫生间还有独立的镜子和化妆台，时刻有各个年龄段的女性站在镜前补妆。近距离观察会发现，日本女性小到背着书包穿着校服的高中生，大到花甲鬓白的老妇，各个都有着精致的妆容，都有画眉、腮红、唇膏，几乎无人佩戴眼镜，发型光亮整洁不毛糙，从去上班开始到下班一直保持这个状态，看不到一丝懈怠。中国多爱日妆，有的也是被这样的社会文化感染，但我觉得这还是一个民族的性质特征决定。他们日日拘谨，也许乐在其中，只有自己知道。</p>
-<h3 id="还想说几句"><a href="#还想说几句" class="headerlink" title="还想说几句"></a>还想说几句</h3><p>人的一生随着社会阅历的改变总是在不断刷新自己对待世物的看法，现在记录下来，提醒我曾经年轻过、我的年少装的什么：<br>学生时代最遗憾的事莫过于没有好好对待二学位的日语学习，单单拿了个空空的学位到头来发现书到用时方恨少，有句话叫功不唐捐，韩寒说的“懂得很多道理却依然过不好这一生”，就像我现在懂得这个道理却不能保证会在余下的时间里认真对待每一件值得认真的事。我只能说时时鞭策自己是便要的，律己是一个人最崇高的品质。</p>
-<p>日本归来爸妈问我，都说日本发达，到底发达在哪，是路更宽还是人们工作压力更小？爸妈有着60后人对祖国发展的欣喜和幸福感。我无法跟他们说日本的发达表现在市政设施还是在社保质量。我认为一个社会的发达不在于建了几条双向8车道几座立交桥、几条盘山公路打通几座大山让大山里的人们感受到大发展。日本的街道窄、车小、工薪阶层压力大，在日本生活你感受不到每天的发展，一方面是因为社会发展到一定阶段之后产生的边际效应，多年后，你会发现我们的差距不在以上的所有，在他们的社会精英和上层建筑忍不能之忍、创不能之新。我们的男人开的是日本车、女人用的是日妆，就连马桶圈都需要去日本抢购。时间的强大就在于他永远能回答你此刻无法理解的问题。</p>
-<p>起飞的时候，你不知道是否还会有机会再来一次<br><img src="japan-82.jpg" alt=""></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;最美的风景，在眼内，在心间。   ——HML&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2 id=&quot;东京&quot;&gt;&lt;a href=&quot;#东京&quot; class=&quot;headerlink&quot; title=&quot;东京&quot;&gt;&lt;/a&gt;东京&lt;/h2&gt;&lt;p&gt;看遍了大阪、奈良和京都，又
-    
-    </summary>
-    
-      <category term="life" scheme="http://www.lchml.com/categories/life/"/>
-    
-    
-      <category term="游记" scheme="http://www.lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
-    
-      <category term="HML" scheme="http://www.lchml.com/tags/HML/"/>
-    
-      <category term="日本" scheme="http://www.lchml.com/tags/%E6%97%A5%E6%9C%AC/"/>
     
   </entry>
   
