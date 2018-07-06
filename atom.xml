@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.lchml.com/"/>
-  <updated>2018-07-06T15:15:25.744Z</updated>
+  <updated>2018-07-06T15:17:59.070Z</updated>
   <id>http://www.lchml.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://www.lchml.com/technology/java-brief/"/>
     <id>http://www.lchml.com/technology/java-brief/</id>
     <published>2018-07-05T16:00:00.000Z</published>
-    <updated>2018-07-06T15:15:25.744Z</updated>
+    <updated>2018-07-06T15:17:59.070Z</updated>
     
     <content type="html"><![CDATA[<p>Java是解释执行还是编译运行？其实这个问题本身就是一个错误的问题，以现在jvm的发展来说，jvm在执行字节码时，本身就融合了解释和编译两种方式，部分代码由jvm解释执行，部分代码会由JIT一次性编译成机器指令直接运行。</p>
 <h3 id="泛型、反射原理"><a href="#泛型、反射原理" class="headerlink" title="泛型、反射原理"></a>泛型、反射原理</h3><p>泛型擦除，反射实现动态创建对象。动态编译</p>
@@ -113,7 +113,7 @@
 <p>MySQL的存储引擎是从MyISAM到InnoDB，锁从表锁到行锁。后者的出现从某种程度上是弥补前者的不足。比如：MyISAM不支持事务，InnoDB支持事务。表锁虽然开销小，锁表快，但高并发下性能低。行锁虽然开销大，锁表慢，但高并发下相比之下性能更高。事务和行锁都是在确保数据准确的基础上提高并发的处理能力。MySQL常用的存储引擎是InnoDB，相对于MyISAM而言。InnoDB更适合高并发场景，同时也支持事务处理。</p>
 <p>联合索引的最左原则，如果where中是or条件，则对应的联合索引不起作用。<br>mysql的聚簇索引是指innodb引擎的特性，mysiam并没有，如果需要该索引，只要将索引指定为主键（primary key）就可以了。聚簇索引的叶节点就是数据节点，而非聚簇索引的叶节点仍然是索引节点，并保留一个链接指向对应数据块。聚簇索引主键的插入速度要比非聚簇索引主键的插入速度慢很多。相比之下，聚簇索引适合排序，非聚簇索引（也叫二级索引）不适合用在排序的场合。 </p>
 <h3 id="redis、memcached区别，内存实现。如何实现高可用。"><a href="#redis、memcached区别，内存实现。如何实现高可用。" class="headerlink" title="redis、memcached区别，内存实现。如何实现高可用。"></a>redis、memcached区别，内存实现。如何实现高可用。</h3><p>redis内存管理采用了自己实现的zmalloc.c，在内存管理上比C的malloc性能要好得多。memcache利用Slab Allocator机制管理内存。预先吧内存划分成数个大小IM的slab class仓库，再把每个仓库分成不同尺寸的块。C语言原生的malloc在不断的申请释放过程中会产生很多内存碎片，降低内存的使用率和访问效率。<br>高可用实现，redis本身已经支持cluster和sentinel模式。redis，memcached都可以通过Twemproxy(又称为nutcracker)实现高可用。也可以自己采用一致性哈希的方式实现。<br><a href="https://yikun.github.io/2016/06/09/%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95%E7%9A%84%E7%90%86%E8%A7%A3%E4%B8%8E%E5%AE%9E%E8%B7%B5/" target="_blank" rel="external">一致性哈希的原理</a> </p>
-<h3 id="tcp-timewaiting状态"><a href="#tcp-timewaiting状态" class="headerlink" title="tcp timewaiting状态"></a>tcp timewaiting状态</h3><p><img src="tcp.png" alt="1"></p>
+<h3 id="tcp-timewait状态"><a href="#tcp-timewait状态" class="headerlink" title="tcp timewait状态"></a>tcp timewait状态</h3><p><img src="tcp.png" alt="1"></p>
 <p><a href="https://github.com/BeginMan/BookNotes/blob/master/Unix/Unix-Network-Programming-Volume-1-The-Sockets-Networking-API-3rd-Edition/top2.md" target="_blank" rel="external">TCP相关知识</a><br>TIME_WAIT的产生条件：主动关闭方在发送四次挥手的最后一个ACK会变为TIME_WAIT状态，保留次状态的时间为两个MSL（linux里一个MSL为30s，是不可配置的）<br>TIME_WAIT两个MSL的作用：可靠安全的关闭TCP连接。比如网络拥塞，主动方最后一个ACK被动方没收到，这时被动方会对FIN开启TCP重传，发送多个FIN包，在这时尚未关闭的TIME_WAIT就会把这些尾巴问题处理掉，不至于对新连接及其它服务产生影响。<br>TIME_WAIT占用的资源：少量内存（大约4K，tcp socket buffer）和一个fd。<br>TIME_WAIT关闭的危害：1、  网络情况不好时，如果主动方无TIME_WAIT等待，关闭前个连接后，主动方与被动方又建立起新的TCP连接，这时被动方重传或延时过来的FIN包过来后会直接影响新的TCP连接；2、  同样网络情况不好并且无TIME_WAIT等待，关闭连接后无新连接，当接收到被动方重传或延迟的FIN包后，会给被动方回一个RST包，可能会影响被动方其它的服务连接。<br>TCP: time wait bucket table overflow产生原因及影响：原因是超过了linux系统tw数量的阀值。危害是超过阀值后﹐系统会把多余的time-wait socket 删除掉，并且显示警告信息，如果是NAT网络环境又存在大量访问，会产生各种连接不稳定断开的情况。<br>两个重要参数间net.ipv4.tcp_fin_timeout=30，默认是60s。tcp_max_tw_buckets=256000，最大允许的time_wait数量 </p>
 <h3 id="spring-bean的生命周期，spring源码，beanfactory和factorybean区别"><a href="#spring-bean的生命周期，spring源码，beanfactory和factorybean区别" class="headerlink" title="spring bean的生命周期，spring源码，beanfactory和factorybean区别"></a>spring bean的生命周期，spring源码，beanfactory和factorybean区别</h3><p>spring bean生命周期很多地方都有<a href="https://www.jianshu.com/p/3944792a5fff" target="_blank" rel="external">详细的说明</a>。FactoryBean是用来生成Bean的工厂类接口，比如Mybatis中的SqlSessionFactoryBean，用于生产SqlSessionFactory类。BeanFactory是所有Spring容器的接口。</p>
 <h3 id="jdk序列化原理，fastjson为什么序列化会更快。"><a href="#jdk序列化原理，fastjson为什么序列化会更快。" class="headerlink" title="jdk序列化原理，fastjson为什么序列化会更快。"></a>jdk序列化原理，fastjson为什么序列化会更快。</h3><p>jdk序列化最重要的两个类，ObjectInputStream和ObjectOutputStream，其中writeObject()是序列化方法，readObject是反序列化方法，注意集合类必须自己实现这两个方法。每个类也可以自己实现这两方法来自定义序列化。<br>fastjson序列化的核心方法是serializer.write(object)。<br>序列化的主要优化有：<br>SerializeWriter.class实现了类似StringBuilder的功能，可以减少数组越界检查，可以性能更好的实现字符串拼接。<br>使用ThreadLocal缓存buf提升性能<br>引入ASM可以避免通过java反射的方式获取属性值，可以提升性能。<br>json的object是一种key/value结构，正常的hashmap是无序的，fastjson默认是排序输出的，这是为deserialize优化做准备。<br>反序列化的主要优化有：<br>JSONScanner中预测下一个值的方法nextToken()<br>fastjson自己实现了一个特别的IdentityHashMap，去掉transfer操作的IdentityHashMap，能够在并发时工作，但是不会导致死循环。<br>fastjson的serialize是按照key的顺序进行的，于是fastjson做deserializer时候，采用一种优化算法，就是假设key/value的内容是有序的，读取的时候只需要做key的匹配，而不需要把key从输入中读取出来。通过这个优化，使得fastjson在处理json文本的时候，少读取超过50%的token，这个是一个十分关键的优化算法。基于这个算法，使用asm实现，性能提升十分明显，超过300％的性能提升。<br>deserialize的时候，会使用asm来构造对象，并且做batch set，也就是说合并连续调用多个setter方法，而不是分散调用，这个能够提升性能。<br>我们看xml或者javac的parser实现，经常会看到有一个这样的东西symbol table，它就是把一些经常使用的关键字缓存起来，在遍历char[]的时候，同时把hash计算好，通过这个hash值在hashtable中来获取缓存好的symbol，避免创建新的字符串对象。这种优化在fastjson里面用在key的读取，以及enum value的读取。这是也是parse性能优化的关键算法之一。 </p>
@@ -229,9 +229,9 @@
       <category term="life" scheme="http://www.lchml.com/categories/life/"/>
     
     
-      <category term="LC" scheme="http://www.lchml.com/tags/LC/"/>
-    
       <category term="游记" scheme="http://www.lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
+    
+      <category term="LC" scheme="http://www.lchml.com/tags/LC/"/>
     
       <category term="玉皇山" scheme="http://www.lchml.com/tags/%E7%8E%89%E7%9A%87%E5%B1%B1/"/>
     
