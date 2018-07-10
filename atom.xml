@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://lchml.com/"/>
-  <updated>2018-07-06T15:17:59.070Z</updated>
+  <updated>2018-07-10T06:19:12.869Z</updated>
   <id>http://lchml.com/</id>
   
   <author>
@@ -14,6 +14,43 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Hikari经常出现[WARN] Failed to validate connection并阻塞应用线程问题</title>
+    <link href="http://lchml.com/technology/hikari-maxlifetime/"/>
+    <id>http://lchml.com/technology/hikari-maxlifetime/</id>
+    <published>2018-07-10T16:00:00.000Z</published>
+    <updated>2018-07-10T06:19:12.869Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>在分布式系统中的一个dubbo服务，日志中经常出现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[WARN ]2018-07-06 19:30:49.581 [DubboServerHandler-10.206.56.200:20008-thread-195]PoolBase | HikariPool-1 - Failed to validate connection com.mysql.jdbc.JDBC4Connection@6a9ac783 (No operations allowed after connection closed.)</div></pre></td></tr></table></figure></p>
+<p>同时导致对应请求长时间阻塞，阻塞时间从5s~20s不等。</p>
+<h3 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h3><p>首先从Github上下载<a href="https://github.com/brettwooldridge/HikariCP" target="_blank" rel="external">Hikari源码</a>，在源码中直接搜索到对应的错误信息日志。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">isConnectionAlive</span><span class="params">(<span class="keyword">final</span> Connection connection)</span></span></div><div class="line">&#123;</div><div class="line">   <span class="keyword">try</span> &#123;</div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">         setNetworkTimeout(connection, validationTimeout);</div><div class="line"></div><div class="line">         <span class="keyword">final</span> <span class="keyword">int</span> validationSeconds = (<span class="keyword">int</span>) Math.max(<span class="number">1000L</span>, validationTimeout) / <span class="number">1000</span>;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (isUseJdbc4Validation) &#123;</div><div class="line">            <span class="keyword">return</span> connection.isValid(validationSeconds);</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">try</span> (Statement statement = connection.createStatement()) &#123;</div><div class="line">            <span class="keyword">if</span> (isNetworkTimeoutSupported != TRUE) &#123;</div><div class="line">               setQueryTimeout(statement, validationSeconds);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            statement.execute(config.getConnectionTestQuery());</div><div class="line">         &#125;</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">finally</span> &#123;</div><div class="line">         setNetworkTimeout(connection, networkTimeout);</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (isIsolateInternalQueries &amp;&amp; !isAutoCommit) &#123;</div><div class="line">            connection.rollback();</div><div class="line">         &#125;</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">   &#125;</div><div class="line">   <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">      lastConnectionFailure.set(e);</div><div class="line">      LOGGER.warn(<span class="string">"&#123;&#125; - Failed to validate connection &#123;&#125; (&#123;&#125;). Possibly consider using a shorter maxLifetime value."</span>, poolName, connection, e.getMessage());</div><div class="line">      <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>从代码中可以看出，错误是从这个isConnectionAlive()中抛出来的，从堆栈可以看出异常是从setNetworkTimeout()方法抛出，这个方法里面逻辑很简单，就是对当前数据库连接设置一个网络超时时间，其实相当于同时检查了连接是否可用。所以这个异常的根本原因就是当前数据库连接已经不可用，但是却依旧存在于Hikari的连接池中。</p>
+<p>再来看应用层获取连接的方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> Connection <span class="title">getConnection</span><span class="params">(<span class="keyword">final</span> <span class="keyword">long</span> hardTimeout)</span> <span class="keyword">throws</span> SQLException</span></div><div class="line">&#123;</div><div class="line">   suspendResumeLock.acquire();</div><div class="line">   <span class="keyword">final</span> <span class="keyword">long</span> startTime = currentTime();</div><div class="line"></div><div class="line">   <span class="keyword">try</span> &#123;</div><div class="line">      <span class="keyword">long</span> timeout = hardTimeout;</div><div class="line">      <span class="keyword">do</span> &#123;</div><div class="line">         PoolEntry poolEntry = connectionBag.borrow(timeout, MILLISECONDS);</div><div class="line">         <span class="keyword">if</span> (poolEntry == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">break</span>; <span class="comment">// We timed out... break and throw exception</span></div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">final</span> <span class="keyword">long</span> now = currentTime();</div><div class="line">         <span class="keyword">if</span> (poolEntry.isMarkedEvicted() || (elapsedMillis(poolEntry.lastAccessed, now) &gt; ALIVE_BYPASS_WINDOW_MS &amp;&amp; !isConnectionAlive(poolEntry.connection))) &#123;</div><div class="line">            closeConnection(poolEntry, poolEntry.isMarkedEvicted() ? EVICTED_CONNECTION_MESSAGE : DEAD_CONNECTION_MESSAGE);</div><div class="line">            timeout = hardTimeout - elapsedMillis(startTime);</div><div class="line">         &#125;</div><div class="line">         <span class="keyword">else</span> &#123;</div><div class="line">            metricsTracker.recordBorrowStats(poolEntry, startTime);</div><div class="line">            <span class="keyword">return</span> poolEntry.createProxyConnection(leakTaskFactory.schedule(poolEntry), now);</div><div class="line">         &#125;</div><div class="line">      &#125; <span class="keyword">while</span> (timeout &gt; <span class="number">0L</span>);</div><div class="line"></div><div class="line">      metricsTracker.recordBorrowTimeoutStats(startTime);</div><div class="line">      <span class="keyword">throw</span> createTimeoutException(startTime);</div><div class="line">   &#125;</div><div class="line">   <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">      Thread.currentThread().interrupt();</div><div class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> SQLException(poolName + <span class="string">" - Interrupted during connection acquisition"</span>, e);</div><div class="line">   &#125;</div><div class="line">   <span class="keyword">finally</span> &#123;</div><div class="line">      suspendResumeLock.release();</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>逻辑很简答，在while循环里面会从连接池中拿到连接，并通过isConnectionAlive()方法来判断连接是否可用，其中会为连接设置忘了超时setNetworkTimeout()，因此如果连接失效，则会阻塞一个validationTImeout的时间周期并关闭连接。然后继续从连接池取一下连接，如此循环，直到拿到可用连接，或者连接池为空并抛出异常。这就解释了为什么我们在日志中看到的阻塞时间都是5s的倍数，因为这和连续几次拿到无效连接有关。</p>
+<p>那为什么连接池中会有无效的连接呢？我们来看连接创建的方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Creating new poolEntry.  If maxLifetime is configured, create a future End-of-life task with 2.5% variance from</div><div class="line"> * the maxLifetime time to ensure there is no massive die-off of Connections in the pool.</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">private</span> PoolEntry <span class="title">createPoolEntry</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">   <span class="keyword">try</span> &#123;</div><div class="line">      <span class="keyword">final</span> PoolEntry poolEntry = newPoolEntry();</div><div class="line"></div><div class="line">      <span class="keyword">final</span> <span class="keyword">long</span> maxLifetime = config.getMaxLifetime();</div><div class="line">      <span class="keyword">if</span> (maxLifetime &gt; <span class="number">0</span>) &#123;</div><div class="line">         <span class="comment">// variance up to 2.5% of the maxlifetime</span></div><div class="line">         <span class="keyword">final</span> <span class="keyword">long</span> variance = maxLifetime &gt; <span class="number">10_000</span> ? ThreadLocalRandom.current().nextLong( maxLifetime / <span class="number">40</span> ) : <span class="number">0</span>;</div><div class="line">         <span class="keyword">final</span> <span class="keyword">long</span> lifetime = maxLifetime - variance;</div><div class="line">         poolEntry.setFutureEol(houseKeepingExecutorService.schedule(</div><div class="line">            () -&gt; &#123;</div><div class="line">               <span class="keyword">if</span> (softEvictConnection(poolEntry, <span class="string">"(connection has passed maxLifetime)"</span>, <span class="keyword">false</span> <span class="comment">/* not owner */</span>)) &#123;</div><div class="line">                  addBagItem(connectionBag.getWaitingThreadCount());</div><div class="line">               &#125;</div><div class="line">            &#125;,</div><div class="line">            lifetime, MILLISECONDS));</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      <span class="keyword">return</span> poolEntry;</div><div class="line">   &#125;</div><div class="line">   <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">      <span class="keyword">if</span> (poolState == POOL_NORMAL) &#123; <span class="comment">// we check POOL_NORMAL to avoid a flood of messages if shutdown() is running concurrently</span></div><div class="line">         LOGGER.debug(<span class="string">"&#123;&#125; - Cannot acquire connection from data source"</span>, poolName, (e <span class="keyword">instanceof</span> ConnectionSetupException ? e.getCause() : e));</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>可以看到每个连接创建时都会对应的创建一个schedule任务去调用softEvictConnection()方法将连接设置为Evicted状态，可以看到这个时间的lifetime就是根据我们设置的maxLifetime减去一个随机误差的。也就说如果在lifetime时间内，连接失效Hikari并不会把它从连接池中清理掉。Hikari的默认maxLifetime是30分钟，mysql默认的连接超时是8小时，所以一般不会碰到这个问题。但是由于我在项目中使用的是分布式数据库ddb，所以怀疑是ddb的连接超时小于30分钟导致的。去找dba询问，果然给出的时间是1000s，也就是16分钟左右。</p>
+<h3 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h3><p>把Hikari的maxlifetime（注意计算随机误差）设置成比数据库连接超时更短的时间。dbcp中也有类似的配置：minEvictableIdleTimeMillis。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;问题描述&quot;&gt;&lt;a href=&quot;#问题描述&quot; class=&quot;headerlink&quot; title=&quot;问题描述&quot;&gt;&lt;/a&gt;问题描述&lt;/h3&gt;&lt;p&gt;在分布式系统中的一个dubbo服务，日志中经常出现：&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;
+    
+    </summary>
+    
+      <category term="technology" scheme="http://lchml.com/categories/technology/"/>
+    
+    
+      <category term="LC" scheme="http://lchml.com/tags/LC/"/>
+    
+      <category term="Java" scheme="http://lchml.com/tags/Java/"/>
+    
+      <category term="Hirika" scheme="http://lchml.com/tags/Hirika/"/>
+    
+      <category term="数据库" scheme="http://lchml.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+  </entry>
   
   <entry>
     <title>Java常见知识点</title>
@@ -1027,215 +1064,6 @@
     <summary type="html">
     
       &lt;h3 id=&quot;REST接口&quot;&gt;&lt;a href=&quot;#REST接口&quot; class=&quot;headerlink&quot; title=&quot;REST接口&quot;&gt;&lt;/a&gt;REST接口&lt;/h3&gt;&lt;p&gt;下面的REST接口让非Java应用也可以使用Eureka。  &lt;strong&gt;appID&lt;/strong&gt;：
-    
-    </summary>
-    
-      <category term="technology" scheme="http://lchml.com/categories/technology/"/>
-    
-    
-      <category term="LC" scheme="http://lchml.com/tags/LC/"/>
-    
-      <category term="服务发现" scheme="http://lchml.com/tags/%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/"/>
-    
-      <category term="Eureka" scheme="http://lchml.com/tags/Eureka/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Eureka文档翻译（上）</title>
-    <link href="http://lchml.com/technology/netflix-eureka-glance/"/>
-    <id>http://lchml.com/technology/netflix-eureka-glance/</id>
-    <published>2016-05-26T16:00:00.000Z</published>
-    <updated>2017-04-18T03:16:51.000Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="什么是Eureka？"><a href="#什么是Eureka？" class="headerlink" title="什么是Eureka？"></a>什么是Eureka？</h3><p>Eureka是一个基于REST（Representational State Transfer）的服务，主要用于AWS中实现负载均衡和中间件服务的故障转移。我们称这种服务为Eureka服务器，同时Eureka还附带了基于Java的客户端组件，可以简化与服务器的交互。Eureka客户端内置了负载均衡，用于实现基本的循环负载均衡。在Netflix，有更为复杂的基于权重的负载均衡，如流量、资源使用率、错误控制等权重区分。</p>
-<h4 id="什么时候需要Eureka？"><a href="#什么时候需要Eureka？" class="headerlink" title="什么时候需要Eureka？"></a>什么时候需要Eureka？</h4><p>在AWS中，由于其固有特性，服务器会经常上下线。不同于传统基于IP和HOST的负载均衡，在AWS上，负载均衡需要更为复杂的注册和注销服务策略。由于AWS并没有提供一个中间件的负载均衡器，Eureka恰好填补了这一空白。</p>
-<h4 id="Eureka与AWS-ELB有什么区别？"><a href="#Eureka与AWS-ELB有什么区别？" class="headerlink" title="Eureka与AWS ELB有什么区别？"></a>Eureka与<a href="https://aws.amazon.com/cn/elasticloadbalancing/" target="_blank" rel="external">AWS ELB</a>有什么区别？</h4><p>AWS ELB（Elastic Load Balancer）是为暴露给用户的边缘服务器提供的网络流量的负载均衡方案。而Eureka提供了中间件负载均衡。（虽然理论上你也可以把AWS ELB用于中间件，但这会让他们都暴露在公开环境中，从而也失去了AWS的安全保护。）</p>
-<p>同时，ELB是传统的基于代理的负载均衡解决方案，而Eureka提供的是实例、服务器、host层面的负载均衡。客户端实例能得到需要联系的服务器的所有信息，是好是坏取决于你从什么角度来看它。假如你需要的是一个基于用户会话状态的负载均衡，AWS已经有提供，而Eureka却没有提供开箱即用的方案。在Netflix，我们倾向于让服务是无状态的。这更有利于构建可扩展模型，而Eureka非常适合用于此。</p>
-<p>Eureka负载均衡和基于代理的负载均衡的另一个重要不同在于，所有可用服务器的信息都会被缓存在客户端中，因此当应用从负载均衡掉线后具有恢复能力。通过花费很小的内存换来更好的弹性。</p>
-<h4 id="Eureka与Route-53有什么区别？"><a href="#Eureka与Route-53有什么区别？" class="headerlink" title="Eureka与Route 53有什么区别？"></a>Eureka与<a href="https://aws.amazon.com/cn/route53/" target="_blank" rel="external">Route 53</a>有什么区别？</h4><p> Route 53是一种命名服务，类似于Eureka为中间件提供的服务，但也尽是类似。作为DNS服务，也可以为非AWS提供服务。它还可以做基于延迟的AWS跨域路由。Eureka类似于一种内部DNS，它与公开的DNS服务无关。同时也是区域隔离的，它不知道其他AWS域的服务器信息，仅持有单个区域内的服务器信息。</p>
-<p> 虽然你可以通过Route 53注册你的服务器并依靠AWS安全组件来保护他们不被公开访问，但是你的中间件服务仍然暴露在公开环境中。另外，这还会有传统DNS负载均衡带来的缺陷：当服务器已经变得不可用甚至不存在时，流量还是会被路由到这些服务器上。（AWS中，服务器随时可能下线）</p>
-<h4 id="Netflix如何使用Eureka？"><a href="#Netflix如何使用Eureka？" class="headerlink" title="Netflix如何使用Eureka？"></a>Netflix如何使用Eureka？</h4><p>在Netflix，Eureka不仅仅作为中间件负载均衡的重要组件。</p>
-<ul>
-<li>配合<a href="https://github.com/Netflix/asgard" target="_blank" rel="external">Asgard</a>实现零宕机部署。当服务器出现问题时，可以做到新旧版本部署的无缝切换。（特别是当部署上百个实例时会需要很长的时间）</li>
-<li>配合<a href="https://github.com/Netflix/Priam" target="_blank" rel="external">Cassandra</a>运维，实现线上服务热插拔。</li>
-<li>用于确定memcached缓存服务的节点列表。</li>
-<li>用于传递其他各种服务的特定云数据或信息。</li>
-</ul>
-<h4 id="什么时候该用Eureka？"><a href="#什么时候该用Eureka？" class="headerlink" title="什么时候该用Eureka？"></a>什么时候该用Eureka？</h4><p>运行在AWS，不想通过AWS ELB注册或暴露你的中间件服务。你可能在找一个简单的循环负载均衡或可定制的负载均衡方案。你不需要保持会话状态或从memcached中加载会话数据。更重要的是，如果你的架构符合基于客户端负载均衡的模型，那么Eureka是你最合适的选择。</p>
-<h4 id="client与Server是如何通信的？"><a href="#client与Server是如何通信的？" class="headerlink" title="client与Server是如何通信的？"></a>client与Server是如何通信的？</h4><p>你可以选择任意的通信方式。Eureka帮你寻找你需要的服务的信息，并没有对通信协议或通信方式做任何限制。例如，你可以使用Eureka获取目标服务器的地址，同时使用thrif、http或任何一种RPC方式。</p>
-<h4 id="应用架构"><a href="#应用架构" class="headerlink" title="应用架构"></a>应用架构</h4><p><img src="eureka_architecture.png" alt="eureka应用架构图"><br>上图的架构描述了Eureka在Netflix是如何部署的，这也是Eureka的典型用法。在每个域内至少有一个Eureka集群，它只知道该域内的实例，每个分区至少有一台Eureka服务器用于处理分区内的故障。</p>
-<ul>
-<li>region：域</li>
-<li>zone：分区</li>
-</ul>
-<p>服务会向Eureka注册，并每隔30s发送一次心跳。如果连续90s没有心跳，服务器就会被注销。服务的注册信息和心跳状态会被复制到Eureka集群中的每一个节点上。从任何一个节点上来的客户端都可以找到对应的服务并发起远程调用。</p>
-<h5 id="非Java服务和客户端"><a href="#非Java服务和客户端" class="headerlink" title="非Java服务和客户端"></a>非Java服务和客户端</h5><p>对于非Java的服务，你可以选择用相应的语言来实现Eureka客户端部分，或者运行一个内嵌了Eureka客户端的独立Java程序来实现注册和心跳。Eureka客户端的所有操作接口都有对应的REST接口暴露出来，非Java客户端可以通过REST接口来查询服务注册信息。</p>
-<h4 id="可配置"><a href="#可配置" class="headerlink" title="可配置"></a>可配置</h4><p>Eureka可以让你的服务集群实现节点的热插拔。可以动态调整配置，如超时时间或者线程池配置等。Eureka使用<a href="https://github.com/Netflix/archaius" target="_blank" rel="external">archaius</a>作为配置中心实现，你也可以自己实现。</p>
-<h4 id="弹性"><a href="#弹性" class="headerlink" title="弹性"></a>弹性</h4><p>作为AWS的服务，考虑服务弹性是必不可少的。Eureka提供客户端和服务端内建的弹性能力。</p>
-<p>Eureka客户端被设计成可以处理当一个或多个Eureka节点宕机的情况。由于客户端会缓存所有的注册信息，因此就算所有Eureka节点全部宕机，依然可以正常工作。</p>
-<p>Eureka服务端同样有能力应对Eureka节点宕机的情况。即使当服务端与客户端出现网络中断的情况，服务端依然可以通过内置的恢复能力防止大规模的中断。</p>
-<h4 id="分区部署"><a href="#分区部署" class="headerlink" title="分区部署"></a>分区部署</h4><p>在多个AWS区域部署Eureka是一个相当简单的任务，不同区域的Eureka集群之间并不需要彼此通信。</p>
-<h4 id="监控"><a href="#监控" class="headerlink" title="监控"></a>监控</h4><p>Eureka使用<a href="https://github.com/Netflix/servo/wiki" target="_blank" rel="external">servo</a>作为监控服务，实现客户端服务端信息监控，异常报警等。数据通过JMX暴露出来，并可以导出到Amazon Cloud Watch。</p>
-<h3 id="配置Eureka"><a href="#配置Eureka" class="headerlink" title="配置Eureka"></a>配置Eureka</h3><p>Eureka的使用有两部分组成——<strong>Eureka Client</strong>和<strong>Eureka Server</strong>。采用Eureka的架构通常会包含两种应用：</p>
-<ul>
-<li><strong>应用客户端</strong>：通过Eureka Client向服务端发起请求。</li>
-<li><strong>应用服务端</strong>：接收客户端请求并返回。</li>
-</ul>
-<p>包含了如下三个部分：</p>
-<ul>
-<li>Eureka Server</li>
-<li>应用客户端用的Eureka Client</li>
-<li>应用服务端用的Eureka Client</li>
-</ul>
-<p>Eureka同时支持AWS和非AWS环境。</p>
-<p><strong>如果是AWS的环境，你需要在java参数中增加<code>-Deureka.datacenter=cloud</code>，用于通知Eureka初始化特定的AWS信息。</strong></p>
-<h4 id="配置Eureka-Client"><a href="#配置Eureka-Client" class="headerlink" title="配置Eureka Client"></a>配置Eureka Client</h4><h5 id="必要条件"><a href="#必要条件" class="headerlink" title="必要条件"></a>必要条件</h5><ul>
-<li>JDK1.8+</li>
-</ul>
-<p>可以通过以下方式获得Eureka Client（尽量使用最新版本）。</p>
-<ul>
-<li>通过这个url下载Eureka Client：<a href="http://search.maven.org/#search%7Cga%7C1%7Ceureka-client" target="_blank" rel="external">http://search.maven.org/#search%7Cga%7C1%7Ceureka-client</a></li>
-<li>通过pom文件添加依赖获得Eureka Client：</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.netflix.eureka<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>eureka-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.1.16<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
-<p><a href="https://github.com/Netflix/eureka/wiki/Building-Eureka-Client-and-Server" target="_blank" rel="external">这里</a>有详细的Client构建说明</p>
-<h5 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h5><p>配置Eureka Client最简单的方式是使用property文件。Eureka Client会默认搜索classpath中的<code>eureka-client.properties</code>文件，然后进一步搜索指定环境中的指定配置文件。环境通常分为test和prod两种，通过java参数-Deureka.environment来指定，如<code>-Deureka.environment=test</code>。因此client也会搜索<code>eureka-client-{test,prod}.properties</code>文件。</p>
-<p><a href="https://github.com/Netflix/eureka/tree/master/eureka-examples/conf" target="_blank" rel="external">这里</a>有一些默认的配置文件实例。你可以把他们复制到自己的工程中并改成自己需要的。如果你想要改变文件名，你可以用java参数来指定配置文件名：<code>-Deureka.client.props=config-name</code>。</p>
-<p>配置文件中必须包含如下属性：</p>
-<ul>
-<li>Application Name (eureka.name)</li>
-<li>Application Port (eureka.port)</li>
-<li>Virtual HostName (eureka.vipAddress)</li>
-<li>Eureka Service Urls (eureka.serviceUrls)</li>
-</ul>
-<p>更多高级配置，可以参考下面的两个配置类。<br><a href="https://github.com/Netflix/eureka/blob/master/eureka-client/src/main/java/com/netflix/appinfo/EurekaInstanceConfig.java" target="_blank" rel="external">https://github.com/Netflix/eureka/blob/master/eureka-client/src/main/java/com/netflix/appinfo/EurekaInstanceConfig.java</a><br><a href="https://github.com/Netflix/eureka/blob/master/eureka-client/src/main/java/com/netflix/discovery/EurekaClientConfig.java" target="_blank" rel="external">https://github.com/Netflix/eureka/blob/master/eureka-client/src/main/java/com/netflix/discovery/EurekaClientConfig.java</a></p>
-<h4 id="配置Eureka-Server"><a href="#配置Eureka-Server" class="headerlink" title="配置Eureka Server"></a>配置Eureka Server</h4><h5 id="必要条件-1"><a href="#必要条件-1" class="headerlink" title="必要条件"></a>必要条件</h5><ul>
-<li>JDK 1.8+</li>
-<li>Tomcat6.0+</li>
-</ul>
-<p>可以通过以下方式获得Eureka Server</p>
-<ul>
-<li>通过<a href="https://github.com/Netflix/eureka" target="_blank" rel="external">源码</a>编译构建得到war文件</li>
-<li>通过这个url下载war文件：<a href="http://search.maven.org/#search%7Cga%7C1%7Ceureka-server" target="_blank" rel="external">http://search.maven.org/#search%7Cga%7C1%7Ceureka-server</a></li>
-</ul>
-<h5 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a>配置</h5><p>Eureka Server配置分为两部分</p>
-<ul>
-<li>上面说的Eureka Client配置</li>
-<li>Eureka Server配置</li>
-</ul>
-<p>最简单的配置方式是和Eureka Client一样采用property文件配置。首先，根据上述内容配置好服务端的Eureka Client。Eureka Server自身会启动一个Eureka Client用于寻找其他Eureka Server。因此，你需要像给其他应用的Eureka Client配置一样，给Eureka Server配置好自身的Eureka Client。Eureka Server会根据这个配置来寻找其他具有一样eureka.name属性的Eureka Server。</p>
-<p>配置好Eureka Client部分后，如果运行在AWS的，还需要配置Eureka Server部分。Eureka Server默认搜索classpath下的<code>eureka-server.properties</code>文件。然后进一步搜索指定环境中的指定配置文件。环境通常分为test和prod两种，通过java参数-Deureka.environment来指定，如<code>-Deureka.environment=test</code>。因此Eureka Server也会搜索<code>eureka-server-{test,prod}.properties</code>文件。</p>
-<h5 id="配置本地开发环境"><a href="#配置本地开发环境" class="headerlink" title="配置本地开发环境"></a>配置本地开发环境</h5><p>当在本地开发环境中运行Eureka时，通常需要等待3分钟左右才能完全启动。这是由于Eureka Server默认行为：当搜索不到其他可用节点时会不停的重试。可以通过下面的参数配置来修改这个等待时间：<code>eureka.numberRegistrySyncRetries=0</code>。</p>
-<h5 id="配置AWS"><a href="#配置AWS" class="headerlink" title="配置AWS"></a>配置AWS</h5><p>运行在AWS环境的情况下，需要更多额外的配置，参考<a href="https://github.com/Netflix/eureka/wiki" target="_blank" rel="external">这里</a>。其他Server的高级可用配置参考<a href="http://netflix.github.io/eureka/javadoc/eureka-core/com/netflix/eureka/EurekaServerConfig.html" target="_blank" rel="external">这里</a></p>
-<p>如果你是自己构建war文件，可以直接编辑eureka-server/conf目录中的配置文件，构建过程会把配置文件放到WEB-INF/classes目录。</p>
-<p>如果你是下载的war文件，可以直接修改WEB-INF/classes目录中的配置文件。</p>
-<p>尝试运行<a href="https://github.com/Netflix/eureka/wiki/Running-the-Demo-Application" target="_blank" rel="external">demo</a>，可以有助于更好的理解。</p>
-<h4 id="Client-Server版本兼容性"><a href="#Client-Server版本兼容性" class="headerlink" title="Client/Server版本兼容性"></a>Client/Server版本兼容性</h4><p>Eureka使用semantic versioning，会保持小版本的Server/Client之间兼容（例如1.x版本的Client和Server之间协议是兼容的）。通常，Server版本大于Client版本总是安全的。</p>
-<h3 id="构建"><a href="#构建" class="headerlink" title="构建"></a>构建</h3><ul>
-<li>安装git</li>
-<li><p>获取Eureka源码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git clone https://github.com/Netflix/eureka.git</div></pre></td></tr></table></figure>
-</li>
-<li><p>运行下面命令构建Eureka Server</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd eureka</div><div class="line">./gradlew clean build</div></pre></td></tr></table></figure>
-</li>
-<li><p>得到如下结果</p>
-<ul>
-<li>Eureka Server war包 (./eureka-server/build/libs/eureka-server-XXX.war )</li>
-<li>Eureka Client jar包(./eureka-client/build/libs/eureka-client-XXX.jar )</li>
-<li>依赖包 (./eureka-server/testlibs/) (如果不适用maven类似的依赖机制，可以直接使用这些包)</li>
-</ul>
-</li>
-</ul>
-<h3 id="关于Demo"><a href="#关于Demo" class="headerlink" title="关于Demo"></a>关于Demo</h3><p>Demo程序包含了运行Eureka所需要的所有配置，构建和运行能力。</p>
-<ul>
-<li>Eureka Server</li>
-<li>Application Server</li>
-<li>Application Client</li>
-</ul>
-<p>Demo会帮你设置一个Eureka Server的监听端口，同时设置一个处理请求的Application Server和一个发送请求的Application Client。</p>
-<p>Application Service会注册到Eureka Server，Application client可以从Eureka Server找到它们并发送请求。Client和Server完成消息互通后优雅的退出。</p>
-<h4 id="关于Demo-Server"><a href="#关于Demo-Server" class="headerlink" title="关于Demo Server"></a>关于Demo Server</h4><p>Demo Server被配置成便于demo使用，而非适合正式产品使用。理解如果正确的配置Eureka Server（The server configurations to understand how to properly configure the eureka servers）。</p>
-<h4 id="Eureka-Server配置"><a href="#Eureka-Server配置" class="headerlink" title="Eureka Server配置"></a>Eureka Server配置</h4><ul>
-<li>需要的话，在eureka-server/conf/目录中，修改eureka-client.properties和eureka-client-test.properties。（对于demo来说，通常不需要修改eureka-server.properties，除非你需要更多高级配置）</li>
-<li>构建应用（同时会构建所有运行demo所需要的库）</li>
-<li>部署war包到你的tomcat中</li>
-<li>启动tomcat，通过<code>http://localhost:8080/eureka</code>查看信息。Eureka Client会在30s内注册上来并显示此处。</li>
-</ul>
-<h4 id="Application-Service的Eureka-Client配置"><a href="#Application-Service的Eureka-Client配置" class="headerlink" title="Application Service的Eureka Client配置"></a>Application Service的Eureka Client配置</h4><ul>
-<li>需要的话，在eureka-examples/conf目录中，修改sample-eureka-service.properties。</li>
-</ul>
-<h4 id="Application-Client的Eureka-Client配置"><a href="#Application-Client的Eureka-Client配置" class="headerlink" title="Application Client的Eureka Client配置"></a>Application Client的Eureka Client配置</h4><ul>
-<li>需要的话，在eureka-examples/conf目录中，修改sample-eureka-client.properties。</li>
-</ul>
-<h4 id="运行Demo"><a href="#运行Demo" class="headerlink" title="运行Demo"></a>运行Demo</h4><p>参考Demo的readme<a href="https://github.com/Netflix/eureka/tree/master/eureka-examples" target="_blank" rel="external">https://github.com/Netflix/eureka/tree/master/eureka-examples</a></p>
-<h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><p>在AWS环境，实例会频繁的上线下线。这就意味着你不能通过正常的host或ip来定位Eureka Server，而Eureka Server需要识别定位那些不断变换hostname的服务，所以你要为Eureka Server提供一套标准的可识别地址。</p>
-<p>这时候就需要AWS EC2的弹性IP（Elastic IP）了。如果你没听说过弹性地址，那么请先看<a href="http://aws.amazon.com/articles/1346" target="_blank" rel="external">这里</a></p>
-<p>第一步，先为每台Eureka Server获取一个Elastic IP。你需要为集群中的每个Server获取一个Elastic IP。当你给Eureka Server配置好Elastic IP列表之后，Eureka Server会自己处理寻找没被占用的IP，并在启动时绑定该IP。</p>
-<p>通常每个AWS域中的每个Eureka集群会有一个<a href="http://aws.amazon.com/cn/autoscaling/" target="_blank" rel="external">ASG</a>，每个实例都使用一样的配置启动。这意味着，每个分区内必须要有一个冗余Eureka Server实例处理故障。一旦有一个实例被挂掉，ASG就会从空闲区域中启动一个新的Eureka Server实例，并从该区域内选取一个空闲Elastic IP绑定。对于正在访问Eureka Server的客户端来说，整个过程是透明的。就和正常的Eureka Client连接失败后转移到其他服务器，当服务器恢复后会自动重连一样。</p>
-<p>根据不同的弹性需求，有两种不同的Elastic IP配置方式。在Netflix，为了做到全透明的增加新分区或新Eureka Server节点，我们采用DNS的方式来分配EIPs，做到对client和server端都可以热部署。还有个更简单的方式是配置在Eureka的配置文件中，这样做的缺点是，这些配置需要被分发到集群（大约1000个实例）中的每个实例。增加移除分区的操作肯定会变非常麻烦，因为不是给每个client下发新部署的配置。</p>
-<h4 id="通过配置文件配置EIPs"><a href="#通过配置文件配置EIPs" class="headerlink" title="通过配置文件配置EIPs"></a>通过配置文件配置EIPs</h4><p>首先需要为Eureka Server配置每个域中的所有有效分区。配置内容在eureka-client.properties(或eureka-client-test.properties，或eureka-client-prod.properties)</p>
-<p>下面的例子中，一个us-east-1域指定了三个有效分区：us-east-1c,us-east-1d, us-east-1e。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">eureka.us-east-1.availabilityZones=us-east-1c,us-east-1d,us-east-1e</div></pre></td></tr></table></figure>
-<p>下一步为每个分区配置Eureka监听地址，一个分区内的多个Eureka Server可以用逗号隔开。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">eureka.serviceUrl.us-east-1c=http://ec2-552-627-568-165.compute-1.amazonaws.com:7001/eureka/v2/,http://ec2-368-101-182-134.compute-1.amazonaws.com:7001/eureka/v2/</div><div class="line">eureka.serviceUrl.us-east-1d=http://ec2-552-627-568-170.compute-1.amazonaws.com:7001/eureka/v2/</div><div class="line">eureka.serviceUrl.us-east-1e=http://ec2-500-179-285-592.compute-1.amazonaws.com:7001/eureka/v2/</div></pre></td></tr></table></figure>
-<p>服务端和客户端的Eureka Client也有同样的配置。</p>
-<h3 id="通过DNS配置EIPs"><a href="#通过DNS配置EIPs" class="headerlink" title="通过DNS配置EIPs"></a>通过DNS配置EIPs</h3><p>如果你需要更高的灵活性，那就需要采用DNS的配置方式。</p>
-<p>首先为每个域配置一个DNS name用于解析可用分区列表。 由于一个DNS name只有一个CNAME，我们用TXT records作为DNS name列表。</p>
-<p>下面是一个DNS TXT record例子，在DNS server上列出了一个分区中的有效DNS name。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">txt.us-east-1.mydomaintest.netflix.net=&quot;us-east-1c.mydomaintest.netflix.net&quot; </div><div class="line">&quot;us-east-1d.mydomaintest.netflix.net&quot; &quot;us-east-1e.mydomaintest.netflix.net&quot;</div></pre></td></tr></table></figure>
-<p>接着可以像下面一样为每个分区定义TXT record（如果一个分区有多个hostname，用逗号隔开）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">txt.us-east-1c.mydomaintest.netflix.net=&quot;ec2-552-627-568-165.compute-1.amazonaws.com&quot; </div><div class="line">&quot;ec2-368-101-182-134.compute-1.amazonaws.com&quot;</div><div class="line">txt.us-east-1d.mydomaintest.netflix.net=&quot;ec2-552-627-568-170.compute-1.amazonaws.com&quot;</div><div class="line">txt.us-east-1e.mydomaintest.netflix.net=&quot;ec2-500-179-285-592.compute-1.amazonaws.com&quot;</div></pre></td></tr></table></figure>
-<p>最后在Eureka Server和Eureka Client的配置中增加如下配置。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">eureka.shouldUseDns=true</div><div class="line">eureka.eurekaServer.domainName=mydomaintest.netflix.net</div><div class="line">eureka.eurekaServer.port=7001</div><div class="line">eureka.eurekaServer.context=eureka/v2</div></pre></td></tr></table></figure>
-<p>在Netflix，我们用DNS的配置方式做到动态增加删除Eureka Server节点，并在几分钟内完成对几千个客户端的同步。</p>
-<h4 id="通过Service-Urls设置EIPs"><a href="#通过Service-Urls设置EIPs" class="headerlink" title="通过Service Urls设置EIPs"></a>通过Service Urls设置EIPs</h4><p>那么，为什么想要给Server分配EIPs时需要定义URLs呢？为了保证AWS的安全机制，任意两个实例之间的通信需要通过公共的hostname。Eureka Server之间使用这些URL进行通信。每个URL中包含了有EIP（552.627.568.170）衍生的公共hostname（ec2-552-627-568-170.compute-1.amazonaws.com）</p>
-<p>Eureka server启动时会先找到一个分区推出的EIP，然后再从该分区中再找到一个空闲的EIP绑定启动。</p>
-<p>Eureka是如果找到空闲EIP的？它通过Eureka Client找到集群中的其他实例，并查看他们绑定的IP，然后从中挑选未被绑定的IP。它优先使用同一个分区内的EIP，这样可以让该分区内的其他Eureka Client与之通信。如果Eureka Server找不到该分区内的空闲EIP，才会去尝试其他分区。如果所有的EIP都已经被占用，那么Eureka Server启动后会一直等待空闲EIP，并每个5分钟重试一次。</p>
-<p>同样的，Eureka Client会优先寻找同一分区内的Eureka Server，找不到的情况下才去尝试其他分区。</p>
-<h4 id="Eureka故障切换"><a href="#Eureka故障切换" class="headerlink" title="Eureka故障切换"></a>Eureka故障切换</h4><p>当Eureka Client得到Eureka Server的列表后，发生故障时，会自动切换到集群中的其他节点。让我们通过下面的配置来分析这个过程是如何工作的。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">eureka.us-east-1.availabilityZones=us-east-1c,us-east-1d,us-east-1e</div><div class="line">eureka.serviceUrl.us-east-1c=http://ec2-552-627-568-165.compute-1.amazonaws.com:7001/eureka/v2/,http://ec2-368-101-182-134.compute-1.amazonaws.com:7001/eureka/v2/</div><div class="line">eureka.serviceUrl.us-east-1d=http://ec2-552-627-568-170.compute-1.amazonaws.com:7001/eureka/v2/</div><div class="line">eureka.serviceUrl.us-east-1e=http://ec2-500-179-285-592.compute-1.amazonaws.com:7001/eureka/v2/</div></pre></td></tr></table></figure>
-<p>我们定义了三个分区 (us-east-1c, us-east-1d and us-east1e) 每个分区只有一个EIP。 比如eureka server在us-east-1c分区<a href="http://ec2-552-627-568-165.compute-1.amazonaws.com:7001/eureka/v2/" target="_blank" rel="external">http://ec2-552-627-568-165.compute-1.amazonaws.com:7001/eureka/v2/</a>运行失败, 所有eureka clients自动切换到下一个分区<a href="http://ec2-552-627-568-170.compute-1.amazonaws.com:7001/eureka/v2/" target="_blank" rel="external">http://ec2-552-627-568-170.compute-1.amazonaws.com:7001/eureka/v2/</a>。如果还是失败，继续尝试列表中的下一个分区。</p>
-<p>当宕机的Eureka Server重新恢复，Eureka Client会重新连接到该分区内的Eureka Server。</p>
-<h4 id="Eureka的AWS特定配置"><a href="#Eureka的AWS特定配置" class="headerlink" title="Eureka的AWS特定配置"></a>Eureka的AWS特定配置</h4><p>在AWS上，需要增加java参数<code>-Deureka.datacenter=cloud</code>，让Eureka Server/Client知道针对AWS环境初始化。</p>
-<p>Eureka Server需要运行在AWS的EC2的访问权限。两种方式：使用默认的配置，它会在EC2实例中使用InstanceProfileCredentials。或者明确在配置文件中配置好AWS的accessId和secretKey：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">eureka.awsAccessId=</div><div class="line">eureka.awsSecretKey=</div></pre></td></tr></table></figure>
-<h4 id="AWS访问策略"><a href="#AWS访问策略" class="headerlink" title="AWS访问策略"></a>AWS访问策略</h4><p>Eureka会尝试查询ASG的相关信息，以确保实例启动时处于OUT_OF_SERVICE或UP状态，而这取决于自动伸缩组配置项中addToLoadbalancer的值。属于哪个ASG的属性由Eureka Client配置中的eureka.asgName指定。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">eureka.asgName</div></pre></td></tr></table></figure>
-<p>Eureka server需要访问云端的ASG信息和IP绑定信息。因此AWS策略要配置成允许上述访问，下面是一个访问策略的例子。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;Statement&quot;: [</div><div class="line">    &#123;</div><div class="line">      &quot;Sid&quot;: &quot;Stmt1358974336152&quot;,</div><div class="line">      &quot;Action&quot;: [</div><div class="line">        &quot;ec2:DescribeAddresses&quot;,</div><div class="line">        &quot;ec2:AssociateAddress&quot;,</div><div class="line">        &quot;ec2:DisassociateAddress&quot;</div><div class="line">      ],</div><div class="line">      &quot;Effect&quot;: &quot;Allow&quot;,</div><div class="line">      &quot;Resource&quot;: &quot;*&quot;</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      &quot;Sid&quot;: &quot;Stmt1358974395291&quot;,</div><div class="line">      &quot;Action&quot;: [</div><div class="line">        &quot;autoscaling:DescribeAutoScalingGroups&quot;</div><div class="line">      ],</div><div class="line">      &quot;Effect&quot;: &quot;Allow&quot;,</div><div class="line">      &quot;Resource&quot;: &quot;*&quot;</div><div class="line">    &#125;</div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="Client-Server互通"><a href="#Client-Server互通" class="headerlink" title="Client/Server互通"></a>Client/Server互通</h3><p>使用Eureka Server的第一步是先初始化Eureka Client。如果在AWS上，初始化方法如下：</p>
-<p>版本1.1.153，EurekaModule类引入了governator/guice来使用eureka-client。<a href="https://github.com/Netflix/eureka/blob/master/eureka-examples/src/main/java/com/netflix/eureka/ExampleEurekaGovernatedService.java" target="_blank" rel="external">governated例子</a>。</p>
-<p>1.1.153之前的版本，可以这样初始化Eureka Client：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">DiscoveryManager.getInstance().initComponent(</div><div class="line">    <span class="keyword">new</span> CloudInstanceConfig(),</div><div class="line">    <span class="keyword">new</span> DefaultEurekaClientConfig());</div></pre></td></tr></table></figure>
-<p>如果在其他环境运行Eureka，初始化方法如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">DiscoveryManager.getInstance().initComponent(</div><div class="line">    <span class="keyword">new</span> MyDataCenterInstanceConfig(),</div><div class="line">    <span class="keyword">new</span> DefaultEurekaClientConfig());</div></pre></td></tr></table></figure>
-<p>Eureka Client会自动寻找eureka-client.properties配置文件进行初始化。</p>
-<h4 id="关于无状态实例"><a href="#关于无状态实例" class="headerlink" title="关于无状态实例"></a>关于无状态实例</h4><p>默认情况下，Eureka Client启动后会处于STARTING状态，这样可以让实例在正式提供服务之前进行其他的初始化工作。然后再通过下面的方法把状态改为UP，让实例正式上线提供服务。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ApplicationInfoManager.getInstance().setInstanceStatus(InstanceStatus.UP)</div></pre></td></tr></table></figure>
-<p>应用也可以注册心跳检测的回调，用于把实例状态改为DOWN。</p>
-<p>在Netflix，我们也会使用OUT_OF_SERVICE状态，主要用于从线上撤下实例。当新部署版本有问题时可以很容易的回滚。大多数应用会为新的版本创建新的ASG，然后把线上流量导到新的ASG。出现问题的情况下，回滚只需要把ASG中的所有实例状态改为OUT_OF_SERVICE来切断流量。</p>
-<h3 id="Eureka-Client运行"><a href="#Eureka-Client运行" class="headerlink" title="Eureka Client运行"></a>Eureka Client运行</h3><p>Eureka Client在AWS上会先尝试与本同一分区的Eureka Server协商所有操作，失败则尝试其他分区。</p>
-<p>Application Client可以通过Eureka Client返回的信息实现负载均衡，如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">InstanceInfo nextServerInfo = DiscoveryManager.getInstance()</div><div class="line">    .getDiscoveryClient()</div><div class="line">    .getNextServerFromEureka(vipAddress, <span class="keyword">false</span>);</div><div class="line"></div><div class="line">Socket s = <span class="keyword">new</span> Socket();</div><div class="line"><span class="keyword">int</span> serverPort = nextServerInfo.getPort();</div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">    s.connect(<span class="keyword">new</span> InetSocketAddress(nextServerInfo.getHostName(),</div><div class="line">        serverPort));</div><div class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">    System.err.println(<span class="string">"Could not connect to the server :"</span></div><div class="line">        + nextServerInfo.getHostName() + <span class="string">" at port "</span> + serverPort);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>如果简单的轮询负载均衡不能满足需求，你可以从<a href="http://netflix.github.io/eureka/javadoc/eureka-client/com/netflix/discovery/DiscoveryClient.html" target="_blank" rel="external">这里</a>提供的选择中封装自己的负载均衡。在AWS环境，需要实现失败重试并保持较低的超时时间，因为有一种情况是，Eureka Server可能返回了已经无效或不存在的实例。</p>
-<p>需要注意是，为了服务器的正常的通信，Eureka Client会清理掉闲置30s以上的http连接。因为AWS不允许在一个空闲了几分钟之后的连接上传输内容。</p>
-<p>Eureka Client与Server的交互如下：</p>
-<h5 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h5><p>Eureka Client会把实例的相关信息注册到Eureka Server。在AWS上，这些信息包含了访问URL，如[<a href="http://169.254.169.254/latest/metadata][]这样。Client会在第一次心跳时进行注册。" target="_blank" rel="external">http://169.254.169.254/latest/metadata][]这样。Client会在第一次心跳时进行注册。</a></p>
-<h4 id="心跳"><a href="#心跳" class="headerlink" title="心跳"></a>心跳</h4><p>Eureka Client需要每隔30秒发送一次心跳来更新状态，告知Eureka Server自己还活着。如果Server连续超过90s没有收到心跳，会将对应的实例从注册表中移除。尽量不要去修改心跳时间间隔，因为Server依靠心跳来确定与Client之间的通信是否有问题。</p>
-<h4 id="获取注册表"><a href="#获取注册表" class="headerlink" title="获取注册表"></a>获取注册表</h4><p>Eureka Client从Server获取注册信息并缓存在本地，然后应该根据这些注册信息找到需要的服务。注册信息会周期性（每30s）做增量更新。由于增量信息本身会在Server缓存较长时间（大约3分钟），因此可能会返回相同的增量信息。Eureka Client会自动处理这种重复信息。</p>
-<p>拿到增量信息后，Eureka Client会比较服务器返回的信息和实例数量的一致性，如果信息不匹配，整个注册表信息都会再重新获取一次。Eureka Server会缓存所有压缩过和非压缩的增量信息、整个注册表信息，以及每个应用的信息。信息格式支持JSON/XML等格式。Eureka Client获得的信息是经过<a href="https://jersey.java.net/" target="_blank" rel="external">Apache jersey</a>压缩的json格式。</p>
-<h4 id="注销"><a href="#注销" class="headerlink" title="注销"></a>注销</h4><p>Eureka Client关闭时发送一个注销请求给Eureka Server。通过从Server的注册表中移除该实例，从而有效的把实例从线上撤下。</p>
-<p>应用关闭时应该确保调用如下方法：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">DiscoveryManager.getInstance().shutdownComponent()</div></pre></td></tr></table></figure>
-<h4 id="时延"><a href="#时延" class="headerlink" title="时延"></a>时延</h4><p>所有从Eureka Client发起的操作需要一段时间才能反映到所有Eureka Server和其他Client。因为Eureka Server的缓存是每个一段时间刷新一次，Client也是每隔一段时间获取一次注册信息。所以同步到所有Server和Client可能需要花费2分钟。</p>
-<h5 id="通信协议"><a href="#通信协议" class="headerlink" title="通信协议"></a>通信协议</h5><p>默认情况下，Eureka使用<a href="https://jersey.java.net/" target="_blank" rel="external">Jersey</a>和<a href="http://www.codehaus.org/" target="_blank" rel="external">XStream</a>配合json作为Server与Client之间的通信协议。你也可以选择实现自己的协议来代替。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h3 id=&quot;什么是Eureka？&quot;&gt;&lt;a href=&quot;#什么是Eureka？&quot; class=&quot;headerlink&quot; title=&quot;什么是Eureka？&quot;&gt;&lt;/a&gt;什么是Eureka？&lt;/h3&gt;&lt;p&gt;Eureka是一个基于REST（Representational State
     
     </summary>
     
