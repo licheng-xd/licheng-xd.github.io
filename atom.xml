@@ -57,7 +57,7 @@
     <link href="http://lchml.com/technology/java-brief/"/>
     <id>http://lchml.com/technology/java-brief/</id>
     <published>2018-07-05T16:00:00.000Z</published>
-    <updated>2018-07-06T15:17:59.070Z</updated>
+    <updated>2018-07-10T09:04:32.244Z</updated>
     
     <content type="html"><![CDATA[<p>Java是解释执行还是编译运行？其实这个问题本身就是一个错误的问题，以现在jvm的发展来说，jvm在执行字节码时，本身就融合了解释和编译两种方式，部分代码由jvm解释执行，部分代码会由JIT一次性编译成机器指令直接运行。</p>
 <h3 id="泛型、反射原理"><a href="#泛型、反射原理" class="headerlink" title="泛型、反射原理"></a>泛型、反射原理</h3><p>泛型擦除，反射实现动态创建对象。动态编译</p>
@@ -102,7 +102,7 @@
 <li>handler： the handler to use when execution is blocked because the thread bounds and queue capacities are reached</li>
 </ul>
 <h3 id="Exception、Error、Throwable、RuntimeException区别"><a href="#Exception、Error、Throwable、RuntimeException区别" class="headerlink" title="Exception、Error、Throwable、RuntimeException区别"></a>Exception、Error、Throwable、RuntimeException区别</h3><p>Throwable是Error和Exception的父类，RuntimeException是Exception的子类</p>
-<h3 id="JDK动态代理和cglib的实现方式有何不同"><a href="#JDK动态代理和cglib的实现方式有何不同" class="headerlink" title="JDK动态代理和cglib的实现方式有何不同"></a>JDK动态代理和cglib的实现方式有何不同</h3><p>JDK动态代理是基于反射实现的，被代理类必须实现接口。cglib是通过继承实现的，所以可以不实现接口，所以final类，private方法都无法被代理。</p>
+<h3 id="JDK动态代理和cglib的实现方式有何不同"><a href="#JDK动态代理和cglib的实现方式有何不同" class="headerlink" title="JDK动态代理和cglib的实现方式有何不同"></a>JDK动态代理和cglib的实现方式有何不同</h3><p>JDK动态代理是基于反射和字节码生成实现的，被代理类必须实现接口。cglib是通过继承实现的，所以可以不实现接口，但final类和private方法都无法被代理。还有一种更快的动态代理实现方法，就是采用javaassist或ASM库生成字节码的方式实现，比如HikariCP的连接池中就采用这种方式。</p>
 <h3 id="BIO、NIO、AIO区别。poll和epoll有什么区别。"><a href="#BIO、NIO、AIO区别。poll和epoll有什么区别。" class="headerlink" title="BIO、NIO、AIO区别。poll和epoll有什么区别。"></a>BIO、NIO、AIO区别。poll和epoll有什么区别。</h3><p>简单的理解：BIO一个请求对应一个线程，服务器线程资源会很紧张，导致服务能力上不去。NIO是事件驱动模型，由一个线程处理系统IO事件，上层应用只有在事件发生时才需要处理。AIO与NIO最大的区别是，NIO当有读写事件时，会通知上层做读写操作，而AIO会有系统先完成读写，数据存到缓冲去中，通知上层时数据已经准备好。</p>
 <h3 id="数据库：事物隔离级别，表锁和行锁，联合索引，聚簇索引"><a href="#数据库：事物隔离级别，表锁和行锁，联合索引，聚簇索引" class="headerlink" title="数据库：事物隔离级别，表锁和行锁，联合索引，聚簇索引"></a>数据库：事物隔离级别，表锁和行锁，联合索引，聚簇索引</h3><p>InnoDB中的四种事务隔离级别：</p>
 <table>
