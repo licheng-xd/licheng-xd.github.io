@@ -5,11 +5,11 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://lchml.com/"/>
-  <updated>2018-07-17T02:20:40.009Z</updated>
+  <updated>2018-07-19T07:33:19.320Z</updated>
   <id>http://lchml.com/</id>
   
   <author>
-    <name>LC HML</name>
+    <name>LC&amp;HML</name>
     
   </author>
   
@@ -20,7 +20,7 @@
     <link href="http://lchml.com/technology/zipkin/"/>
     <id>http://lchml.com/technology/zipkin/</id>
     <published>2018-07-16T16:00:00.000Z</published>
-    <updated>2018-07-17T02:20:40.009Z</updated>
+    <updated>2018-07-19T07:33:19.320Z</updated>
     
     <content type="html"><![CDATA[<p>首先给出demo地址，有问题也可以直接看代码。<a href="https://github.com/licheng-xd/dubbo-sleuth" target="_blank" rel="external">https://github.com/licheng-xd/dubbo-sleuth</a></p>
 <h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><p>sleuth是springcloud对zipkin接入的封装，从2.0开始直接采用了brave提供的zipkin接入实现。</p>
@@ -72,11 +72,11 @@
   </entry>
   
   <entry>
-    <title>Hikari经常出现[WARN] Failed to validate connection并阻塞应用线程问题</title>
+    <title>Hikari经常出现Failed to validate connection并阻塞应用线程问题</title>
     <link href="http://lchml.com/technology/hikari-maxlifetime/"/>
     <id>http://lchml.com/technology/hikari-maxlifetime/</id>
     <published>2018-07-10T16:00:00.000Z</published>
-    <updated>2018-07-10T06:19:12.869Z</updated>
+    <updated>2018-07-19T07:43:05.586Z</updated>
     
     <content type="html"><![CDATA[<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>在分布式系统中的一个dubbo服务，日志中经常出现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[WARN ]2018-07-06 19:30:49.581 [DubboServerHandler-10.206.56.200:20008-thread-195]PoolBase | HikariPool-1 - Failed to validate connection com.mysql.jdbc.JDBC4Connection@6a9ac783 (No operations allowed after connection closed.)</div></pre></td></tr></table></figure></p>
 <p>同时导致对应请求长时间阻塞，阻塞时间从5s~20s不等。</p>
@@ -113,9 +113,10 @@
     <link href="http://lchml.com/technology/java-brief/"/>
     <id>http://lchml.com/technology/java-brief/</id>
     <published>2018-07-05T16:00:00.000Z</published>
-    <updated>2018-07-10T09:04:32.244Z</updated>
+    <updated>2018-07-19T07:31:10.900Z</updated>
     
     <content type="html"><![CDATA[<p>Java是解释执行还是编译运行？其实这个问题本身就是一个错误的问题，以现在jvm的发展来说，jvm在执行字节码时，本身就融合了解释和编译两种方式，部分代码由jvm解释执行，部分代码会由JIT一次性编译成机器指令直接运行。</p>
+<a id="more"></a>
 <h3 id="泛型、反射原理"><a href="#泛型、反射原理" class="headerlink" title="泛型、反射原理"></a>泛型、反射原理</h3><p>泛型擦除，反射实现动态创建对象。动态编译</p>
 <h3 id="Java-IO"><a href="#Java-IO" class="headerlink" title="Java IO"></a>Java IO</h3><p>根据处理数据类型的不同分为：字符流、字节流。根据数据流向不同分为：输出流、输入流。常用的IO对象：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">JavaIO</div><div class="line">    |--字符流</div><div class="line">        --Reader</div><div class="line">            --BufferedReader</div><div class="line">            --InputStreamReader</div><div class="line">                --FileReader</div><div class="line">            -- ......</div><div class="line">        --Writer</div><div class="line">            --BufferedWriter</div><div class="line">            --OutputSteamWriter</div><div class="line">                --FileWriter</div><div class="line">            -- ......</div><div class="line">    |--字节流</div><div class="line">        --InputStream</div><div class="line">            --FileInputStream</div><div class="line">            --FilterInputStream</div><div class="line">                --BufferedInputStream</div><div class="line">            -- ......</div><div class="line">        --OutputStream</div><div class="line">            --FileOutputStream</div><div class="line">            --FilterOutputStream</div><div class="line">                --BufferedOutputStream</div><div class="line">            -- ......</div></pre></td></tr></table></figure>
@@ -236,7 +237,6 @@
     <summary type="html">
     
       &lt;p&gt;Java是解释执行还是编译运行？其实这个问题本身就是一个错误的问题，以现在jvm的发展来说，jvm在执行字节码时，本身就融合了解释和编译两种方式，部分代码由jvm解释执行，部分代码会由JIT一次性编译成机器指令直接运行。&lt;/p&gt;
-&lt;h3 id=&quot;泛型、反射原理&quot;&gt;&lt;a hr
     
     </summary>
     
