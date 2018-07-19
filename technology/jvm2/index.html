@@ -81,19 +81,19 @@
 
 
 
-<meta name="description" content="相信大家都听过一句话：“计算机只认识0和1”，因此我们写的程序要经过编译器翻译成0和1构成的二进制格式才能有计算机执行。而随着计算机的发展，特别是大量建立在虚拟机上的程序语言出现，将程序编译成二进制已经不是唯一的选择，越来越多的语言选择了与操作系统无关、平台中立的格式作为编译后的存储格式。 在1997年第一版Java虚拟机规范发布时就描述了：未来，我们会对Java虚拟机进行扩展，以便更好的支持其他">
+<meta name="description" content="JVM,李城,Java,服务器,架构,微服务,高可用,分布式">
 <meta name="keywords" content="LC,Java,JVM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="java虚拟机 - Class">
 <meta property="og:url" content="http://lchml.com/technology/jvm2/index.html">
 <meta property="og:site_name" content="LC&#39;s Blog">
-<meta property="og:description" content="相信大家都听过一句话：“计算机只认识0和1”，因此我们写的程序要经过编译器翻译成0和1构成的二进制格式才能有计算机执行。而随着计算机的发展，特别是大量建立在虚拟机上的程序语言出现，将程序编译成二进制已经不是唯一的选择，越来越多的语言选择了与操作系统无关、平台中立的格式作为编译后的存储格式。 在1997年第一版Java虚拟机规范发布时就描述了：未来，我们会对Java虚拟机进行扩展，以便更好的支持其他">
+<meta property="og:description" content="JVM,李城,Java,服务器,架构,微服务,高可用,分布式">
 <meta property="og:image" content="http://lchml.com/technology/jvm2/jvm-loading.png">
 <meta property="og:image" content="http://lchml.com/technology/jvm2/jvm-classloader.png">
-<meta property="og:updated_time" content="2017-11-14T06:39:58.000Z">
+<meta property="og:updated_time" content="2018-07-19T10:20:43.534Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java虚拟机 - Class">
-<meta name="twitter:description" content="相信大家都听过一句话：“计算机只认识0和1”，因此我们写的程序要经过编译器翻译成0和1构成的二进制格式才能有计算机执行。而随着计算机的发展，特别是大量建立在虚拟机上的程序语言出现，将程序编译成二进制已经不是唯一的选择，越来越多的语言选择了与操作系统无关、平台中立的格式作为编译后的存储格式。 在1997年第一版Java虚拟机规范发布时就描述了：未来，我们会对Java虚拟机进行扩展，以便更好的支持其他">
+<meta name="twitter:description" content="JVM,李城,Java,服务器,架构,微服务,高可用,分布式">
 <meta name="twitter:image" content="http://lchml.com/technology/jvm2/jvm-loading.png">
 
 
@@ -174,7 +174,7 @@
       </a>
     </div>
       
-        <p class="site-subtitle">旅行的代码</p>
+        <h1 class="site-subtitle" itemprop="description">旅行的代码</h1>
       
   </div>
 
@@ -290,7 +290,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="LC&HML">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="路漫漫其修远兮，吾将上下而求索">
       <meta itemprop="image" content="/lc-icon.jpg">
     </span>
 
@@ -303,7 +303,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">java虚拟机 - Class</h1>
+          <h2 class="post-title" itemprop="name headline">java虚拟机 - Class</h2>
         
 
         <div class="post-meta">
@@ -365,11 +365,26 @@
 
           
           
-
+             <span id="/technology/jvm2/" class="leancloud_visitors" data-flag-title="java虚拟机 - Class">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
           
 
           
 
+          
+
+          
+              <div class="post-description">
+                  JVM,李城,Java,服务器,架构,微服务,高可用,分布式
+              </div>
           
 
         </div>
@@ -587,7 +602,7 @@
                 alt="LC&HML" />
             
               <p class="site-author-name" itemprop="name">LC&HML</p>
-              <p class="site-description motion-element" itemprop="description">李城 | 李城LC | 独立博客 | Hexo | Typecho | Java | 心情 | 随笔 | 游记 | 服务器 | 程序 | 架构 | JVM | GC | 垃圾回收 | Python | HTTP | Websocket | TCP |</p>
+              <p class="site-description motion-element" itemprop="description">路漫漫其修远兮，吾将上下而求索</p>
           </div>
 
           <nav class="site-state motion-element">
@@ -597,7 +612,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-count">54</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -619,7 +634,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">71</span>
+                  <span class="site-state-item-count">69</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -646,15 +661,9 @@
                   </span>
                 
                   <span class="links-of-author-item">
-                    <a href="https://500px.com/lichengxml" target="_blank" title="500px">
-                      
-                        <i class="fa fa-fw fa-500px"></i>500px</a>
-                  </span>
-                
-                  <span class="links-of-author-item">
                     <a href="mailto:licheng_xd@163.com" target="_blank" title="E-Mail">
                       
-                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                        <i class="fa fa-fw fa-envelope-o"></i>E-Mail</a>
                   </span>
                 
                   <span class="links-of-author-item">
@@ -664,15 +673,21 @@
                   </span>
                 
                   <span class="links-of-author-item">
-                    <a href="http://moviehell.net" target="_blank" title="Moviehell">
-                      
-                        <i class="fa fa-fw fa-file-movie-o"></i>Moviehell</a>
-                  </span>
-                
-                  <span class="links-of-author-item">
                     <a href="https://weibo.com/4qg55j4w/home?wvr=5" target="_blank" title="Weibo">
                       
                         <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://500px.com/lichengxml" target="_blank" title="500px">
+                      
+                        <i class="fa fa-fw fa-500px"></i>500px</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://moviehell.net" target="_blank" title="Movie">
+                      
+                        <i class="fa fa-fw fa-file-movie-o"></i>Movie</a>
                   </span>
                 
             </div>
@@ -928,6 +943,113 @@
 
 
   
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("MabW4tTRa4YhUWvISCsRLuzd-gzGzoHsz", "X8ewKXvEvIbA6C6S61dHMX5J");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
 
   
 
