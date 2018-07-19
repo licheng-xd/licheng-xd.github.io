@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://lchml.com/"/>
-  <updated>2018-07-19T07:33:19.320Z</updated>
+  <updated>2018-07-19T08:36:30.937Z</updated>
   <id>http://lchml.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://lchml.com/technology/zipkin/"/>
     <id>http://lchml.com/technology/zipkin/</id>
     <published>2018-07-16T16:00:00.000Z</published>
-    <updated>2018-07-19T07:33:19.320Z</updated>
+    <updated>2018-07-19T08:36:30.937Z</updated>
     
     <content type="html"><![CDATA[<p>首先给出demo地址，有问题也可以直接看代码。<a href="https://github.com/licheng-xd/dubbo-sleuth" target="_blank" rel="external">https://github.com/licheng-xd/dubbo-sleuth</a></p>
 <h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><p>sleuth是springcloud对zipkin接入的封装，从2.0开始直接采用了brave提供的zipkin接入实现。</p>
@@ -39,7 +39,7 @@
 <h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p>可以从zipkin的数据分析中清楚的看出来整个请求中的rpc调用链，以及每次rpc消耗的时间。<br><img src="zipkin-1.png" alt=""></p>
 <h3 id="依赖分析"><a href="#依赖分析" class="headerlink" title="依赖分析"></a>依赖分析</h3><p>你会发现依赖分析页面没有数据。对了，只有当数据在内存中存储的时候，zipkin-server才能直接分析出调用依赖关系。当采用外部存储的时候，就需要单独的依赖分析来实现了。下载<a href="https://github.com/openzipkin/zipkin-dependencies" target="_blank" rel="external">zipkin-dependencies.jar</a>并在crontab中创建定时任务，定时对存储数据进行分析，这样就可以看到依赖关系了。<br><img src="zipkin-2.png" alt=""></p>
 <h3 id="奇怪的小问题"><a href="#奇怪的小问题" class="headerlink" title="奇怪的小问题"></a>奇怪的小问题</h3><ol>
-<li><p>用于引入了springcloud-sleuth，而springcloud会在进程启动时启动一个自己的bootstrap context，作为当前应用ApplicationContext的父ApplicationContext，由于每初始化一个ApplicationContext就会加载一遍spring.factories配置文件中的ApplicationListener，所以配置在spring.factories中的listener都会被执行两次。因此dubbo的WelcomeLogoListener会被执行两次。</p>
+<li><p>由于引入了springcloud-sleuth，而springcloud会在进程启动时启动一个自己的bootstrap context，作为当前应用ApplicationContext的父ApplicationContext，由于每初始化一个ApplicationContext就会加载一遍spring.factories配置文件中的ApplicationListener，所以配置在spring.factories中的listener都会被执行两次。因此dubbo的WelcomeLogoListener会被执行两次。</p>
 </li>
 <li><p>使用feign作为http客户端时，build传入的client必须是spring的bean，否则sleuth无法做拦截。</p>
 </li>
