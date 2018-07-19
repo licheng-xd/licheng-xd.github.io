@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="LC,服务发现,Zookeeper," />
+  <meta name="keywords" content="zookeeper,服务发现,李城,Java,服务器,架构,微服务,高可用,分布式" />
 
 
 
@@ -81,20 +81,20 @@
 
 
 
-<meta name="description" content="zookeeper,服务发现,李城,Java,服务器,架构,微服务,高可用,分布式">
-<meta name="keywords" content="LC,服务发现,Zookeeper">
+<meta name="description" content="在调研了多个开源服务发现，或服务治理平台之后，如Eureka、Consul，dubbo等，发现由于都不能完美的适配当前已有系统。 原方案的缺点，单个节点独立部署，可靠性差，扩展性差。不方便维护更新，更新一台服务器时，需要先把对应的服务调用方的流量切换到其他服务器，然后对服务进行更新，更新后再把流量切回来。整个过程操作复杂、容易出错。当服务器较多时，耗时耗力。 因此我们需要一个更好的架构来解决上面的">
+<meta name="keywords" content="zookeeper,服务发现,李城,Java,服务器,架构,微服务,高可用,分布式">
 <meta property="og:type" content="article">
 <meta property="og:title" content="基于Zookeeper实现的服务注册发现平台">
-<meta property="og:url" content="http://lchml.com/technology/yxguard/index.html">
+<meta property="og:url" content="https://lchml.com/technology/yxguard/index.html">
 <meta property="og:site_name" content="LC&#39;s Blog">
-<meta property="og:description" content="zookeeper,服务发现,李城,Java,服务器,架构,微服务,高可用,分布式">
-<meta property="og:image" content="http://lchml.com/technology/yxguard/yxguard1.png">
-<meta property="og:image" content="http://lchml.com/technology/yxguard/yxguard2.png">
-<meta property="og:updated_time" content="2018-07-19T10:11:44.047Z">
+<meta property="og:description" content="在调研了多个开源服务发现，或服务治理平台之后，如Eureka、Consul，dubbo等，发现由于都不能完美的适配当前已有系统。 原方案的缺点，单个节点独立部署，可靠性差，扩展性差。不方便维护更新，更新一台服务器时，需要先把对应的服务调用方的流量切换到其他服务器，然后对服务进行更新，更新后再把流量切回来。整个过程操作复杂、容易出错。当服务器较多时，耗时耗力。 因此我们需要一个更好的架构来解决上面的">
+<meta property="og:image" content="https://lchml.com/technology/yxguard/yxguard1.png">
+<meta property="og:image" content="https://lchml.com/technology/yxguard/yxguard2.png">
+<meta property="og:updated_time" content="2018-07-19T10:55:31.759Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基于Zookeeper实现的服务注册发现平台">
-<meta name="twitter:description" content="zookeeper,服务发现,李城,Java,服务器,架构,微服务,高可用,分布式">
-<meta name="twitter:image" content="http://lchml.com/technology/yxguard/yxguard1.png">
+<meta name="twitter:description" content="在调研了多个开源服务发现，或服务治理平台之后，如Eureka、Consul，dubbo等，发现由于都不能完美的适配当前已有系统。 原方案的缺点，单个节点独立部署，可靠性差，扩展性差。不方便维护更新，更新一台服务器时，需要先把对应的服务调用方的流量切换到其他服务器，然后对服务进行更新，更新后再把流量切回来。整个过程操作复杂、容易出错。当服务器较多时，耗时耗力。 因此我们需要一个更好的架构来解决上面的">
+<meta name="twitter:image" content="https://lchml.com/technology/yxguard/yxguard1.png">
 
 
 
@@ -124,7 +124,7 @@
 
 
 
-  <link rel="canonical" href="http://lchml.com/technology/yxguard/"/>
+  <link rel="canonical" href="https://lchml.com/technology/yxguard/"/>
 
 
 
@@ -286,7 +286,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://lchml.com/technology/yxguard/">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/yxguard/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="LC&HML">
@@ -381,10 +381,6 @@
 
           
 
-          
-              <div class="post-description">
-                  zookeeper,服务发现,李城,Java,服务器,架构,微服务,高可用,分布式
-              </div>
           
 
         </div>
@@ -565,7 +561,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-count">55</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -991,6 +987,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
   

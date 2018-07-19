@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="LC,zipkin,sleuth,springboot,dubbo,elasticsearch,分布式追踪," />
+  <meta name="keywords" content="sleuth,zipkin,springboot,springcloud,分布式追踪,服务发现,李城,Java,服务器,架构,微服务,高可用,分布式" />
 
 
 
@@ -81,20 +81,20 @@
 
 
 
-<meta name="description" content="zipkin,springboot,springcloud,dubbo,sleuth,李城,Java,服务器,架构,微服务,高可用,分布式">
-<meta name="keywords" content="LC,zipkin,sleuth,springboot,dubbo,elasticsearch,分布式追踪">
+<meta name="description" content="首先给出demo地址，有问题也可以直接看代码。https://github.com/licheng-xd/dubbo-sleuth 准备sleuth是springcloud对zipkin接入的封装，从2.0开始直接采用了brave提供的zipkin接入实现。 由于sleuth对dubbo的支持是从2.0开始的，所以一咬牙直接把整个项目升级成了springboot2.0，springboot2.0和">
+<meta name="keywords" content="sleuth,zipkin,springboot,springcloud,分布式追踪,服务发现,李城,Java,服务器,架构,微服务,高可用,分布式">
 <meta property="og:type" content="article">
 <meta property="og:title" content="分布式调用追踪系统Zipkin集成">
-<meta property="og:url" content="http://lchml.com/technology/zipkin/index.html">
+<meta property="og:url" content="https://lchml.com/technology/zipkin/index.html">
 <meta property="og:site_name" content="LC&#39;s Blog">
-<meta property="og:description" content="zipkin,springboot,springcloud,dubbo,sleuth,李城,Java,服务器,架构,微服务,高可用,分布式">
-<meta property="og:image" content="http://lchml.com/technology/zipkin/zipkin-1.png">
-<meta property="og:image" content="http://lchml.com/technology/zipkin/zipkin-2.png">
-<meta property="og:updated_time" content="2018-07-19T10:11:17.636Z">
+<meta property="og:description" content="首先给出demo地址，有问题也可以直接看代码。https://github.com/licheng-xd/dubbo-sleuth 准备sleuth是springcloud对zipkin接入的封装，从2.0开始直接采用了brave提供的zipkin接入实现。 由于sleuth对dubbo的支持是从2.0开始的，所以一咬牙直接把整个项目升级成了springboot2.0，springboot2.0和">
+<meta property="og:image" content="https://lchml.com/technology/zipkin/zipkin-1.png">
+<meta property="og:image" content="https://lchml.com/technology/zipkin/zipkin-2.png">
+<meta property="og:updated_time" content="2018-07-19T10:57:09.170Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分布式调用追踪系统Zipkin集成">
-<meta name="twitter:description" content="zipkin,springboot,springcloud,dubbo,sleuth,李城,Java,服务器,架构,微服务,高可用,分布式">
-<meta name="twitter:image" content="http://lchml.com/technology/zipkin/zipkin-1.png">
+<meta name="twitter:description" content="首先给出demo地址，有问题也可以直接看代码。https://github.com/licheng-xd/dubbo-sleuth 准备sleuth是springcloud对zipkin接入的封装，从2.0开始直接采用了brave提供的zipkin接入实现。 由于sleuth对dubbo的支持是从2.0开始的，所以一咬牙直接把整个项目升级成了springboot2.0，springboot2.0和">
+<meta name="twitter:image" content="https://lchml.com/technology/zipkin/zipkin-1.png">
 
 
 
@@ -124,7 +124,7 @@
 
 
 
-  <link rel="canonical" href="http://lchml.com/technology/zipkin/"/>
+  <link rel="canonical" href="https://lchml.com/technology/zipkin/"/>
 
 
 
@@ -286,7 +286,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://lchml.com/technology/zipkin/">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/zipkin/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="LC&HML">
@@ -381,10 +381,6 @@
 
           
 
-          
-              <div class="post-description">
-                  zipkin,springboot,springcloud,dubbo,sleuth,李城,Java,服务器,架构,微服务,高可用,分布式
-              </div>
           
 
         </div>
@@ -589,7 +585,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-count">55</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1031,6 +1027,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
   

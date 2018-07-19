@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="LC,Java," />
+  <meta name="keywords" content="HTTP,李城,Java,服务器,架构,微服务,高可用,分布式" />
 
 
 
@@ -81,19 +81,19 @@
 
 
 
-<meta name="description" content="HTTP,李城,Java,服务器,架构,微服务,高可用,分布式">
-<meta name="keywords" content="LC,Java">
+<meta name="description" content="log-server是为服务器提供监控报警等功能的一个服务，由于上线前后有很多其他任务要完成，所以只能抽零碎时间先写了一个能跑起来的用着。一直想找个机会重构一下（程序员的洁癖），前段时间空了一些，所以专门抽时间重新写了一下。在过程中遇到不少问题，有些花了不少时间google，所以觉得有必要记录一下。备忘同时也算是分享吧。 SpringMVC容器问题一个基于SpringMVC的web应用，结构如下图">
+<meta name="keywords" content="HTTP,李城,Java,服务器,架构,微服务,高可用,分布式">
 <meta property="og:type" content="article">
 <meta property="og:title" content="小问题也是大问题">
-<meta property="og:url" content="http://lchml.com/technology/log-server/index.html">
+<meta property="og:url" content="https://lchml.com/technology/log-server/index.html">
 <meta property="og:site_name" content="LC&#39;s Blog">
-<meta property="og:description" content="HTTP,李城,Java,服务器,架构,微服务,高可用,分布式">
-<meta property="og:image" content="http://lchml.com/technology/log-server/log-server.jpg">
-<meta property="og:updated_time" content="2018-07-19T10:20:16.244Z">
+<meta property="og:description" content="log-server是为服务器提供监控报警等功能的一个服务，由于上线前后有很多其他任务要完成，所以只能抽零碎时间先写了一个能跑起来的用着。一直想找个机会重构一下（程序员的洁癖），前段时间空了一些，所以专门抽时间重新写了一下。在过程中遇到不少问题，有些花了不少时间google，所以觉得有必要记录一下。备忘同时也算是分享吧。 SpringMVC容器问题一个基于SpringMVC的web应用，结构如下图">
+<meta property="og:image" content="https://lchml.com/technology/log-server/log-server.jpg">
+<meta property="og:updated_time" content="2018-07-19T10:54:28.039Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="小问题也是大问题">
-<meta name="twitter:description" content="HTTP,李城,Java,服务器,架构,微服务,高可用,分布式">
-<meta name="twitter:image" content="http://lchml.com/technology/log-server/log-server.jpg">
+<meta name="twitter:description" content="log-server是为服务器提供监控报警等功能的一个服务，由于上线前后有很多其他任务要完成，所以只能抽零碎时间先写了一个能跑起来的用着。一直想找个机会重构一下（程序员的洁癖），前段时间空了一些，所以专门抽时间重新写了一下。在过程中遇到不少问题，有些花了不少时间google，所以觉得有必要记录一下。备忘同时也算是分享吧。 SpringMVC容器问题一个基于SpringMVC的web应用，结构如下图">
+<meta name="twitter:image" content="https://lchml.com/technology/log-server/log-server.jpg">
 
 
 
@@ -123,7 +123,7 @@
 
 
 
-  <link rel="canonical" href="http://lchml.com/technology/log-server/"/>
+  <link rel="canonical" href="https://lchml.com/technology/log-server/"/>
 
 
 
@@ -285,7 +285,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://lchml.com/technology/log-server/">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/log-server/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="LC&HML">
@@ -380,10 +380,6 @@
 
           
 
-          
-              <div class="post-description">
-                  HTTP,李城,Java,服务器,架构,微服务,高可用,分布式
-              </div>
           
 
         </div>
@@ -601,7 +597,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-count">55</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1043,6 +1039,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
   

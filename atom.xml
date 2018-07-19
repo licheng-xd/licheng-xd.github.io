@@ -4,9 +4,9 @@
   <subtitle>旅行的代码</subtitle>
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://lchml.com/"/>
-  <updated>2018-07-19T10:11:17.636Z</updated>
-  <id>http://lchml.com/</id>
+  <link href="https://lchml.com/"/>
+  <updated>2018-07-19T10:57:09.170Z</updated>
+  <id>https://lchml.com/</id>
   
   <author>
     <name>LC&amp;HML</name>
@@ -17,10 +17,10 @@
   
   <entry>
     <title>分布式调用追踪系统Zipkin集成</title>
-    <link href="http://lchml.com/technology/zipkin/"/>
-    <id>http://lchml.com/technology/zipkin/</id>
+    <link href="https://lchml.com/technology/zipkin/"/>
+    <id>https://lchml.com/technology/zipkin/</id>
     <published>2018-07-16T16:00:00.000Z</published>
-    <updated>2018-07-19T10:11:17.636Z</updated>
+    <updated>2018-07-19T10:57:09.170Z</updated>
     
     <content type="html"><![CDATA[<p>首先给出demo地址，有问题也可以直接看代码。<a href="https://github.com/licheng-xd/dubbo-sleuth" target="_blank" rel="external">https://github.com/licheng-xd/dubbo-sleuth</a></p>
 <h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><p>sleuth是springcloud对zipkin接入的封装，从2.0开始直接采用了brave提供的zipkin接入实现。</p>
@@ -48,35 +48,35 @@
     
     <summary type="html">
     
-      zipkin,springboot,springcloud,dubbo,sleuth,李城,Java,服务器,架构,微服务,高可用,分布式
+      &lt;p&gt;首先给出demo地址，有问题也可以直接看代码。&lt;a href=&quot;https://github.com/licheng-xd/dubbo-sleuth&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://github.com/licheng-xd/
     
     </summary>
     
-      <category term="technology" scheme="http://lchml.com/categories/technology/"/>
+      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="LC" scheme="http://lchml.com/tags/LC/"/>
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
     
-      <category term="zipkin" scheme="http://lchml.com/tags/zipkin/"/>
+      <category term="zipkin" scheme="https://lchml.com/tags/zipkin/"/>
     
-      <category term="sleuth" scheme="http://lchml.com/tags/sleuth/"/>
+      <category term="sleuth" scheme="https://lchml.com/tags/sleuth/"/>
     
-      <category term="springboot" scheme="http://lchml.com/tags/springboot/"/>
+      <category term="springboot" scheme="https://lchml.com/tags/springboot/"/>
     
-      <category term="dubbo" scheme="http://lchml.com/tags/dubbo/"/>
+      <category term="dubbo" scheme="https://lchml.com/tags/dubbo/"/>
     
-      <category term="elasticsearch" scheme="http://lchml.com/tags/elasticsearch/"/>
+      <category term="elasticsearch" scheme="https://lchml.com/tags/elasticsearch/"/>
     
-      <category term="分布式追踪" scheme="http://lchml.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%BF%BD%E8%B8%AA/"/>
+      <category term="分布式追踪" scheme="https://lchml.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%BF%BD%E8%B8%AA/"/>
     
   </entry>
   
   <entry>
     <title>Hikari经常出现Failed to validate connection并阻塞应用线程问题</title>
-    <link href="http://lchml.com/technology/hikari-maxlifetime/"/>
-    <id>http://lchml.com/technology/hikari-maxlifetime/</id>
+    <link href="https://lchml.com/technology/hikari-maxlifetime/"/>
+    <id>https://lchml.com/technology/hikari-maxlifetime/</id>
     <published>2018-07-10T16:00:00.000Z</published>
-    <updated>2018-07-19T10:22:36.442Z</updated>
+    <updated>2018-07-19T10:58:10.079Z</updated>
     
     <content type="html"><![CDATA[<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>在分布式系统中的一个dubbo服务，日志中经常出现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[WARN ]2018-07-06 19:30:49.581 [DubboServerHandler-10.206.56.200:20008-thread-195]PoolBase | HikariPool-1 - Failed to validate connection com.mysql.jdbc.JDBC4Connection@6a9ac783 (No operations allowed after connection closed.)</div></pre></td></tr></table></figure></p>
 <p>同时导致对应请求长时间阻塞，阻塞时间从5s~20s不等。</p>
@@ -91,29 +91,29 @@
     
     <summary type="html">
     
-      Hirika,db,数据库,连接池,李城,Java,服务器,架构,微服务,高可用,分布式
+      &lt;h3 id=&quot;问题描述&quot;&gt;&lt;a href=&quot;#问题描述&quot; class=&quot;headerlink&quot; title=&quot;问题描述&quot;&gt;&lt;/a&gt;问题描述&lt;/h3&gt;&lt;p&gt;在分布式系统中的一个dubbo服务，日志中经常出现：&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;
     
     </summary>
     
-      <category term="technology" scheme="http://lchml.com/categories/technology/"/>
+      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="LC" scheme="http://lchml.com/tags/LC/"/>
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
     
-      <category term="Java" scheme="http://lchml.com/tags/Java/"/>
+      <category term="Java" scheme="https://lchml.com/tags/Java/"/>
     
-      <category term="Hirika" scheme="http://lchml.com/tags/Hirika/"/>
+      <category term="Hirika" scheme="https://lchml.com/tags/Hirika/"/>
     
-      <category term="数据库" scheme="http://lchml.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+      <category term="数据库" scheme="https://lchml.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
   </entry>
   
   <entry>
     <title>Java常见知识点</title>
-    <link href="http://lchml.com/technology/java-brief/"/>
-    <id>http://lchml.com/technology/java-brief/</id>
+    <link href="https://lchml.com/technology/java-brief/"/>
+    <id>https://lchml.com/technology/java-brief/</id>
     <published>2018-07-05T16:00:00.000Z</published>
-    <updated>2018-07-19T10:21:26.373Z</updated>
+    <updated>2018-07-19T10:54:07.982Z</updated>
     
     <content type="html"><![CDATA[<p>Java是解释执行还是编译运行？其实这个问题本身就是一个错误的问题，以现在jvm的发展来说，jvm在执行字节码时，本身就融合了解释和编译两种方式，部分代码由jvm解释执行，部分代码会由JIT一次性编译成机器指令直接运行。</p>
 <a id="more"></a>
@@ -236,27 +236,27 @@
     
     <summary type="html">
     
-      李城,Java,服务器,架构,微服务,高可用,分布式
+      &lt;p&gt;Java是解释执行还是编译运行？其实这个问题本身就是一个错误的问题，以现在jvm的发展来说，jvm在执行字节码时，本身就融合了解释和编译两种方式，部分代码由jvm解释执行，部分代码会由JIT一次性编译成机器指令直接运行。&lt;/p&gt;
     
     </summary>
     
-      <category term="technology" scheme="http://lchml.com/categories/technology/"/>
+      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="LC" scheme="http://lchml.com/tags/LC/"/>
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
     
-      <category term="java" scheme="http://lchml.com/tags/java/"/>
+      <category term="java" scheme="https://lchml.com/tags/java/"/>
     
-      <category term="面试" scheme="http://lchml.com/tags/%E9%9D%A2%E8%AF%95/"/>
+      <category term="面试" scheme="https://lchml.com/tags/%E9%9D%A2%E8%AF%95/"/>
     
   </entry>
   
   <entry>
     <title>碎片化思维</title>
-    <link href="http://lchml.com/life/deep-think/"/>
-    <id>http://lchml.com/life/deep-think/</id>
+    <link href="https://lchml.com/life/deep-think/"/>
+    <id>https://lchml.com/life/deep-think/</id>
     <published>2018-03-12T16:00:00.000Z</published>
-    <updated>2018-03-13T10:51:46.000Z</updated>
+    <updated>2018-07-19T10:53:47.837Z</updated>
     
     <content type="html"><![CDATA[<p>早上开车来公司的路上，突然意识到自己在很多事的思考上都停留在碎片化的阶段。经常会想到一件事，然后对应的想到一些观点，以及自己的态度等等，然后过几分钟以后就忘了这件事，切换到下一件事，然后不停的在这个循环中。最后会形成一种错觉，觉得自己对很多事都有很见解，有态度，有思考。但是仔细去回想一下，就会发现，其实脑子中几乎没有留下任何有价值的思维产出。在我意识到这个问题后，突然觉得有些害怕，如果一直这样下去，最后是不是就浑浑噩噩的结束了这一生。所以我开始想要探究为什么会这样，为什么会出现这种大量碎片化的思维，为什么当自己想要深入思考的时候会有无力的感觉，会不自觉得想要躲避深入的思考，为什么潜意识里总有一种焦虑的情绪，为什么又会形成一种自己有想法有思考的错觉。</p>
 <p>在互联网还没有兴起的时代，我们接触不到太多的外界信息，所以每个人都聚焦于线下的生活，一个人独处的时候会反思自己或是思考人生而不是刷朋友圈刷新闻，与朋友聚会时大家会对一件事有更深入探讨而不是不停的变换谈资，那时候信息很少，思考的时间却很多。有人说过“那时日色很慢，车马很慢，一生只够爱一个人”，正是对慢生活的怀念。如今的社会，信息爆炸，瞬息万变。每个人都从手机中不停的吸取碎片化的信息，朋友圈，社会热点，生活娱乐，朋友问候，购物指南，每条信息，每个app都想要挤到我们的脑子里来，每个产品经理都在想尽办法占据你的思维，你的时间。</p>
@@ -279,23 +279,23 @@
     
     </summary>
     
-      <category term="life" scheme="http://lchml.com/categories/life/"/>
+      <category term="life" scheme="https://lchml.com/categories/life/"/>
     
     
-      <category term="LC" scheme="http://lchml.com/tags/LC/"/>
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
     
-      <category term="碎片化" scheme="http://lchml.com/tags/%E7%A2%8E%E7%89%87%E5%8C%96/"/>
+      <category term="碎片化" scheme="https://lchml.com/tags/%E7%A2%8E%E7%89%87%E5%8C%96/"/>
     
-      <category term="深度思考" scheme="http://lchml.com/tags/%E6%B7%B1%E5%BA%A6%E6%80%9D%E8%80%83/"/>
+      <category term="深度思考" scheme="https://lchml.com/tags/%E6%B7%B1%E5%BA%A6%E6%80%9D%E8%80%83/"/>
     
   </entry>
   
   <entry>
     <title>凤凰山-玉皇山</title>
-    <link href="http://lchml.com/life/fenghuangshan/"/>
-    <id>http://lchml.com/life/fenghuangshan/</id>
+    <link href="https://lchml.com/life/fenghuangshan/"/>
+    <id>https://lchml.com/life/fenghuangshan/</id>
     <published>2018-03-10T16:00:00.000Z</published>
-    <updated>2018-07-19T10:24:12.897Z</updated>
+    <updated>2018-07-19T10:53:52.448Z</updated>
     
     <content type="html"><![CDATA[<p>登高望远，不负好春光。网上很多攻略都说从万松书院上山，所以也没有查证就直奔万松书院。幸好买了门票准备上山的时候问了一句，工作人员告知，万松书院是封闭景区，与凤凰山有围栏隔开。上凤凰山要从停车场附近的节义亭上山。不过既然票都买了，那就进去看看吧，正好还没进去过。</p>
 <blockquote>
@@ -314,33 +314,34 @@
     
     <summary type="html">
     
-      凤凰山,玉皇山,八卦田,万松书院,游记,何美玲
+      &lt;p&gt;登高望远，不负好春光。网上很多攻略都说从万松书院上山，所以也没有查证就直奔万松书院。幸好买了门票准备上山的时候问了一句，工作人员告知，万松书院是封闭景区，与凤凰山有围栏隔开。上凤凰山要从停车场附近的节义亭上山。不过既然票都买了，那就进去看看吧，正好还没进去过。&lt;/p&gt;
+&lt;b
     
     </summary>
     
-      <category term="life" scheme="http://lchml.com/categories/life/"/>
+      <category term="life" scheme="https://lchml.com/categories/life/"/>
     
     
-      <category term="LC" scheme="http://lchml.com/tags/LC/"/>
+      <category term="游记" scheme="https://lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
     
-      <category term="游记" scheme="http://lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
     
-      <category term="玉皇山" scheme="http://lchml.com/tags/%E7%8E%89%E7%9A%87%E5%B1%B1/"/>
+      <category term="玉皇山" scheme="https://lchml.com/tags/%E7%8E%89%E7%9A%87%E5%B1%B1/"/>
     
-      <category term="凤凰山" scheme="http://lchml.com/tags/%E5%87%A4%E5%87%B0%E5%B1%B1/"/>
+      <category term="凤凰山" scheme="https://lchml.com/tags/%E5%87%A4%E5%87%B0%E5%B1%B1/"/>
     
-      <category term="八卦田" scheme="http://lchml.com/tags/%E5%85%AB%E5%8D%A6%E7%94%B0/"/>
+      <category term="八卦田" scheme="https://lchml.com/tags/%E5%85%AB%E5%8D%A6%E7%94%B0/"/>
     
-      <category term="万松书院" scheme="http://lchml.com/tags/%E4%B8%87%E6%9D%BE%E4%B9%A6%E9%99%A2/"/>
+      <category term="万松书院" scheme="https://lchml.com/tags/%E4%B8%87%E6%9D%BE%E4%B9%A6%E9%99%A2/"/>
     
   </entry>
   
   <entry>
     <title>理想照进现实 —— Thailand（下）</title>
-    <link href="http://lchml.com/life/thailand2/"/>
-    <id>http://lchml.com/life/thailand2/</id>
+    <link href="https://lchml.com/life/thailand2/"/>
+    <id>https://lchml.com/life/thailand2/</id>
     <published>2018-02-11T16:00:00.000Z</published>
-    <updated>2018-07-19T10:15:45.289Z</updated>
+    <updated>2018-07-19T10:55:17.248Z</updated>
     
     <content type="html"><![CDATA[<p>迟迟无法动笔写下曼谷和清迈的见闻，是因为对曼谷和清迈真的印象一般，似乎总结下来也就几句话，真的凑不成文，自然而言的要写出一篇虎头蛇尾的游记来。</p>
 <p>先说曼谷，似乎还没来到曼谷我就已经在各大驴友网上吸收了一波游记炸弹，给我留下根深蒂固的刻板印象——来曼谷就是来购物的，没有其他。由于我们俩都是那种进了商场就晕的穷光蛋，所以在曼谷就安排了1天的行程，主要是打算去见识下世界最大购物中心的风采，顺便看看有什么要买的。从芭提雅到曼谷是飞猪上叫的拼车服务，同行的是两男两女，其中女生是香港人。高速走了不到两小时，进了曼谷市区却堵了一个多小时，真是名副其实的堵城。</p>
@@ -359,31 +360,32 @@
     
     <summary type="html">
     
-      泰国,芭提雅,曼谷,清迈,游记,何美玲
+      &lt;p&gt;迟迟无法动笔写下曼谷和清迈的见闻，是因为对曼谷和清迈真的印象一般，似乎总结下来也就几句话，真的凑不成文，自然而言的要写出一篇虎头蛇尾的游记来。&lt;/p&gt;
+&lt;p&gt;先说曼谷，似乎还没来到曼谷我就已经在各大驴友网上吸收了一波游记炸弹，给我留下根深蒂固的刻板印象——来曼谷就是来购物的
     
     </summary>
     
-      <category term="life" scheme="http://lchml.com/categories/life/"/>
+      <category term="life" scheme="https://lchml.com/categories/life/"/>
     
     
-      <category term="游记" scheme="http://lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
+      <category term="游记" scheme="https://lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
     
-      <category term="HML" scheme="http://lchml.com/tags/HML/"/>
+      <category term="HML" scheme="https://lchml.com/tags/HML/"/>
     
-      <category term="泰国" scheme="http://lchml.com/tags/%E6%B3%B0%E5%9B%BD/"/>
+      <category term="泰国" scheme="https://lchml.com/tags/%E6%B3%B0%E5%9B%BD/"/>
     
-      <category term="清迈" scheme="http://lchml.com/tags/%E6%B8%85%E8%BF%88/"/>
+      <category term="清迈" scheme="https://lchml.com/tags/%E6%B8%85%E8%BF%88/"/>
     
-      <category term="曼谷" scheme="http://lchml.com/tags/%E6%9B%BC%E8%B0%B7/"/>
+      <category term="曼谷" scheme="https://lchml.com/tags/%E6%9B%BC%E8%B0%B7/"/>
     
   </entry>
   
   <entry>
     <title>芭提雅，你的不夜城 —— Thailand（上）</title>
-    <link href="http://lchml.com/life/thailand/"/>
-    <id>http://lchml.com/life/thailand/</id>
+    <link href="https://lchml.com/life/thailand/"/>
+    <id>https://lchml.com/life/thailand/</id>
     <published>2018-02-07T16:00:00.000Z</published>
-    <updated>2018-07-19T10:15:43.096Z</updated>
+    <updated>2018-07-19T10:55:14.008Z</updated>
     
     <content type="html"><![CDATA[<p>虽然更远的巴厘岛也去了，但去过泰国好像没到过东南亚一般，所以我们就规划了这次泰国旅行。行程安排是我家哥哥做的，每次都是他辛苦规划，才让我们有机会一起走的更远。其实我不爱流水账式的记录一次旅行，更喜欢简单记录下自己旅途中印象深刻的人和事，所以下文只能是个旅行的梗概，但也许某些小细节能带给你触动。</p>
 <p>机票：<br>杭州直飞曼谷  ThaiLion Air<br>曼谷飞清迈    NokAir<br>清迈直飞杭州  AirAsia</p>
@@ -404,29 +406,29 @@
     
     <summary type="html">
     
-      泰国,芭提雅,曼谷,清迈,游记,何美玲
+      &lt;p&gt;虽然更远的巴厘岛也去了，但去过泰国好像没到过东南亚一般，所以我们就规划了这次泰国旅行。行程安排是我家哥哥做的，每次都是他辛苦规划，才让我们有机会一起走的更远。其实我不爱流水账式的记录一次旅行，更喜欢简单记录下自己旅途中印象深刻的人和事，所以下文只能是个旅行的梗概，但也许某些
     
     </summary>
     
-      <category term="life" scheme="http://lchml.com/categories/life/"/>
+      <category term="life" scheme="https://lchml.com/categories/life/"/>
     
     
-      <category term="游记" scheme="http://lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
+      <category term="游记" scheme="https://lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
     
-      <category term="HML" scheme="http://lchml.com/tags/HML/"/>
+      <category term="HML" scheme="https://lchml.com/tags/HML/"/>
     
-      <category term="泰国" scheme="http://lchml.com/tags/%E6%B3%B0%E5%9B%BD/"/>
+      <category term="泰国" scheme="https://lchml.com/tags/%E6%B3%B0%E5%9B%BD/"/>
     
-      <category term="芭提雅" scheme="http://lchml.com/tags/%E8%8A%AD%E6%8F%90%E9%9B%85/"/>
+      <category term="芭提雅" scheme="https://lchml.com/tags/%E8%8A%AD%E6%8F%90%E9%9B%85/"/>
     
   </entry>
   
   <entry>
     <title>Webcat文档</title>
-    <link href="http://lchml.com/technology/webcat-doc/"/>
-    <id>http://lchml.com/technology/webcat-doc/</id>
+    <link href="https://lchml.com/technology/webcat-doc/"/>
+    <id>https://lchml.com/technology/webcat-doc/</id>
     <published>2017-11-23T12:00:00.000Z</published>
-    <updated>2018-07-19T10:12:12.354Z</updated>
+    <updated>2018-07-19T10:55:29.509Z</updated>
     
     <content type="html"><![CDATA[<p>Webcat是一个基于netty的简单、高性能服务端框架，目前提供http和websocket两种协议的快速开发模式。webcat采用spring进行对象管理，因此工程需要依赖spring框架，<a href="https://github.com/licheng-xd/webcat" target="_blank" rel="external">Github地址</a>。</p>
 <p>下载源代码后，可以直接运行WebcatServerTest启动http和websocket服务，然后通过pytest文件夹中的两个python脚本对服务进行测试。</p>
@@ -460,31 +462,31 @@
     
     <summary type="html">
     
-      webcat,websocket,HTTP,李城,Java,服务器,架构,微服务,高可用,分布式
+      &lt;p&gt;Webcat是一个基于netty的简单、高性能服务端框架，目前提供http和websocket两种协议的快速开发模式。webcat采用spring进行对象管理，因此工程需要依赖spring框架，&lt;a href=&quot;https://github.com/licheng-xd/w
     
     </summary>
     
-      <category term="technology" scheme="http://lchml.com/categories/technology/"/>
+      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="LC" scheme="http://lchml.com/tags/LC/"/>
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
     
-      <category term="Java" scheme="http://lchml.com/tags/Java/"/>
+      <category term="Java" scheme="https://lchml.com/tags/Java/"/>
     
-      <category term="Webcat" scheme="http://lchml.com/tags/Webcat/"/>
+      <category term="Webcat" scheme="https://lchml.com/tags/Webcat/"/>
     
-      <category term="HTTP" scheme="http://lchml.com/tags/HTTP/"/>
+      <category term="HTTP" scheme="https://lchml.com/tags/HTTP/"/>
     
-      <category term="websocket" scheme="http://lchml.com/tags/websocket/"/>
+      <category term="websocket" scheme="https://lchml.com/tags/websocket/"/>
     
   </entry>
   
   <entry>
     <title>java虚拟机 - 并发</title>
-    <link href="http://lchml.com/technology/jvm3/"/>
-    <id>http://lchml.com/technology/jvm3/</id>
+    <link href="https://lchml.com/technology/jvm3/"/>
+    <id>https://lchml.com/technology/jvm3/</id>
     <published>2017-11-18T03:07:00.000Z</published>
-    <updated>2018-07-19T10:20:37.867Z</updated>
+    <updated>2018-07-19T10:54:22.465Z</updated>
     
     <content type="html"><![CDATA[<p>由于当今计算机的发展现状，计算机的存储设备（内存、磁盘）与CPU的运算速度有好几个数量级的差距。因为计算机不可能仅靠寄存器来完成所有运算任务，为了更加高效的利用运算能力，现代计算机系统都不得不加入一层读写速度尽可能接近处理器运算速度的高速缓存（Cache）来作为内存与处理器之间的缓冲：把运算需要使用到的数据复制到缓存中，让运算能快速进行，当运算结束后再从缓存同步回内存之中，这样处理器就无须等待缓慢的内存读写了。除了增加了高速缓存之外，为了使得处理器内部的运算单元能尽量被充分利用，处理器可能会对输入代码进行乱序执行优化。<br><img src="jvm-cpucache.png" alt=""></p>
 <h3 id="Java内存模型"><a href="#Java内存模型" class="headerlink" title="Java内存模型"></a>Java内存模型</h3><p>不同架构的物理机可以拥有不一样的内存模型，而Java虚拟机也有自己的内存模型，它与硬件的内存模型有很大的相似之处。Java内存模型规定，所有变量都存储在主内存中（类似操作系统的住内存），每条线程还有自己的工作内存（类似于高速缓存）。与处理器的乱序优化类似，Java虚拟机的即时编译中也有类似的指令重排序优化。<br><img src="jvm-javacache.png" alt=""><br>这里所讲的主内存、工作内存与前面所说的java堆，栈，方法区等是不同维度的内存划分，两者之间并没有关系。</p>
@@ -515,27 +517,27 @@
     
     <summary type="html">
     
-      JVM,李城,Java,服务器,架构,微服务,高可用,分布式
+      &lt;p&gt;由于当今计算机的发展现状，计算机的存储设备（内存、磁盘）与CPU的运算速度有好几个数量级的差距。因为计算机不可能仅靠寄存器来完成所有运算任务，为了更加高效的利用运算能力，现代计算机系统都不得不加入一层读写速度尽可能接近处理器运算速度的高速缓存（Cache）来作为内存与处理器
     
     </summary>
     
-      <category term="technology" scheme="http://lchml.com/categories/technology/"/>
+      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="LC" scheme="http://lchml.com/tags/LC/"/>
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
     
-      <category term="Java" scheme="http://lchml.com/tags/Java/"/>
+      <category term="Java" scheme="https://lchml.com/tags/Java/"/>
     
-      <category term="JVM" scheme="http://lchml.com/tags/JVM/"/>
+      <category term="JVM" scheme="https://lchml.com/tags/JVM/"/>
     
   </entry>
   
   <entry>
     <title>java虚拟机 - Class</title>
-    <link href="http://lchml.com/technology/jvm2/"/>
-    <id>http://lchml.com/technology/jvm2/</id>
+    <link href="https://lchml.com/technology/jvm2/"/>
+    <id>https://lchml.com/technology/jvm2/</id>
     <published>2017-11-15T03:07:00.000Z</published>
-    <updated>2018-07-19T10:20:43.534Z</updated>
+    <updated>2018-07-19T10:54:20.024Z</updated>
     
     <content type="html"><![CDATA[<p>相信大家都听过一句话：“计算机只认识0和1”，因此我们写的程序要经过编译器翻译成0和1构成的二进制格式才能有计算机执行。而随着计算机的发展，特别是大量建立在虚拟机上的程序语言出现，将程序编译成二进制已经不是唯一的选择，越来越多的语言选择了与操作系统无关、平台中立的格式作为编译后的存储格式。</p>
 <p>在1997年第一版Java虚拟机规范发布时就描述了：未来，我们会对Java虚拟机进行扩展，以便更好的支持其他语言在jvm上运行。如今，除了Java以外已经发展出了一大批可以在jvm上运行的语言，如Clojure、Groovy、JRuby、Jython、Scala等。而jvm实现语言无关性的基础就是虚拟机和字节码存储格式。Java虚拟机不与任何语言绑定，它只与“Class文件”这种特定的二进制文件格式有关。Class文件中包含了Java虚拟机指令集和符号表以及其他辅助信息。Java虚拟机不关系Class文件的来源，因此任何语言只要编译成符合Java虚拟机的规范的Class文件，都可以在jvm上运行。</p>
@@ -590,27 +592,27 @@
     
     <summary type="html">
     
-      JVM,李城,Java,服务器,架构,微服务,高可用,分布式
+      &lt;p&gt;相信大家都听过一句话：“计算机只认识0和1”，因此我们写的程序要经过编译器翻译成0和1构成的二进制格式才能有计算机执行。而随着计算机的发展，特别是大量建立在虚拟机上的程序语言出现，将程序编译成二进制已经不是唯一的选择，越来越多的语言选择了与操作系统无关、平台中立的格式作为编
     
     </summary>
     
-      <category term="technology" scheme="http://lchml.com/categories/technology/"/>
+      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="LC" scheme="http://lchml.com/tags/LC/"/>
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
     
-      <category term="Java" scheme="http://lchml.com/tags/Java/"/>
+      <category term="Java" scheme="https://lchml.com/tags/Java/"/>
     
-      <category term="JVM" scheme="http://lchml.com/tags/JVM/"/>
+      <category term="JVM" scheme="https://lchml.com/tags/JVM/"/>
     
   </entry>
   
   <entry>
     <title>java虚拟机 - 内存</title>
-    <link href="http://lchml.com/technology/jvm1/"/>
-    <id>http://lchml.com/technology/jvm1/</id>
+    <link href="https://lchml.com/technology/jvm1/"/>
+    <id>https://lchml.com/technology/jvm1/</id>
     <published>2017-11-12T03:07:00.000Z</published>
-    <updated>2018-07-19T10:20:46.032Z</updated>
+    <updated>2018-07-19T10:54:17.383Z</updated>
     
     <content type="html"><![CDATA[<p>最近花了一周时间把《深入Java虚拟机》这本书看完了，虽然说看之前，对jvm已经基本了解了。但是看书的过程中依然会有很多恍然大悟的时刻。很多平时使用过的功能特性，在看书的过程中才知道原来背后的原理是这样的。因此，平时通过Google我们很大程度上只是“知其然”，而要做到“知其所以然”确实还需要从最基础开始学习。</p>
 <p>温故而知新，这里对看书过程中的一些心得做一个总结。</p>
@@ -639,29 +641,29 @@
     
     <summary type="html">
     
-      JVM,李城,Java,服务器,架构,微服务,高可用,分布式
+      &lt;p&gt;最近花了一周时间把《深入Java虚拟机》这本书看完了，虽然说看之前，对jvm已经基本了解了。但是看书的过程中依然会有很多恍然大悟的时刻。很多平时使用过的功能特性，在看书的过程中才知道原来背后的原理是这样的。因此，平时通过Google我们很大程度上只是“知其然”，而要做到“知
     
     </summary>
     
-      <category term="technology" scheme="http://lchml.com/categories/technology/"/>
+      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="LC" scheme="http://lchml.com/tags/LC/"/>
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
     
-      <category term="Java" scheme="http://lchml.com/tags/Java/"/>
+      <category term="Java" scheme="https://lchml.com/tags/Java/"/>
     
-      <category term="JVM" scheme="http://lchml.com/tags/JVM/"/>
+      <category term="JVM" scheme="https://lchml.com/tags/JVM/"/>
     
-      <category term="GC" scheme="http://lchml.com/tags/GC/"/>
+      <category term="GC" scheme="https://lchml.com/tags/GC/"/>
     
   </entry>
   
   <entry>
     <title>GRPC丢包之路</title>
-    <link href="http://lchml.com/technology/grpc-trap/"/>
-    <id>http://lchml.com/technology/grpc-trap/</id>
+    <link href="https://lchml.com/technology/grpc-trap/"/>
+    <id>https://lchml.com/technology/grpc-trap/</id>
     <published>2017-06-17T16:00:00.000Z</published>
-    <updated>2018-07-19T10:23:27.086Z</updated>
+    <updated>2018-07-19T10:53:55.166Z</updated>
     
     <content type="html"><![CDATA[<p>GRPC是Google开源的一个高性能、跨语言的RPC框架，基于HTTP2协议，基于protobuf-3.x，基于Netty-4.x。</p>
 <p>最近开发一个公司的游戏项目，采用分布式的服务器架构，内部服务之间均采用GRPC进行通信。但是在测试过程中发现一个重大的bug，<strong>偶现丢包</strong>。</p>
@@ -694,27 +696,28 @@
     
     <summary type="html">
     
-      GRPC,RPC,丢包,李城,Java,服务器,架构,微服务,高可用,分布式
+      &lt;p&gt;GRPC是Google开源的一个高性能、跨语言的RPC框架，基于HTTP2协议，基于protobuf-3.x，基于Netty-4.x。&lt;/p&gt;
+&lt;p&gt;最近开发一个公司的游戏项目，采用分布式的服务器架构，内部服务之间均采用GRPC进行通信。但是在测试过程中发现一个重大的bug
     
     </summary>
     
-      <category term="technology" scheme="http://lchml.com/categories/technology/"/>
+      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="LC" scheme="http://lchml.com/tags/LC/"/>
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
     
-      <category term="GRPC" scheme="http://lchml.com/tags/GRPC/"/>
+      <category term="GRPC" scheme="https://lchml.com/tags/GRPC/"/>
     
-      <category term="java" scheme="http://lchml.com/tags/java/"/>
+      <category term="java" scheme="https://lchml.com/tags/java/"/>
     
   </entry>
   
   <entry>
     <title>Jekyll迁移Hexo</title>
-    <link href="http://lchml.com/technology/jekyll-hexo/"/>
-    <id>http://lchml.com/technology/jekyll-hexo/</id>
+    <link href="https://lchml.com/technology/jekyll-hexo/"/>
+    <id>https://lchml.com/technology/jekyll-hexo/</id>
     <published>2017-04-19T07:07:06.000Z</published>
-    <updated>2018-07-19T10:20:56.738Z</updated>
+    <updated>2018-07-19T10:54:15.040Z</updated>
     
     <content type="html"><![CDATA[<p>拖了大半年，这次终于下定决心动手把博客jekyll迁移到Hexo。为什么要迁移，就不细说了，反正就是因为被Hexo的各种优点所吸引。整个迁移花了两天时间。下载安装hexo这些都比较简单，官方文档就够用了。主要说说踩到的坑以及建议。</p>
 <p>第一次push到github，一定要先将github上原jekyll博客的内容清空，再push新的内容。还有，由于原本的博客内容已经比较多，加上游记中有大量的图片，导致第一次往github push时，文件数量多，容量大。容易失败，最好选择在够快够稳定的网络环境中进行。</p>
@@ -728,27 +731,28 @@
     
     <summary type="html">
     
-      Hexo,李城,Java,服务器,架构,微服务,高可用,分布式
+      &lt;p&gt;拖了大半年，这次终于下定决心动手把博客jekyll迁移到Hexo。为什么要迁移，就不细说了，反正就是因为被Hexo的各种优点所吸引。整个迁移花了两天时间。下载安装hexo这些都比较简单，官方文档就够用了。主要说说踩到的坑以及建议。&lt;/p&gt;
+&lt;p&gt;第一次push到github
     
     </summary>
     
-      <category term="technology" scheme="http://lchml.com/categories/technology/"/>
+      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="LC" scheme="http://lchml.com/tags/LC/"/>
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
     
-      <category term="Hexo" scheme="http://lchml.com/tags/Hexo/"/>
+      <category term="Hexo" scheme="https://lchml.com/tags/Hexo/"/>
     
-      <category term="博客" scheme="http://lchml.com/tags/%E5%8D%9A%E5%AE%A2/"/>
+      <category term="博客" scheme="https://lchml.com/tags/%E5%8D%9A%E5%AE%A2/"/>
     
   </entry>
   
   <entry>
     <title>三亚记事</title>
-    <link href="http://lchml.com/life/sanya/"/>
-    <id>http://lchml.com/life/sanya/</id>
+    <link href="https://lchml.com/life/sanya/"/>
+    <id>https://lchml.com/life/sanya/</id>
     <published>2017-04-04T16:00:00.000Z</published>
-    <updated>2018-07-19T10:17:29.791Z</updated>
+    <updated>2018-07-19T10:54:57.128Z</updated>
     
     <content type="html"><![CDATA[<p>芭蕉椰树艳阳，蓝天碧海山庄<br><img src="/life/sanya/sanya1.jpg" alt="亚龙湾街头" title="亚龙湾街头"><br><img src="/life/sanya/sanya2.jpg" alt="亚龙湾天玺海景" title="亚龙湾天玺海景"></p>
 <p>现在的游记好像上来不放两张扎眼的靓图就不好意思似的，的确，你以为真的只要见过就可以常记心间吗？人的大脑善于遗忘，所以摄影才横行人间。<br>这是继巴厘岛之后第二次热带游记。说是游记，好像也没有什么可以说的，毕竟酒店游真的只是在酒店躺了五天，好在是豪华海景房，否则真觉得对不起自己了。</p>
@@ -762,27 +766,27 @@
     
     <summary type="html">
     
-      三亚,游记,何美玲
+      &lt;p&gt;芭蕉椰树艳阳，蓝天碧海山庄&lt;br&gt;&lt;img src=&quot;/life/sanya/sanya1.jpg&quot; alt=&quot;亚龙湾街头&quot; title=&quot;亚龙湾街头&quot;&gt;&lt;br&gt;&lt;img src=&quot;/life/sanya/sanya2.jpg&quot; alt=&quot;亚龙湾天玺海景&quot; title=&quot;亚
     
     </summary>
     
-      <category term="life" scheme="http://lchml.com/categories/life/"/>
+      <category term="life" scheme="https://lchml.com/categories/life/"/>
     
     
-      <category term="游记" scheme="http://lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
+      <category term="游记" scheme="https://lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
     
-      <category term="HML" scheme="http://lchml.com/tags/HML/"/>
+      <category term="HML" scheme="https://lchml.com/tags/HML/"/>
     
-      <category term="三亚" scheme="http://lchml.com/tags/%E4%B8%89%E4%BA%9A/"/>
+      <category term="三亚" scheme="https://lchml.com/tags/%E4%B8%89%E4%BA%9A/"/>
     
   </entry>
   
   <entry>
     <title>家庭网络，科学上网</title>
-    <link href="http://lchml.com/technology/nas-netgear/"/>
-    <id>http://lchml.com/technology/nas-netgear/</id>
+    <link href="https://lchml.com/technology/nas-netgear/"/>
+    <id>https://lchml.com/technology/nas-netgear/</id>
     <published>2016-11-16T16:00:00.000Z</published>
-    <updated>2018-07-19T10:19:08.575Z</updated>
+    <updated>2018-07-19T10:54:38.311Z</updated>
     
     <content type="html"><![CDATA[<p>前段时间，360网盘即将关停服务的消息在网上引起了不小的风波，这已经不是第一次出现互联网免费服务突然关停了，相信也不会是最后一次，毕竟大家都是出来做企业的，没有义务一直为你提供免费的服务，当确定在这一领域没有盈利可期时，服务关停也就是必然的事了。</p>
 <p>这里我们不去讨论和批判所谓的互联网文化，我们说点做点更务实的事情。既然免费云存储是不可靠不安全的，那么作为个人用户，还有什么更好的数据存储选择呢？这就是我们今天要说的主角：家庭网络存储，也就是家用NAS（Network Attached Storage）。话不多说，先上家里的网络架构图。</p>
@@ -805,29 +809,30 @@
     
     <summary type="html">
     
-      NAS,ShadowSocks,李城
+      &lt;p&gt;前段时间，360网盘即将关停服务的消息在网上引起了不小的风波，这已经不是第一次出现互联网免费服务突然关停了，相信也不会是最后一次，毕竟大家都是出来做企业的，没有义务一直为你提供免费的服务，当确定在这一领域没有盈利可期时，服务关停也就是必然的事了。&lt;/p&gt;
+&lt;p&gt;这里我们不去
     
     </summary>
     
-      <category term="technology" scheme="http://lchml.com/categories/technology/"/>
+      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="LC" scheme="http://lchml.com/tags/LC/"/>
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
     
-      <category term="ShadowSocks" scheme="http://lchml.com/tags/ShadowSocks/"/>
+      <category term="ShadowSocks" scheme="https://lchml.com/tags/ShadowSocks/"/>
     
-      <category term="翻墙" scheme="http://lchml.com/tags/%E7%BF%BB%E5%A2%99/"/>
+      <category term="翻墙" scheme="https://lchml.com/tags/%E7%BF%BB%E5%A2%99/"/>
     
-      <category term="NAS" scheme="http://lchml.com/tags/NAS/"/>
+      <category term="NAS" scheme="https://lchml.com/tags/NAS/"/>
     
   </entry>
   
   <entry>
     <title>星辰和大海</title>
-    <link href="http://lchml.com/life/cosmic-dream/"/>
-    <id>http://lchml.com/life/cosmic-dream/</id>
+    <link href="https://lchml.com/life/cosmic-dream/"/>
+    <id>https://lchml.com/life/cosmic-dream/</id>
     <published>2016-10-16T16:00:00.000Z</published>
-    <updated>2018-07-19T10:24:39.999Z</updated>
+    <updated>2018-07-19T10:53:43.345Z</updated>
     
     <content type="html"><![CDATA[<p>今日清晨 2016-10-17 7:30 神州十一号飞船成功发射，两名宇航员进入太空。</p>
 <p>对于从小就有着探索太空梦想的我，这是一件激动人心的事。虽然梦想没能自己实现，但只要看到人类踏上宇宙的征程，内心总会澎湃不已。总会想起《星际迷航》中的经典台词：</p>
@@ -839,27 +844,29 @@
     
     <summary type="html">
     
-      李城
+      &lt;p&gt;今日清晨 2016-10-17 7:30 神州十一号飞船成功发射，两名宇航员进入太空。&lt;/p&gt;
+&lt;p&gt;对于从小就有着探索太空梦想的我，这是一件激动人心的事。虽然梦想没能自己实现，但只要看到人类踏上宇宙的征程，内心总会澎湃不已。总会想起《星际迷航》中的经典台词：&lt;/p&gt;
+&lt;p
     
     </summary>
     
-      <category term="life" scheme="http://lchml.com/categories/life/"/>
+      <category term="life" scheme="https://lchml.com/categories/life/"/>
     
     
-      <category term="LC" scheme="http://lchml.com/tags/LC/"/>
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
     
-      <category term="随想" scheme="http://lchml.com/tags/%E9%9A%8F%E6%83%B3/"/>
+      <category term="随想" scheme="https://lchml.com/tags/%E9%9A%8F%E6%83%B3/"/>
     
-      <category term="科幻" scheme="http://lchml.com/tags/%E7%A7%91%E5%B9%BB/"/>
+      <category term="科幻" scheme="https://lchml.com/tags/%E7%A7%91%E5%B9%BB/"/>
     
   </entry>
   
   <entry>
     <title>基于Zookeeper实现的服务注册发现平台</title>
-    <link href="http://lchml.com/technology/yxguard/"/>
-    <id>http://lchml.com/technology/yxguard/</id>
+    <link href="https://lchml.com/technology/yxguard/"/>
+    <id>https://lchml.com/technology/yxguard/</id>
     <published>2016-09-14T16:00:00.000Z</published>
-    <updated>2018-07-19T10:11:44.047Z</updated>
+    <updated>2018-07-19T10:55:31.759Z</updated>
     
     <content type="html"><![CDATA[<p>在调研了多个开源服务发现，或服务治理平台之后，如Eureka、Consul，dubbo等，发现由于都不能完美的适配当前已有系统。</p>
 <p>原方案的缺点，单个节点独立部署，可靠性差，扩展性差。不方便维护更新，更新一台服务器时，需要先把对应的服务调用方的流量切换到其他服务器，然后对服务进行更新，更新后再把流量切回来。整个过程操作复杂、容易出错。当服务器较多时，耗时耗力。</p>
@@ -876,27 +883,28 @@
     
     <summary type="html">
     
-      zookeeper,服务发现,李城,Java,服务器,架构,微服务,高可用,分布式
+      &lt;p&gt;在调研了多个开源服务发现，或服务治理平台之后，如Eureka、Consul，dubbo等，发现由于都不能完美的适配当前已有系统。&lt;/p&gt;
+&lt;p&gt;原方案的缺点，单个节点独立部署，可靠性差，扩展性差。不方便维护更新，更新一台服务器时，需要先把对应的服务调用方的流量切换到其他服务
     
     </summary>
     
-      <category term="technology" scheme="http://lchml.com/categories/technology/"/>
+      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="LC" scheme="http://lchml.com/tags/LC/"/>
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
     
-      <category term="服务发现" scheme="http://lchml.com/tags/%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/"/>
+      <category term="服务发现" scheme="https://lchml.com/tags/%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/"/>
     
-      <category term="Zookeeper" scheme="http://lchml.com/tags/Zookeeper/"/>
+      <category term="Zookeeper" scheme="https://lchml.com/tags/Zookeeper/"/>
     
   </entry>
   
   <entry>
     <title>横店·群演的故事</title>
-    <link href="http://lchml.com/life/hengdian/"/>
-    <id>http://lchml.com/life/hengdian/</id>
+    <link href="https://lchml.com/life/hengdian/"/>
+    <id>https://lchml.com/life/hengdian/</id>
     <published>2016-06-26T16:00:00.000Z</published>
-    <updated>2018-07-19T10:22:45.468Z</updated>
+    <updated>2018-07-19T10:53:59.985Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>一个人，一座城；这些人，这座城。                                   —— HML</p>
@@ -926,27 +934,30 @@
     
     <summary type="html">
     
-      横店,游记,何美玲
+      &lt;blockquote&gt;
+&lt;p&gt;一个人，一座城；这些人，这座城。                                   —— HML&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;横店，作为影视城，娱乐行业并没有给横店带来更多的帮助，无论是经济上还是资源上，所以到今天它
     
     </summary>
     
-      <category term="life" scheme="http://lchml.com/categories/life/"/>
+      <category term="life" scheme="https://lchml.com/categories/life/"/>
     
     
-      <category term="游记" scheme="http://lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
+      <category term="游记" scheme="https://lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
     
-      <category term="HML" scheme="http://lchml.com/tags/HML/"/>
+      <category term="HML" scheme="https://lchml.com/tags/HML/"/>
     
-      <category term="横店" scheme="http://lchml.com/tags/%E6%A8%AA%E5%BA%97/"/>
+      <category term="横店" scheme="https://lchml.com/tags/%E6%A8%AA%E5%BA%97/"/>
     
   </entry>
   
   <entry>
     <title>临安·大明山</title>
-    <link href="http://lchml.com/life/damingshan/"/>
-    <id>http://lchml.com/life/damingshan/</id>
+    <link href="https://lchml.com/life/damingshan/"/>
+    <id>https://lchml.com/life/damingshan/</id>
     <published>2016-06-18T16:00:00.000Z</published>
-    <updated>2018-07-19T10:25:31.422Z</updated>
+    <updated>2018-07-19T10:53:45.825Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>有那么一刻，感觉会就这样走到天荒地老没有尽头。                                   —— HML</p>
@@ -976,25 +987,28 @@
     
     <summary type="html">
     
-      临安,大明山,游记,何美玲
+      &lt;blockquote&gt;
+&lt;p&gt;有那么一刻，感觉会就这样走到天荒地老没有尽头。                                   —— HML&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;昨天的徒步是一段可能会记得很久很久的旅程。没有记得很多风景，倒是记得很多人和
     
     </summary>
     
-      <category term="life" scheme="http://lchml.com/categories/life/"/>
+      <category term="life" scheme="https://lchml.com/categories/life/"/>
     
     
-      <category term="游记" scheme="http://lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
+      <category term="游记" scheme="https://lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
     
-      <category term="HML" scheme="http://lchml.com/tags/HML/"/>
+      <category term="HML" scheme="https://lchml.com/tags/HML/"/>
     
   </entry>
   
   <entry>
     <title>Eureka文档翻译（下）</title>
-    <link href="http://lchml.com/technology/netflix-eureka-rest/"/>
-    <id>http://lchml.com/technology/netflix-eureka-rest/</id>
+    <link href="https://lchml.com/technology/netflix-eureka-rest/"/>
+    <id>https://lchml.com/technology/netflix-eureka-rest/</id>
     <published>2016-05-28T16:00:00.000Z</published>
-    <updated>2018-07-19T10:18:45.225Z</updated>
+    <updated>2018-07-19T10:54:42.343Z</updated>
     
     <content type="html"><![CDATA[<h3 id="REST接口"><a href="#REST接口" class="headerlink" title="REST接口"></a>REST接口</h3><p>下面的REST接口让非Java应用也可以使用Eureka。  <strong>appID</strong>：应用名  <strong>instanceID</strong>：实例的唯一ID（AWS中是实例的id，在其他环节是实例的hostname）。JSON、XML协议分别应使用对应的Content-type：application/json、application/xml。</p>
 <table border="1" cellpadding="10"><br>  <tr><br>    <th>Operation</th><br>    <th>HTTP action</th><br>    <th>Description</th><br>  </tr><br>  <tr><br>    <td>Register new application instance</td><br>    <td>POST /eureka/v2/apps/appID</td><br>    <td>Input: JSON/XML payload HTTP Code: 204 on success</td><br>  </tr><br>  <tr><br>    <td>De-register application instance</td><br>    <td>DELETE /eureka/v2/apps/appID/instanceID</td><br>    <td>HTTP Code: 200 on success</td><br>  </tr><br>  <tr><br>    <td>Send application instance heartbeat</td><br>    <td>PUT /eureka/v2/apps/appID/instanceID</td><br>    <td>HTTP Code:<br><em> 200 on success
@@ -1068,18 +1082,18 @@
     
     <summary type="html">
     
-      Eureka,李城,Java,服务器,架构,微服务,高可用,分布式
+      &lt;h3 id=&quot;REST接口&quot;&gt;&lt;a href=&quot;#REST接口&quot; class=&quot;headerlink&quot; title=&quot;REST接口&quot;&gt;&lt;/a&gt;REST接口&lt;/h3&gt;&lt;p&gt;下面的REST接口让非Java应用也可以使用Eureka。  &lt;strong&gt;appID&lt;/strong&gt;：
     
     </summary>
     
-      <category term="technology" scheme="http://lchml.com/categories/technology/"/>
+      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="LC" scheme="http://lchml.com/tags/LC/"/>
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
     
-      <category term="服务发现" scheme="http://lchml.com/tags/%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/"/>
+      <category term="服务发现" scheme="https://lchml.com/tags/%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/"/>
     
-      <category term="Eureka" scheme="http://lchml.com/tags/Eureka/"/>
+      <category term="Eureka" scheme="https://lchml.com/tags/Eureka/"/>
     
   </entry>
   

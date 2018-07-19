@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="LC,GRPC,java," />
+  <meta name="keywords" content="GRPC,RPC,丢包,李城,Java,服务器,架构,微服务,高可用,分布式" />
 
 
 
@@ -81,17 +81,17 @@
 
 
 
-<meta name="description" content="GRPC,RPC,丢包,李城,Java,服务器,架构,微服务,高可用,分布式">
-<meta name="keywords" content="LC,GRPC,java">
+<meta name="description" content="GRPC是Google开源的一个高性能、跨语言的RPC框架，基于HTTP2协议，基于protobuf-3.x，基于Netty-4.x。 最近开发一个公司的游戏项目，采用分布式的服务器架构，内部服务之间均采用GRPC进行通信。但是在测试过程中发现一个重大的bug，偶现丢包。 前置信息：ServerA（作为grpc的client端）通过futureStub异步调用ServerB（作为server端）。">
+<meta name="keywords" content="GRPC,RPC,丢包,李城,Java,服务器,架构,微服务,高可用,分布式">
 <meta property="og:type" content="article">
 <meta property="og:title" content="GRPC丢包之路">
-<meta property="og:url" content="http://lchml.com/technology/grpc-trap/index.html">
+<meta property="og:url" content="https://lchml.com/technology/grpc-trap/index.html">
 <meta property="og:site_name" content="LC&#39;s Blog">
-<meta property="og:description" content="GRPC,RPC,丢包,李城,Java,服务器,架构,微服务,高可用,分布式">
-<meta property="og:updated_time" content="2018-07-19T10:23:27.086Z">
+<meta property="og:description" content="GRPC是Google开源的一个高性能、跨语言的RPC框架，基于HTTP2协议，基于protobuf-3.x，基于Netty-4.x。 最近开发一个公司的游戏项目，采用分布式的服务器架构，内部服务之间均采用GRPC进行通信。但是在测试过程中发现一个重大的bug，偶现丢包。 前置信息：ServerA（作为grpc的client端）通过futureStub异步调用ServerB（作为server端）。">
+<meta property="og:updated_time" content="2018-07-19T10:53:55.166Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GRPC丢包之路">
-<meta name="twitter:description" content="GRPC,RPC,丢包,李城,Java,服务器,架构,微服务,高可用,分布式">
+<meta name="twitter:description" content="GRPC是Google开源的一个高性能、跨语言的RPC框架，基于HTTP2协议，基于protobuf-3.x，基于Netty-4.x。 最近开发一个公司的游戏项目，采用分布式的服务器架构，内部服务之间均采用GRPC进行通信。但是在测试过程中发现一个重大的bug，偶现丢包。 前置信息：ServerA（作为grpc的client端）通过futureStub异步调用ServerB（作为server端）。">
 
 
 
@@ -121,7 +121,7 @@
 
 
 
-  <link rel="canonical" href="http://lchml.com/technology/grpc-trap/"/>
+  <link rel="canonical" href="https://lchml.com/technology/grpc-trap/"/>
 
 
 
@@ -283,7 +283,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://lchml.com/technology/grpc-trap/">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/grpc-trap/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="LC&HML">
@@ -378,10 +378,6 @@
 
           
 
-          
-              <div class="post-description">
-                  GRPC,RPC,丢包,李城,Java,服务器,架构,微服务,高可用,分布式
-              </div>
           
 
         </div>
@@ -578,7 +574,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-count">55</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1004,6 +1000,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
   
