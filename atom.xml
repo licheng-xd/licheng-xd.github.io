@@ -76,7 +76,7 @@
     <link href="https://lchml.com/technology/hikari-maxlifetime/"/>
     <id>https://lchml.com/technology/hikari-maxlifetime/</id>
     <published>2018-07-10T16:00:00.000Z</published>
-    <updated>2018-07-19T10:58:10.079Z</updated>
+    <updated>2018-07-19T12:35:49.372Z</updated>
     
     <content type="html"><![CDATA[<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>在分布式系统中的一个dubbo服务，日志中经常出现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[WARN ]2018-07-06 19:30:49.581 [DubboServerHandler-10.206.56.200:20008-thread-195]PoolBase | HikariPool-1 - Failed to validate connection com.mysql.jdbc.JDBC4Connection@6a9ac783 (No operations allowed after connection closed.)</div></pre></td></tr></table></figure></p>
 <p>同时导致对应请求长时间阻塞，阻塞时间从5s~20s不等。</p>
