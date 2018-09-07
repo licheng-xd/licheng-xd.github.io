@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://lchml.com/"/>
-  <updated>2018-07-19T10:57:09.170Z</updated>
+  <updated>2018-09-07T15:23:43.857Z</updated>
   <id>https://lchml.com/</id>
   
   <author>
@@ -16,11 +16,57 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Druid经常出现连接不可用的问题</title>
+    <link href="https://lchml.com/technology/druid-validation/"/>
+    <id>https://lchml.com/technology/druid-validation/</id>
+    <published>2018-09-05T16:00:00.000Z</published>
+    <updated>2018-09-07T15:23:43.857Z</updated>
+    
+    <content type="html"><![CDATA[<p>又踩了一个数据库连接池的坑，纪念一下。公司的分布式数据库由于更新驱动层，并且目前还只支持Druid连接池，因此项目的数据库连接池也从Hikari换到了Druid。然后换上没多久，测试服就开始频繁报警。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">The last packet successfully received from the server was 2,357,232 milliseconds ago.  </div><div class="line">The last packet sent successfully to the server was 931,359 milliseconds ago.</div><div class="line"></div><div class="line">CommunicationsException, druid version 1.1.10, jdbcUrl : jdbc:mysql:ddb://xx.xxx.xxx.xxx:6000/dbname, </div><div class="line">testWhileIdle true, idle millis 22216001, minIdle 20, poolingCount 19, timeBetweenEvictionRunsMillis 60000, </div><div class="line">lastValidIdleMillis 22216001, driver com.netease.lbd.LBDriver, exceptionSorter com.alibaba.druid.pool.vendor.MySqlExceptionSorter</div></pre></td></tr></table></figure>
+<p>这个错误的原因很明显，使用了一个已经失效的连接去做db操作，就会返回这个错误。也就是说db操作的时候从数据库连接池里拿到了一个烂的连接。然而首先我们是配置了time-between-eviction-runs-millis的，理论上应该是会定时对连接池中的连接做检查的，但是实际结果显然并没有。</p>
+<p>我们直接开始检查druid源码吧，在核心类DruidDataSource中我们可以看到初始化连接池的时候会调用createAndStartDestroyThread()创建一个定时任务来执行DestroyTask，再看DestroyTask里面做了什么。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DestroyTask</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        shrink(<span class="keyword">true</span>, keepAlive);</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (isRemoveAbandoned()) &#123;</div><div class="line">            removeAbandoned();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其中isRemoveAbandoned()没有配置，默认是false的。所以，这个task就执行了一句话：shrink(true, keepAlive)</p>
+<p>在shrink方法里面的最后我们可以看到有这段代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (keepAliveCount &gt; <span class="number">0</span>) &#123;</div><div class="line">    <span class="keyword">this</span>.getDataSourceStat().addKeepAliveCheckCount(keepAliveCount);</div><div class="line">    <span class="comment">// keep order</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = keepAliveCount - <span class="number">1</span>; i &gt;= <span class="number">0</span>; --i) &#123;</div><div class="line">        DruidConnectionHolder holer = keepAliveConnections[i];</div><div class="line">        Connection connection = holer.getConnection();</div><div class="line">        holer.incrementKeepAliveCheckCount();</div><div class="line"></div><div class="line">        <span class="keyword">boolean</span> validate = <span class="keyword">false</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">this</span>.validateConnection(connection);  <span class="comment">// 重点</span></div><div class="line">            validate = <span class="keyword">true</span>;</div><div class="line">        &#125; <span class="keyword">catch</span> (Throwable error) &#123;</div><div class="line">            <span class="keyword">if</span> (LOG.isDebugEnabled()) &#123;</div><div class="line">                LOG.debug(<span class="string">"keepAliveErr"</span>, error);</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// skip</span></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (validate) &#123;</div><div class="line">            holer.lastActiveTimeMillis = System.currentTimeMillis();</div><div class="line">            put(holer);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            JdbcUtils.close(connection);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    Arrays.fill(keepAliveConnections, <span class="keyword">null</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>用于检查经过shrink以后留存下来的连接是否可用。其中的主要方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">validateConnection</span><span class="params">(Connection conn)</span> <span class="keyword">throws</span> SQLException </span>&#123;</div><div class="line">    String query = getValidationQuery();</div><div class="line">    <span class="keyword">if</span> (conn.isClosed()) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> SQLException(<span class="string">"validateConnection: connection closed"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (validConnectionChecker != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">boolean</span> result = <span class="keyword">true</span>;</div><div class="line">        Exception error = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            result = validConnectionChecker.isValidConnection(conn, validationQuery, validationQueryTimeout);</div><div class="line">        &#125; <span class="keyword">catch</span> (SQLException ex) &#123;</div><div class="line">            <span class="keyword">throw</span> ex;</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception ex) &#123;</div><div class="line">            error = ex;</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="keyword">if</span> (!result) &#123;</div><div class="line">            SQLException sqlError = error != <span class="keyword">null</span> ? <span class="comment">//</span></div><div class="line">                <span class="keyword">new</span> SQLException(<span class="string">"validateConnection false"</span>, error) <span class="comment">//</span></div><div class="line">                : <span class="keyword">new</span> SQLException(<span class="string">"validateConnection false"</span>);</div><div class="line">            <span class="keyword">throw</span> sqlError;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (<span class="keyword">null</span> != query) &#123;</div><div class="line">        Statement stmt = <span class="keyword">null</span>;</div><div class="line">        ResultSet rs = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            stmt = conn.createStatement();</div><div class="line">            <span class="keyword">if</span> (getValidationQueryTimeout() &gt; <span class="number">0</span>) &#123;</div><div class="line">                stmt.setQueryTimeout(getValidationQueryTimeout());</div><div class="line">            &#125;</div><div class="line">            rs = stmt.executeQuery(query);</div><div class="line">            <span class="keyword">if</span> (!rs.next()) &#123;</div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> SQLException(<span class="string">"validationQuery didn't return a row"</span>);</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            JdbcUtils.close(rs);</div><div class="line">            JdbcUtils.close(stmt);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>再跟进去到validConnectionChecker.isValidConnection(conn, validationQuery, validationQueryTimeout)方法。在这个方法里面可以看到</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isValidConnection</span><span class="params">(Connection conn, String validateQuery, <span class="keyword">int</span> validationQueryTimeout)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="keyword">if</span> (conn.isClosed()) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 省略 。。。</span></div><div class="line"></div><div class="line">    String query = validateQuery;</div><div class="line">    <span class="keyword">if</span> (validateQuery == <span class="keyword">null</span> || validateQuery.isEmpty()) &#123;</div><div class="line">        query = DEFAULT_VALIDATION_QUERY;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    Statement stmt = <span class="keyword">null</span>;</div><div class="line">    ResultSet rs = <span class="keyword">null</span>;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        stmt = conn.createStatement();</div><div class="line">        <span class="keyword">if</span> (validationQueryTimeout &gt; <span class="number">0</span>) &#123;</div><div class="line">            stmt.setQueryTimeout(validationQueryTimeout);</div><div class="line">        &#125;</div><div class="line">        rs = stmt.executeQuery(query);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        JdbcUtils.close(rs);</div><div class="line">        JdbcUtils.close(stmt);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果没有配置validationQuery，会默认使用 “SELECT 1”。于是我们认为不配置validationQuery是没关系的。然后没过多久，还是继续出现了上面说的异常，说明就是有烂的连接留存在连接池里。</p>
+<p>重新再看一遍代码，注意到上面的validConnectionChecker有没有可能是null呢？于是找到validConnectionChecker的初始化方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initValidConnectionChecker</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.validConnectionChecker != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    String realDriverClassName = driver.getClass().getName();</div><div class="line">    <span class="keyword">if</span> (JdbcUtils.isMySqlDriver(realDriverClassName)) &#123;</div><div class="line">        <span class="keyword">this</span>.validConnectionChecker = <span class="keyword">new</span> MySqlValidConnectionChecker();</div><div class="line"></div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (realDriverClassName.equals(JdbcConstants.ORACLE_DRIVER)</div><div class="line">            || realDriverClassName.equals(JdbcConstants.ORACLE_DRIVER2)) &#123;</div><div class="line">        <span class="keyword">this</span>.validConnectionChecker = <span class="keyword">new</span> OracleValidConnectionChecker();</div><div class="line"></div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (realDriverClassName.equals(JdbcConstants.SQL_SERVER_DRIVER)</div><div class="line">               || realDriverClassName.equals(JdbcConstants.SQL_SERVER_DRIVER_SQLJDBC4)</div><div class="line">               || realDriverClassName.equals(JdbcConstants.SQL_SERVER_DRIVER_JTDS)) &#123;</div><div class="line">        <span class="keyword">this</span>.validConnectionChecker = <span class="keyword">new</span> MSSQLValidConnectionChecker();</div><div class="line"></div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (realDriverClassName.equals(JdbcConstants.POSTGRESQL_DRIVER)</div><div class="line">            || realDriverClassName.equals(JdbcConstants.ENTERPRISEDB_DRIVER)) &#123;</div><div class="line">        <span class="keyword">this</span>.validConnectionChecker = <span class="keyword">new</span> PGValidConnectionChecker();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>发现如果是数据库的标准驱动，那么validConnectionChecker就是对应数据库的checker，然后恰巧我们的项目中用的是自己实现的db driver。所以这个地方其实根本没有初始化成功。所以validConnectionChecker果然是个null。<br>因此上面的检查代码其实根本没有进到isValidConnection()方法中，所以默认的”SELECT 1”也不起作用了。<br>validateConnection()方法再往下可以看到if (null != query) 的条件下，druid还有一个兜底检查行为。<br>然而又恰好我们又没有配置validationQuery，所以最后兜底也没有兜到。</p>
+<p>总结：该配置的参数还是都要配上，不能因为有默认值就偷懒不配。还有，druid的代码写的真的是乱，非常乱。对比Hikari的代码，代码可读性差的不是一点点。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;又踩了一个数据库连接池的坑，纪念一下。公司的分布式数据库由于更新驱动层，并且目前还只支持Druid连接池，因此项目的数据库连接池也从Hikari换到了Druid。然后换上没多久，测试服就开始频繁报警。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;
+    
+    </summary>
+    
+      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
+    
+    
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
+    
+      <category term="Druid" scheme="https://lchml.com/tags/Druid/"/>
+    
+      <category term="Java" scheme="https://lchml.com/tags/Java/"/>
+    
+      <category term="数据库" scheme="https://lchml.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+  </entry>
+  
+  <entry>
     <title>分布式调用追踪系统Zipkin集成</title>
     <link href="https://lchml.com/technology/zipkin/"/>
     <id>https://lchml.com/technology/zipkin/</id>
     <published>2018-07-16T16:00:00.000Z</published>
-    <updated>2018-07-19T10:57:09.170Z</updated>
+    <updated>2018-07-19T10:57:10.000Z</updated>
     
     <content type="html"><![CDATA[<p>首先给出demo地址，有问题也可以直接看代码。<a href="https://github.com/licheng-xd/dubbo-sleuth" target="_blank" rel="external">https://github.com/licheng-xd/dubbo-sleuth</a></p>
 <h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><p>sleuth是springcloud对zipkin接入的封装，从2.0开始直接采用了brave提供的zipkin接入实现。</p>
@@ -76,9 +122,10 @@
     <link href="https://lchml.com/technology/hikari-maxlifetime/"/>
     <id>https://lchml.com/technology/hikari-maxlifetime/</id>
     <published>2018-07-10T16:00:00.000Z</published>
-    <updated>2018-07-19T12:35:49.372Z</updated>
+    <updated>2018-09-07T15:15:03.155Z</updated>
     
-    <content type="html"><![CDATA[<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>在分布式系统中的一个dubbo服务，日志中经常出现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[WARN ]2018-07-06 19:30:49.581 [DubboServerHandler-10.206.56.200:20008-thread-195]PoolBase | HikariPool-1 - Failed to validate connection com.mysql.jdbc.JDBC4Connection@6a9ac783 (No operations allowed after connection closed.)</div></pre></td></tr></table></figure></p>
+    <content type="html"><![CDATA[<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>在分布式系统中的一个dubbo服务，日志中经常出现：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[WARN ]2018-07-06 19:30:49.581 [DubboServerHandler-10.206.56.200:20008-thread-195]PoolBase | HikariPool-1 - Failed to validate connection com.mysql.jdbc.JDBC4Connection@6a9ac783 (No operations allowed after connection closed.)</div></pre></td></tr></table></figure>
 <p>同时导致对应请求长时间阻塞，阻塞时间从5s~20s不等。</p>
 <h3 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h3><p>首先从Github上下载<a href="https://github.com/brettwooldridge/HikariCP" target="_blank" rel="external">Hikari源码</a>，在源码中直接搜索到对应的错误信息日志。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">isConnectionAlive</span><span class="params">(<span class="keyword">final</span> Connection connection)</span></span></div><div class="line">&#123;</div><div class="line">   <span class="keyword">try</span> &#123;</div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">         setNetworkTimeout(connection, validationTimeout);</div><div class="line"></div><div class="line">         <span class="keyword">final</span> <span class="keyword">int</span> validationSeconds = (<span class="keyword">int</span>) Math.max(<span class="number">1000L</span>, validationTimeout) / <span class="number">1000</span>;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (isUseJdbc4Validation) &#123;</div><div class="line">            <span class="keyword">return</span> connection.isValid(validationSeconds);</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">try</span> (Statement statement = connection.createStatement()) &#123;</div><div class="line">            <span class="keyword">if</span> (isNetworkTimeoutSupported != TRUE) &#123;</div><div class="line">               setQueryTimeout(statement, validationSeconds);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            statement.execute(config.getConnectionTestQuery());</div><div class="line">         &#125;</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">finally</span> &#123;</div><div class="line">         setNetworkTimeout(connection, networkTimeout);</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (isIsolateInternalQueries &amp;&amp; !isAutoCommit) &#123;</div><div class="line">            connection.rollback();</div><div class="line">         &#125;</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">   &#125;</div><div class="line">   <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">      lastConnectionFailure.set(e);</div><div class="line">      LOGGER.warn(<span class="string">"&#123;&#125; - Failed to validate connection &#123;&#125; (&#123;&#125;). Possibly consider using a shorter maxLifetime value."</span>, poolName, connection, e.getMessage());</div><div class="line">      <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>从代码中可以看出，错误是从这个isConnectionAlive()中抛出来的，从堆栈可以看出异常是从setNetworkTimeout()方法抛出，这个方法里面逻辑很简单，就是对当前数据库连接设置一个网络超时时间，其实相当于同时检查了连接是否可用。所以这个异常的根本原因就是当前数据库连接已经不可用，但是却依旧存在于Hikari的连接池中。</p>
@@ -91,7 +138,8 @@
     
     <summary type="html">
     
-      &lt;h3 id=&quot;问题描述&quot;&gt;&lt;a href=&quot;#问题描述&quot; class=&quot;headerlink&quot; title=&quot;问题描述&quot;&gt;&lt;/a&gt;问题描述&lt;/h3&gt;&lt;p&gt;在分布式系统中的一个dubbo服务，日志中经常出现：&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;
+      &lt;h3 id=&quot;问题描述&quot;&gt;&lt;a href=&quot;#问题描述&quot; class=&quot;headerlink&quot; title=&quot;问题描述&quot;&gt;&lt;/a&gt;问题描述&lt;/h3&gt;&lt;p&gt;在分布式系统中的一个dubbo服务，日志中经常出现：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;
     
     </summary>
     
@@ -102,9 +150,9 @@
     
       <category term="Java" scheme="https://lchml.com/tags/Java/"/>
     
-      <category term="Hirika" scheme="https://lchml.com/tags/Hirika/"/>
-    
       <category term="数据库" scheme="https://lchml.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+      <category term="Hirika" scheme="https://lchml.com/tags/Hirika/"/>
     
   </entry>
   
@@ -113,7 +161,7 @@
     <link href="https://lchml.com/technology/java-brief/"/>
     <id>https://lchml.com/technology/java-brief/</id>
     <published>2018-07-05T16:00:00.000Z</published>
-    <updated>2018-07-19T10:54:07.982Z</updated>
+    <updated>2018-07-19T10:54:08.000Z</updated>
     
     <content type="html"><![CDATA[<p>Java是解释执行还是编译运行？其实这个问题本身就是一个错误的问题，以现在jvm的发展来说，jvm在执行字节码时，本身就融合了解释和编译两种方式，部分代码由jvm解释执行，部分代码会由JIT一次性编译成机器指令直接运行。</p>
 <a id="more"></a>
@@ -256,7 +304,7 @@
     <link href="https://lchml.com/life/deep-think/"/>
     <id>https://lchml.com/life/deep-think/</id>
     <published>2018-03-12T16:00:00.000Z</published>
-    <updated>2018-07-19T10:53:47.837Z</updated>
+    <updated>2018-07-19T10:53:48.000Z</updated>
     
     <content type="html"><![CDATA[<p>早上开车来公司的路上，突然意识到自己在很多事的思考上都停留在碎片化的阶段。经常会想到一件事，然后对应的想到一些观点，以及自己的态度等等，然后过几分钟以后就忘了这件事，切换到下一件事，然后不停的在这个循环中。最后会形成一种错觉，觉得自己对很多事都有很见解，有态度，有思考。但是仔细去回想一下，就会发现，其实脑子中几乎没有留下任何有价值的思维产出。在我意识到这个问题后，突然觉得有些害怕，如果一直这样下去，最后是不是就浑浑噩噩的结束了这一生。所以我开始想要探究为什么会这样，为什么会出现这种大量碎片化的思维，为什么当自己想要深入思考的时候会有无力的感觉，会不自觉得想要躲避深入的思考，为什么潜意识里总有一种焦虑的情绪，为什么又会形成一种自己有想法有思考的错觉。</p>
 <p>在互联网还没有兴起的时代，我们接触不到太多的外界信息，所以每个人都聚焦于线下的生活，一个人独处的时候会反思自己或是思考人生而不是刷朋友圈刷新闻，与朋友聚会时大家会对一件事有更深入探讨而不是不停的变换谈资，那时候信息很少，思考的时间却很多。有人说过“那时日色很慢，车马很慢，一生只够爱一个人”，正是对慢生活的怀念。如今的社会，信息爆炸，瞬息万变。每个人都从手机中不停的吸取碎片化的信息，朋友圈，社会热点，生活娱乐，朋友问候，购物指南，每条信息，每个app都想要挤到我们的脑子里来，每个产品经理都在想尽办法占据你的思维，你的时间。</p>
@@ -295,7 +343,7 @@
     <link href="https://lchml.com/life/fenghuangshan/"/>
     <id>https://lchml.com/life/fenghuangshan/</id>
     <published>2018-03-10T16:00:00.000Z</published>
-    <updated>2018-07-19T10:53:52.448Z</updated>
+    <updated>2018-07-19T10:53:54.000Z</updated>
     
     <content type="html"><![CDATA[<p>登高望远，不负好春光。网上很多攻略都说从万松书院上山，所以也没有查证就直奔万松书院。幸好买了门票准备上山的时候问了一句，工作人员告知，万松书院是封闭景区，与凤凰山有围栏隔开。上凤凰山要从停车场附近的节义亭上山。不过既然票都买了，那就进去看看吧，正好还没进去过。</p>
 <blockquote>
@@ -322,9 +370,9 @@
       <category term="life" scheme="https://lchml.com/categories/life/"/>
     
     
-      <category term="游记" scheme="https://lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
-    
       <category term="LC" scheme="https://lchml.com/tags/LC/"/>
+    
+      <category term="游记" scheme="https://lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
     
       <category term="玉皇山" scheme="https://lchml.com/tags/%E7%8E%89%E7%9A%87%E5%B1%B1/"/>
     
@@ -341,7 +389,7 @@
     <link href="https://lchml.com/life/thailand2/"/>
     <id>https://lchml.com/life/thailand2/</id>
     <published>2018-02-11T16:00:00.000Z</published>
-    <updated>2018-07-19T10:55:17.248Z</updated>
+    <updated>2018-07-19T10:55:18.000Z</updated>
     
     <content type="html"><![CDATA[<p>迟迟无法动笔写下曼谷和清迈的见闻，是因为对曼谷和清迈真的印象一般，似乎总结下来也就几句话，真的凑不成文，自然而言的要写出一篇虎头蛇尾的游记来。</p>
 <p>先说曼谷，似乎还没来到曼谷我就已经在各大驴友网上吸收了一波游记炸弹，给我留下根深蒂固的刻板印象——来曼谷就是来购物的，没有其他。由于我们俩都是那种进了商场就晕的穷光蛋，所以在曼谷就安排了1天的行程，主要是打算去见识下世界最大购物中心的风采，顺便看看有什么要买的。从芭提雅到曼谷是飞猪上叫的拼车服务，同行的是两男两女，其中女生是香港人。高速走了不到两小时，进了曼谷市区却堵了一个多小时，真是名副其实的堵城。</p>
@@ -385,7 +433,7 @@
     <link href="https://lchml.com/life/thailand/"/>
     <id>https://lchml.com/life/thailand/</id>
     <published>2018-02-07T16:00:00.000Z</published>
-    <updated>2018-07-19T10:55:14.008Z</updated>
+    <updated>2018-07-19T10:55:16.000Z</updated>
     
     <content type="html"><![CDATA[<p>虽然更远的巴厘岛也去了，但去过泰国好像没到过东南亚一般，所以我们就规划了这次泰国旅行。行程安排是我家哥哥做的，每次都是他辛苦规划，才让我们有机会一起走的更远。其实我不爱流水账式的记录一次旅行，更喜欢简单记录下自己旅途中印象深刻的人和事，所以下文只能是个旅行的梗概，但也许某些小细节能带给你触动。</p>
 <p>机票：<br>杭州直飞曼谷  ThaiLion Air<br>曼谷飞清迈    NokAir<br>清迈直飞杭州  AirAsia</p>
@@ -428,7 +476,7 @@
     <link href="https://lchml.com/technology/webcat-doc/"/>
     <id>https://lchml.com/technology/webcat-doc/</id>
     <published>2017-11-23T12:00:00.000Z</published>
-    <updated>2018-07-19T10:55:29.509Z</updated>
+    <updated>2018-07-19T10:55:30.000Z</updated>
     
     <content type="html"><![CDATA[<p>Webcat是一个基于netty的简单、高性能服务端框架，目前提供http和websocket两种协议的快速开发模式。webcat采用spring进行对象管理，因此工程需要依赖spring框架，<a href="https://github.com/licheng-xd/webcat" target="_blank" rel="external">Github地址</a>。</p>
 <p>下载源代码后，可以直接运行WebcatServerTest启动http和websocket服务，然后通过pytest文件夹中的两个python脚本对服务进行测试。</p>
@@ -486,7 +534,7 @@
     <link href="https://lchml.com/technology/jvm3/"/>
     <id>https://lchml.com/technology/jvm3/</id>
     <published>2017-11-18T03:07:00.000Z</published>
-    <updated>2018-07-19T10:54:22.465Z</updated>
+    <updated>2018-07-19T10:54:24.000Z</updated>
     
     <content type="html"><![CDATA[<p>由于当今计算机的发展现状，计算机的存储设备（内存、磁盘）与CPU的运算速度有好几个数量级的差距。因为计算机不可能仅靠寄存器来完成所有运算任务，为了更加高效的利用运算能力，现代计算机系统都不得不加入一层读写速度尽可能接近处理器运算速度的高速缓存（Cache）来作为内存与处理器之间的缓冲：把运算需要使用到的数据复制到缓存中，让运算能快速进行，当运算结束后再从缓存同步回内存之中，这样处理器就无须等待缓慢的内存读写了。除了增加了高速缓存之外，为了使得处理器内部的运算单元能尽量被充分利用，处理器可能会对输入代码进行乱序执行优化。<br><img src="jvm-cpucache.png" alt=""></p>
 <h3 id="Java内存模型"><a href="#Java内存模型" class="headerlink" title="Java内存模型"></a>Java内存模型</h3><p>不同架构的物理机可以拥有不一样的内存模型，而Java虚拟机也有自己的内存模型，它与硬件的内存模型有很大的相似之处。Java内存模型规定，所有变量都存储在主内存中（类似操作系统的住内存），每条线程还有自己的工作内存（类似于高速缓存）。与处理器的乱序优化类似，Java虚拟机的即时编译中也有类似的指令重排序优化。<br><img src="jvm-javacache.png" alt=""><br>这里所讲的主内存、工作内存与前面所说的java堆，栈，方法区等是不同维度的内存划分，两者之间并没有关系。</p>
@@ -537,7 +585,7 @@
     <link href="https://lchml.com/technology/jvm2/"/>
     <id>https://lchml.com/technology/jvm2/</id>
     <published>2017-11-15T03:07:00.000Z</published>
-    <updated>2018-07-19T10:54:20.024Z</updated>
+    <updated>2018-07-19T10:54:22.000Z</updated>
     
     <content type="html"><![CDATA[<p>相信大家都听过一句话：“计算机只认识0和1”，因此我们写的程序要经过编译器翻译成0和1构成的二进制格式才能有计算机执行。而随着计算机的发展，特别是大量建立在虚拟机上的程序语言出现，将程序编译成二进制已经不是唯一的选择，越来越多的语言选择了与操作系统无关、平台中立的格式作为编译后的存储格式。</p>
 <p>在1997年第一版Java虚拟机规范发布时就描述了：未来，我们会对Java虚拟机进行扩展，以便更好的支持其他语言在jvm上运行。如今，除了Java以外已经发展出了一大批可以在jvm上运行的语言，如Clojure、Groovy、JRuby、Jython、Scala等。而jvm实现语言无关性的基础就是虚拟机和字节码存储格式。Java虚拟机不与任何语言绑定，它只与“Class文件”这种特定的二进制文件格式有关。Class文件中包含了Java虚拟机指令集和符号表以及其他辅助信息。Java虚拟机不关系Class文件的来源，因此任何语言只要编译成符合Java虚拟机的规范的Class文件，都可以在jvm上运行。</p>
@@ -612,7 +660,7 @@
     <link href="https://lchml.com/technology/jvm1/"/>
     <id>https://lchml.com/technology/jvm1/</id>
     <published>2017-11-12T03:07:00.000Z</published>
-    <updated>2018-07-19T10:54:17.383Z</updated>
+    <updated>2018-07-19T10:54:18.000Z</updated>
     
     <content type="html"><![CDATA[<p>最近花了一周时间把《深入Java虚拟机》这本书看完了，虽然说看之前，对jvm已经基本了解了。但是看书的过程中依然会有很多恍然大悟的时刻。很多平时使用过的功能特性，在看书的过程中才知道原来背后的原理是这样的。因此，平时通过Google我们很大程度上只是“知其然”，而要做到“知其所以然”确实还需要从最基础开始学习。</p>
 <p>温故而知新，这里对看书过程中的一些心得做一个总结。</p>
@@ -663,7 +711,7 @@
     <link href="https://lchml.com/technology/grpc-trap/"/>
     <id>https://lchml.com/technology/grpc-trap/</id>
     <published>2017-06-17T16:00:00.000Z</published>
-    <updated>2018-07-19T10:53:55.166Z</updated>
+    <updated>2018-07-19T10:53:56.000Z</updated>
     
     <content type="html"><![CDATA[<p>GRPC是Google开源的一个高性能、跨语言的RPC框架，基于HTTP2协议，基于protobuf-3.x，基于Netty-4.x。</p>
 <p>最近开发一个公司的游戏项目，采用分布式的服务器架构，内部服务之间均采用GRPC进行通信。但是在测试过程中发现一个重大的bug，<strong>偶现丢包</strong>。</p>
@@ -717,7 +765,7 @@
     <link href="https://lchml.com/technology/jekyll-hexo/"/>
     <id>https://lchml.com/technology/jekyll-hexo/</id>
     <published>2017-04-19T07:07:06.000Z</published>
-    <updated>2018-07-19T10:54:15.040Z</updated>
+    <updated>2018-07-19T10:54:16.000Z</updated>
     
     <content type="html"><![CDATA[<p>拖了大半年，这次终于下定决心动手把博客jekyll迁移到Hexo。为什么要迁移，就不细说了，反正就是因为被Hexo的各种优点所吸引。整个迁移花了两天时间。下载安装hexo这些都比较简单，官方文档就够用了。主要说说踩到的坑以及建议。</p>
 <p>第一次push到github，一定要先将github上原jekyll博客的内容清空，再push新的内容。还有，由于原本的博客内容已经比较多，加上游记中有大量的图片，导致第一次往github push时，文件数量多，容量大。容易失败，最好选择在够快够稳定的网络环境中进行。</p>
@@ -752,7 +800,7 @@
     <link href="https://lchml.com/life/sanya/"/>
     <id>https://lchml.com/life/sanya/</id>
     <published>2017-04-04T16:00:00.000Z</published>
-    <updated>2018-07-19T10:54:57.128Z</updated>
+    <updated>2018-07-19T10:54:58.000Z</updated>
     
     <content type="html"><![CDATA[<p>芭蕉椰树艳阳，蓝天碧海山庄<br><img src="/life/sanya/sanya1.jpg" alt="亚龙湾街头" title="亚龙湾街头"><br><img src="/life/sanya/sanya2.jpg" alt="亚龙湾天玺海景" title="亚龙湾天玺海景"></p>
 <p>现在的游记好像上来不放两张扎眼的靓图就不好意思似的，的确，你以为真的只要见过就可以常记心间吗？人的大脑善于遗忘，所以摄影才横行人间。<br>这是继巴厘岛之后第二次热带游记。说是游记，好像也没有什么可以说的，毕竟酒店游真的只是在酒店躺了五天，好在是豪华海景房，否则真觉得对不起自己了。</p>
@@ -786,7 +834,7 @@
     <link href="https://lchml.com/technology/nas-netgear/"/>
     <id>https://lchml.com/technology/nas-netgear/</id>
     <published>2016-11-16T16:00:00.000Z</published>
-    <updated>2018-07-19T10:54:38.311Z</updated>
+    <updated>2018-07-19T10:54:40.000Z</updated>
     
     <content type="html"><![CDATA[<p>前段时间，360网盘即将关停服务的消息在网上引起了不小的风波，这已经不是第一次出现互联网免费服务突然关停了，相信也不会是最后一次，毕竟大家都是出来做企业的，没有义务一直为你提供免费的服务，当确定在这一领域没有盈利可期时，服务关停也就是必然的事了。</p>
 <p>这里我们不去讨论和批判所谓的互联网文化，我们说点做点更务实的事情。既然免费云存储是不可靠不安全的，那么作为个人用户，还有什么更好的数据存储选择呢？这就是我们今天要说的主角：家庭网络存储，也就是家用NAS（Network Attached Storage）。话不多说，先上家里的网络架构图。</p>
@@ -832,7 +880,7 @@
     <link href="https://lchml.com/life/cosmic-dream/"/>
     <id>https://lchml.com/life/cosmic-dream/</id>
     <published>2016-10-16T16:00:00.000Z</published>
-    <updated>2018-07-19T10:53:43.345Z</updated>
+    <updated>2018-07-19T10:53:44.000Z</updated>
     
     <content type="html"><![CDATA[<p>今日清晨 2016-10-17 7:30 神州十一号飞船成功发射，两名宇航员进入太空。</p>
 <p>对于从小就有着探索太空梦想的我，这是一件激动人心的事。虽然梦想没能自己实现，但只要看到人类踏上宇宙的征程，内心总会澎湃不已。总会想起《星际迷航》中的经典台词：</p>
@@ -866,7 +914,7 @@
     <link href="https://lchml.com/technology/yxguard/"/>
     <id>https://lchml.com/technology/yxguard/</id>
     <published>2016-09-14T16:00:00.000Z</published>
-    <updated>2018-07-19T10:55:31.759Z</updated>
+    <updated>2018-07-19T10:55:32.000Z</updated>
     
     <content type="html"><![CDATA[<p>在调研了多个开源服务发现，或服务治理平台之后，如Eureka、Consul，dubbo等，发现由于都不能完美的适配当前已有系统。</p>
 <p>原方案的缺点，单个节点独立部署，可靠性差，扩展性差。不方便维护更新，更新一台服务器时，需要先把对应的服务调用方的流量切换到其他服务器，然后对服务进行更新，更新后再把流量切回来。整个过程操作复杂、容易出错。当服务器较多时，耗时耗力。</p>
@@ -904,7 +952,7 @@
     <link href="https://lchml.com/life/hengdian/"/>
     <id>https://lchml.com/life/hengdian/</id>
     <published>2016-06-26T16:00:00.000Z</published>
-    <updated>2018-07-19T10:53:59.985Z</updated>
+    <updated>2018-07-19T10:54:00.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>一个人，一座城；这些人，这座城。                                   —— HML</p>
@@ -957,7 +1005,7 @@
     <link href="https://lchml.com/life/damingshan/"/>
     <id>https://lchml.com/life/damingshan/</id>
     <published>2016-06-18T16:00:00.000Z</published>
-    <updated>2018-07-19T10:53:45.825Z</updated>
+    <updated>2018-07-19T10:53:46.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>有那么一刻，感觉会就这样走到天荒地老没有尽头。                                   —— HML</p>
@@ -1000,100 +1048,6 @@
       <category term="游记" scheme="https://lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
     
       <category term="HML" scheme="https://lchml.com/tags/HML/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Eureka文档翻译（下）</title>
-    <link href="https://lchml.com/technology/netflix-eureka-rest/"/>
-    <id>https://lchml.com/technology/netflix-eureka-rest/</id>
-    <published>2016-05-28T16:00:00.000Z</published>
-    <updated>2018-07-19T10:54:42.343Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="REST接口"><a href="#REST接口" class="headerlink" title="REST接口"></a>REST接口</h3><p>下面的REST接口让非Java应用也可以使用Eureka。  <strong>appID</strong>：应用名  <strong>instanceID</strong>：实例的唯一ID（AWS中是实例的id，在其他环节是实例的hostname）。JSON、XML协议分别应使用对应的Content-type：application/json、application/xml。</p>
-<table border="1" cellpadding="10"><br>  <tr><br>    <th>Operation</th><br>    <th>HTTP action</th><br>    <th>Description</th><br>  </tr><br>  <tr><br>    <td>Register new application instance</td><br>    <td>POST /eureka/v2/apps/appID</td><br>    <td>Input: JSON/XML payload HTTP Code: 204 on success</td><br>  </tr><br>  <tr><br>    <td>De-register application instance</td><br>    <td>DELETE /eureka/v2/apps/appID/instanceID</td><br>    <td>HTTP Code: 200 on success</td><br>  </tr><br>  <tr><br>    <td>Send application instance heartbeat</td><br>    <td>PUT /eureka/v2/apps/appID/instanceID</td><br>    <td>HTTP Code:<br><em> 200 on success
-</em> 404 if instanceID doesn’t exist</td><br>  </tr><br>  <tr><br>    <td>Query for all instances</td><br>    <td>GET /eureka/v2/apps</td><br>    <td>HTTP Code: 200 on success Output: JSON/XML</td><br>  </tr><br>  <tr><br>    <td>Query for all appID instances</td><br>    <td>GET /eureka/v2/apps/appID</td><br>    <td>HTTP Code: 200 on success Output: JSON/XML</td><br>  </tr><br>  <tr><br>    <td>Query for a specific appID/instanceID</td><br>    <td>GET /eureka/v2/apps/appID/instanceID</td><br>    <td>HTTP Code: 200 on success Output: JSON/XML</td><br>  </tr><br>  <tr><br>    <td>Query for a specific instanceID</td><br>    <td>GET /eureka/v2/instances/instanceID</td><br>    <td>HTTP Code: 200 on success Output: JSON/XML</td><br>  </tr><br>  <tr><br>    <td>Take instance out of service</td><br>    <td>PUT /eureka/v2/apps/appID/instanceID/status?value=OUT_OF_SERVICE</td><br>    <td>HTTP Code:<br><em> 200 on success
-</em> 500 on failure</td><br>  </tr><br>  <tr><br>    <td>Put instance back into service (remove override)</td><br>    <td>DELETE /eureka/v2/apps/appID/instanceID/status?value=UP (The value=UP is optional, it is used as a suggestion for the fallback status due to removal of the override)</td><br>    <td>HTTP Code:<br><em> 200 on success
-</em> 500 on failure</td><br>  </tr><br>  <tr><br>    <td>Update metadata</td><br>    <td>PUT /eureka/v2/apps/appID/instanceID/metadata?key=value</td><br>    <td>HTTP Code:<br><em> 200 on success
-</em> 500 on failure</td><br>  </tr><br>  <tr><br>    <td>Query for all instances under a particular vip address</td><br>    <td>GET /eureka/v2/vips/vipAddress</td><br>    <td><em> HTTP Code: 200 on success Output: JSON/XML 
-</em> 404 if the vipAddress does not exist.</td><br>  </tr><br>  <tr><br>    <td>Query for all instances under a particular secure vip address</td><br>    <td>GET /eureka/v2/svips/svipAddress</td><br>    <td><em> HTTP Code: 200 on success Output: JSON/XML 
-</em> 404 if the svipAddress does not exist.<br></td><br>  </tr><br></table>
-
-<h3 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h3><p>注册时，你需要发送一个符合下面XSD的XML（或JSON）的包体。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">xsd:schema</span> <span class="attr">xmlns:xsd</span>=<span class="string">"http://www.w3.org/2001/XMLSchema"</span> <span class="attr">elementFormDefault</span>=<span class="string">"qualified"</span> <span class="attr">attributeFormDefault</span>=<span class="string">"unqualified"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"instance"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">xsd:complexType</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">xsd:all</span>&gt;</span></div><div class="line">                <span class="comment">&lt;!-- hostName in ec2 should be the public dns name, within ec2 public dns name will</span></div><div class="line">                     always resolve to its private IP --&gt;</div><div class="line">                <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"hostName"</span> <span class="attr">type</span>=<span class="string">"xsd:string"</span> /&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"app"</span> <span class="attr">type</span>=<span class="string">"xsd:string"</span> /&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"ipAddr"</span> <span class="attr">type</span>=<span class="string">"xsd:string"</span> /&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"vipAddress"</span> <span class="attr">type</span>=<span class="string">"xsd:string"</span> /&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"secureVipAddress"</span> <span class="attr">type</span>=<span class="string">"xsd:string"</span> /&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"status"</span> <span class="attr">type</span>=<span class="string">"statusType"</span> /&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"port"</span> <span class="attr">type</span>=<span class="string">"xsd:positiveInteger"</span> <span class="attr">minOccurs</span>=<span class="string">"0"</span> /&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"securePort"</span> <span class="attr">type</span>=<span class="string">"xsd:positiveInteger"</span> /&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"homePageUrl"</span> <span class="attr">type</span>=<span class="string">"xsd:string"</span> /&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"statusPageUrl"</span> <span class="attr">type</span>=<span class="string">"xsd:string"</span> /&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"healthCheckUrl"</span> <span class="attr">type</span>=<span class="string">"xsd:string"</span> /&gt;</span></div><div class="line">               <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">ref</span>=<span class="string">"dataCenterInfo"</span> <span class="attr">minOccurs</span>=<span class="string">"1"</span> <span class="attr">maxOccurs</span>=<span class="string">"1"</span> /&gt;</span></div><div class="line">                <span class="comment">&lt;!-- optional --&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">ref</span>=<span class="string">"leaseInfo"</span> <span class="attr">minOccurs</span>=<span class="string">"0"</span>/&gt;</span></div><div class="line">                <span class="comment">&lt;!-- optional app specific metadata --&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"metadata"</span> <span class="attr">type</span>=<span class="string">"appMetadataType"</span> <span class="attr">minOccurs</span>=<span class="string">"0"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">xsd:all</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">xsd:complexType</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">xsd:element</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"dataCenterInfo"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">xsd:complexType</span>&gt;</span></div><div class="line">             <span class="tag">&lt;<span class="name">xsd:all</span>&gt;</span></div><div class="line">                 <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"name"</span> <span class="attr">type</span>=<span class="string">"dcNameType"</span> /&gt;</span></div><div class="line">                 <span class="comment">&lt;!-- metadata is only required if name is Amazon --&gt;</span></div><div class="line">                 <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"metadata"</span> <span class="attr">type</span>=<span class="string">"amazonMetdataType"</span> <span class="attr">minOccurs</span>=<span class="string">"0"</span>/&gt;</span></div><div class="line">             <span class="tag">&lt;/<span class="name">xsd:all</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">xsd:complexType</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">xsd:element</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"leaseInfo"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">xsd:complexType</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">xsd:all</span>&gt;</span></div><div class="line">                <span class="comment">&lt;!-- (optional) if you want to change the length of lease - default if 90 secs --&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"evictionDurationInSecs"</span> <span class="attr">minOccurs</span>=<span class="string">"0"</span>  <span class="attr">type</span>=<span class="string">"xsd:positiveInteger"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">xsd:all</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">xsd:complexType</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">xsd:element</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">xsd:simpleType</span> <span class="attr">name</span>=<span class="string">"dcNameType"</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!-- Restricting the values to a set of value using 'enumeration' --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">xsd:restriction</span> <span class="attr">base</span> = <span class="string">"xsd:string"</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">xsd:enumeration</span> <span class="attr">value</span> = <span class="string">"MyOwn"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">xsd:enumeration</span> <span class="attr">value</span> = <span class="string">"Amazon"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">xsd:restriction</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">xsd:simpleType</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">xsd:simpleType</span> <span class="attr">name</span>=<span class="string">"statusType"</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!-- Restricting the values to a set of value using 'enumeration' --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">xsd:restriction</span> <span class="attr">base</span> = <span class="string">"xsd:string"</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">xsd:enumeration</span> <span class="attr">value</span> = <span class="string">"UP"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">xsd:enumeration</span> <span class="attr">value</span> = <span class="string">"DOWN"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">xsd:enumeration</span> <span class="attr">value</span> = <span class="string">"STARTING"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">xsd:enumeration</span> <span class="attr">value</span> = <span class="string">"OUT_OF_SERVICE"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">xsd:enumeration</span> <span class="attr">value</span> = <span class="string">"UNKNOWN"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">xsd:restriction</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">xsd:simpleType</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">xsd:complexType</span> <span class="attr">name</span>=<span class="string">"amazonMetdataType"</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!-- From &lt;a class="jive-link-external-small" href="http://docs.amazonwebservices.com/AWSEC2/latest/DeveloperGuide/index.html?AESDG-chapter-instancedata.html" target="_blank"&gt;http://docs.amazonwebservices.com/AWSEC2/latest/DeveloperGuide/index.html?AESDG-chapter-instancedata.html&lt;/a&gt; --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">xsd:all</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"ami-launch-index"</span> <span class="attr">type</span>=<span class="string">"xsd:string"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"local-hostname"</span> <span class="attr">type</span>=<span class="string">"xsd:string"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"availability-zone"</span> <span class="attr">type</span>=<span class="string">"xsd:string"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"instance-id"</span> <span class="attr">type</span>=<span class="string">"xsd:string"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"public-ipv4"</span> <span class="attr">type</span>=<span class="string">"xsd:string"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"public-hostname"</span> <span class="attr">type</span>=<span class="string">"xsd:string"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"ami-manifest-path"</span> <span class="attr">type</span>=<span class="string">"xsd:string"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"local-ipv4"</span> <span class="attr">type</span>=<span class="string">"xsd:string"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"hostname"</span> <span class="attr">type</span>=<span class="string">"xsd:string"</span>/&gt;</span>       </div><div class="line">            <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"ami-id"</span> <span class="attr">type</span>=<span class="string">"xsd:string"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">xsd:element</span> <span class="attr">name</span>=<span class="string">"instance-type"</span> <span class="attr">type</span>=<span class="string">"xsd:string"</span> /&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">xsd:all</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">xsd:complexType</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">xsd:complexType</span> <span class="attr">name</span>=<span class="string">"appMetadataType"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">xsd:sequence</span>&gt;</span></div><div class="line">            <span class="comment">&lt;!-- this is optional application specific name, value metadata --&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">xsd:any</span> <span class="attr">minOccurs</span>=<span class="string">"0"</span> <span class="attr">maxOccurs</span>=<span class="string">"unbounded"</span> <span class="attr">processContents</span>=<span class="string">"skip"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">xsd:sequence</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">xsd:complexType</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">xsd:schema</span>&gt;</span></div></pre></td></tr></table></figure>
-<h4 id="心跳"><a href="#心跳" class="headerlink" title="心跳"></a>心跳</h4><p>Request： PUT /eureka/v2/apps/MYAPP/i-6589ef6<br>Response：<br>&emsp;Status: 200 (on success)<br>&emsp;404 (eureka doesn’t know about you, Register yourself first)<br>&emsp;500 (failure)</p>
-<h4 id="注销"><a href="#注销" class="headerlink" title="注销"></a>注销</h4><p>如果Eureka在指定时间内没有收到节点的心跳包，则节点会被自动注销<br>Request： DELETE /eureka/v2/apps/MYAPP/i-6589ef6<br>Response：<br>&emsp;Status: 200 (on success)<br>&emsp;500 (failure)</p>
-<h3 id="节点互通"><a href="#节点互通" class="headerlink" title="节点互通"></a>节点互通</h3><p>Eureka Client优先尝试与同分区内的Server节点通信，如果失败，则尝试其他分区。</p>
-<p>一旦节点开始提供服务，节点上所有的操作信息都会被复制到互通的其他节点上。如果某个操作失败了，下一个心跳需要同步的信息也会被复制到其他节点。</p>
-<p>当一个Server节点启动时，会尝试从相邻节点获取所有实例的注册信息。如果获取失败，或挨个尝试所有其他节点直到失败。如果获取成功，他会根据拿到的信息设置好心跳间隔。任何时候，如果心跳失败比例低于配置值（15分钟内低于85%），Eureka Server会保证该实例的注册信息不会过期。</p>
-<p>在Netflix，上述保护措施被称为自我保护模式，主要用于保护Client集群与Server之间网络不稳定的情况。在这种情况下，Server会尽量保护已经注册的信息。但是在有大量连接中断的情况下，可能会导致Client拿到已经不存在的服务实例。Client必须保证对Eureka Server返回的无效或不存在的实例有容错能力。这种情况下，最好的保护措施是快速超时并重试其他服务器。</p>
-<p>当一个Server节点不能从相邻节点中获得注册信息时，它会等待几分钟（约5分钟）让客户端可以注册上来。Server会尽量保证不会只提供部分实例的信息，以免造成负载不均衡的问题。</p>
-<p>Eureka Server节点之间的互通与Server和Client之间的互通一样。</p>
-<p>针对Server节点之间的通信也有一些值得注意的<a href="https://github.com/Netflix/eureka/blob/master/eureka-core/src/main/java/com/netflix/eureka/EurekaServerConfig.java" target="_blank" rel="external">配置项</a></p>
-<h4 id="当节点之间网络中断时发生了什么？"><a href="#当节点之间网络中断时发生了什么？" class="headerlink" title="当节点之间网络中断时发生了什么？"></a>当节点之间网络中断时发生了什么？</h4><p>当发生节点之间的网络中断时，可能出现如下情况：</p>
-<ul>
-<li>节点之间的心跳失败，Server进入自我保护模式（self-preservation）保护当前状态。</li>
-<li>注册操作可能发生在某个孤立的Server上，导致部分客户端可以拿到新的注册信息，部分拿不到。</li>
-<li>当网络恢复到稳定状态后，状态会自我修复到正确状态。一旦节点之间可以互通，注册信息会自动完成节点之间的同步。</li>
-</ul>
-<p>原则是，当发生网络中断时，Eureka Server会尽可能保持可用可恢复状态，但在这期间客户端拿到信息可能不同。</p>
-<h3 id="修改默认配置"><a href="#修改默认配置" class="headerlink" title="修改默认配置"></a>修改默认配置</h3><p>Eureka的默认配置适用于大部分情况，但是如果你想修改默认配置，这里有3种配置方式可以参考。</p>
-<p>你可以继承下面的默认配置类来实现自定义的配置。</p>
-<p><strong>Important：不要使用interfaces，它们只是作为文档使用，并且将来可能被修改。</strong></p>
-<ul>
-<li><a href="https://github.com/Netflix/eureka/blob/master/eureka-client/src/main/java/com/netflix/appinfo/CloudInstanceConfig.java" target="_blank" rel="external">Clound</a>或<a href="https://github.com/Netflix/eureka/blob/master/eureka-client/src/main/java/com/netflix/appinfo/MyDataCenterInstanceConfig.java" target="_blank" rel="external">Datacenter</a>配置类都继承于<a href="https://github.com/Netflix/eureka/blob/master/eureka-client/src/main/java/com/netflix/appinfo/PropertiesInstanceConfig.java" target="_blank" rel="external">PropertiesInstanceConfig</a></li>
-<li><a href="https://github.com/Netflix/eureka/blob/master/eureka-client/src/main/java/com/netflix/discovery/DefaultEurekaClientConfig.java" target="_blank" rel="external">Eureka Client</a> 配置类</li>
-<li><a href="https://github.com/Netflix/eureka/blob/master/eureka-core/src/main/java/com/netflix/eureka/DefaultEurekaServerConfig.java" target="_blank" rel="external">Eureka Server</a> 配置类</li>
-</ul>
-<p>注意以上内容同时作为（即）Eureka中配置默认值的文档说明。</p>
-<h4 id="在注册信息中增加自定义数据"><a href="#在注册信息中增加自定义数据" class="headerlink" title="在注册信息中增加自定义数据"></a>在注册信息中增加自定义数据</h4><p>有时候你可能想要在注册信息中增加一些自定义的信息用于环境部署。例如，你可能想要传递一个特定环境需要用到的自定义environment id。Eureka提供了增加标准注册数据以外的自定义KV数据的能力，有两种方法：</p>
-<h4 id="获取数据"><a href="#获取数据" class="headerlink" title="获取数据"></a>获取数据</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">String myValue = instanceInfo.getMetadata().get(<span class="string">"myKey"</span>);</div></pre></td></tr></table></figure>
-<h4 id="第一种：静态配置"><a href="#第一种：静态配置" class="headerlink" title="第一种：静态配置"></a>第一种：静态配置</h4><p>所有eureka.metadata.mykey=myvalue的KV数据都会被添加到注册数据中。</p>
-<h4 id="第二种：动态代码"><a href="#第二种：动态代码" class="headerlink" title="第二种：动态代码"></a>第二种：动态代码</h4><p>首先你需要根据需求自己实现<a href="https://github.com/Netflix/eureka/blob/master/eureka-client/src/main/java/com/netflix/appinfo/EurekaInstanceConfig.java" target="_blank" rel="external">EurekaInstanceConfig</a>接口，然后重载<code>public Map&lt;String, String&gt; getMetadataMap()</code>方法来返回你想要的数据。可以参考<a href="https://github.com/Netflix/eureka/blob/master/eureka-client/src/main/java/com/netflix/appinfo/PropertiesInstanceConfig.java" target="_blank" rel="external">PropertiesInstanceConfig</a>的实现。</p>
-<h3 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h3><h4 id="当节点之间网络中断时发生了什么？-1"><a href="#当节点之间网络中断时发生了什么？-1" class="headerlink" title="当节点之间网络中断时发生了什么？"></a>当节点之间网络中断时发生了什么？</h4><p>当发生节点之间的网络中断时，可能出现如下情况：</p>
-<ul>
-<li>节点之间的心跳失败，Server进入自我保护模式（self-preservation）保护当前状态。</li>
-<li>注册操作可能发生在某个孤立的Server上，导致部分客户端可以拿到新的注册信息，部分拿不到。</li>
-<li>当网络恢复到稳定状态后，状态会自我修复到正确状态。一旦节点之间可以互通，注册信息会自动完成节点之间的同步。</li>
-</ul>
-<p>原则是，当发生网络中断时，Eureka Server会尽可能保持可用可恢复状态，但在这期间客户端拿到信息可能不同。</p>
-<h4 id="为什么不用HA-proxy做负载均衡？"><a href="#为什么不用HA-proxy做负载均衡？" class="headerlink" title="为什么不用HA proxy做负载均衡？"></a>为什么不用HA proxy做负载均衡？</h4><p>由于AWS固有的原因，实例总会频繁出现上下线。ASG可以根据流量来扩展或撤下实例。假如你使用HAProxy，就需要知道如何自己处理对这种动态。而这恰恰是Eureka所做的事。</p>
-<p>有一种情况，当需要作为有状态中间件的代理时，可以用HAProxy配合Eureka使用。但是通常情况下我们的中间件服务是无状态的，所以没有理由在多增加网络一跳情况下来使用这个proxy。还有一个原因是Eureka Client会缓存拿到的注册表信息，使得系统更有弹性。而使用HAProxy就会有这个不足，系统没有自恢复能力。</p>
-<h4 id="为什么不用Curator-Zookeeper做服务注册？"><a href="#为什么不用Curator-Zookeeper做服务注册？" class="headerlink" title="为什么不用Curator/Zookeeper做服务注册？"></a>为什么不用Curator/Zookeeper做服务注册？</h4><p>Zookeeper和Eureka确实提供了某些有共同的功能，特别是在复制注册信息这点上。Eureka也可以用Zookeeper做注册信息缓存和同步，但这仅仅是Eureka提供的其中一小部分功能。</p>
-<p>Eureka还提供了信息同步以外的许多功能：</p>
-<ul>
-<li>提供注册、心跳、注销操作等的REST接口。</li>
-<li>在负载的弹性IP绑定环境中，保持信息及时更新，以及部署回滚，自动扩展和自恢复能力等。</li>
-<li>针对网络不稳定情况的容灾能力和自恢复能力。</li>
-</ul>
-<p>Zookeeper的强大之处在于它的leader election（选举），ordered updates，distributed synchronization along with its consistency guarantees (保证分布式的一致性)。</p>
-<p>除了注册表复制以外，其他特性都不适用解决如下问题：</p>
-<ul>
-<li>需要找到一个方法像Eureka一样来为zookeeper分配弹性IP。</li>
-<li>处理当Zookeeper失效的情况。</li>
-</ul>
-<p>另外，Eureka设计中特别注意不去强依赖第三方组件。</p>
-<ul>
-<li>大部分服务依赖Eureka启动</li>
-<li>降低复杂度</li>
-<li>避免出现另一个故障点</li>
-</ul>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h3 id=&quot;REST接口&quot;&gt;&lt;a href=&quot;#REST接口&quot; class=&quot;headerlink&quot; title=&quot;REST接口&quot;&gt;&lt;/a&gt;REST接口&lt;/h3&gt;&lt;p&gt;下面的REST接口让非Java应用也可以使用Eureka。  &lt;strong&gt;appID&lt;/strong&gt;：
-    
-    </summary>
-    
-      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
-    
-    
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
-      <category term="服务发现" scheme="https://lchml.com/tags/%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/"/>
-    
-      <category term="Eureka" scheme="https://lchml.com/tags/Eureka/"/>
     
   </entry>
   

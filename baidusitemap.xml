@@ -4,18 +4,18 @@
 
     
   <url>
-    <loc>https://lchml.com/technology/hikari-maxlifetime/</loc>
-    <lastmod>2018-07-19T12:35:49.372Z</lastmod>
+    <loc>https://lchml.com/technology/druid-validation/</loc>
+    <lastmod>2018-09-07T15:23:43.857Z</lastmod>
     <data>
         <display>
-        <title>Hikari经常出现Failed to validate connection并阻塞应用线程问题</title>
-        <pubTime>2018-07-10T16:00:00.000Z</pubTime>
+        <title>Druid经常出现连接不可用的问题</title>
+        <pubTime>2018-09-05T16:00:00.000Z</pubTime>
         
         <tag>LC</tag>
          
-        <tag>Java</tag>
+        <tag>Druid</tag>
          
-        <tag>Hirika</tag>
+        <tag>Java</tag>
          
         <tag>数据库</tag>
          
@@ -30,8 +30,34 @@
 
     
   <url>
+    <loc>https://lchml.com/technology/hikari-maxlifetime/</loc>
+    <lastmod>2018-09-07T15:15:03.155Z</lastmod>
+    <data>
+        <display>
+        <title>Hikari经常出现Failed to validate connection并阻塞应用线程问题</title>
+        <pubTime>2018-07-10T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>Java</tag>
+         
+        <tag>数据库</tag>
+         
+        <tag>Hirika</tag>
+         
+         
+           
+             
+              <breadCrumb title="technology" url="https://lchml.com/categories/technology/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://lchml.com/technology/zipkin/</loc>
-    <lastmod>2018-07-19T10:57:09.170Z</lastmod>
+    <lastmod>2018-07-19T10:57:10.000Z</lastmod>
     <data>
         <display>
         <title>分布式调用追踪系统Zipkin集成</title>
@@ -63,7 +89,7 @@
     
   <url>
     <loc>https://lchml.com/technology/yxguard/</loc>
-    <lastmod>2018-07-19T10:55:31.759Z</lastmod>
+    <lastmod>2018-07-19T10:55:32.000Z</lastmod>
     <data>
         <display>
         <title>基于Zookeeper实现的服务注册发现平台</title>
@@ -87,7 +113,7 @@
     
   <url>
     <loc>https://lchml.com/technology/webcat-doc/</loc>
-    <lastmod>2018-07-19T10:55:29.509Z</lastmod>
+    <lastmod>2018-07-19T10:55:30.000Z</lastmod>
     <data>
         <display>
         <title>Webcat文档</title>
@@ -115,7 +141,7 @@
     
   <url>
     <loc>https://lchml.com/life/travel-in-japan-3/</loc>
-    <lastmod>2018-07-19T10:55:27.069Z</lastmod>
+    <lastmod>2018-07-19T10:55:28.000Z</lastmod>
     <data>
         <display>
         <title>带XML去旅行之日本（下）</title>
@@ -139,7 +165,7 @@
     
   <url>
     <loc>https://lchml.com/life/travel-in-japan-2/</loc>
-    <lastmod>2018-07-19T10:55:24.367Z</lastmod>
+    <lastmod>2018-07-19T10:55:26.000Z</lastmod>
     <data>
         <display>
         <title>带XML去旅行之日本（中）</title>
@@ -163,7 +189,7 @@
     
   <url>
     <loc>https://lchml.com/life/travel-in-japan-1/</loc>
-    <lastmod>2018-07-19T10:55:22.050Z</lastmod>
+    <lastmod>2018-07-19T10:55:24.000Z</lastmod>
     <data>
         <display>
         <title>带XML去旅行之日本（上）</title>
@@ -187,7 +213,7 @@
     
   <url>
     <loc>https://lchml.com/technology/theory-of-relativity/</loc>
-    <lastmod>2018-07-19T10:55:19.543Z</lastmod>
+    <lastmod>2018-07-19T10:55:20.000Z</lastmod>
     <data>
         <display>
         <title>相对论</title>
@@ -211,7 +237,7 @@
     
   <url>
     <loc>https://lchml.com/life/thailand2/</loc>
-    <lastmod>2018-07-19T10:55:17.248Z</lastmod>
+    <lastmod>2018-07-19T10:55:18.000Z</lastmod>
     <data>
         <display>
         <title>理想照进现实 —— Thailand（下）</title>
@@ -239,7 +265,7 @@
     
   <url>
     <loc>https://lchml.com/life/thailand/</loc>
-    <lastmod>2018-07-19T10:55:14.008Z</lastmod>
+    <lastmod>2018-07-19T10:55:16.000Z</lastmod>
     <data>
         <display>
         <title>芭提雅，你的不夜城 —— Thailand（上）</title>
@@ -265,7 +291,7 @@
     
   <url>
     <loc>https://lchml.com/technology/svn-to-git/</loc>
-    <lastmod>2018-07-19T10:55:11.958Z</lastmod>
+    <lastmod>2018-07-19T10:55:12.000Z</lastmod>
     <data>
         <display>
         <title>svn迁移git</title>
@@ -289,7 +315,7 @@
     
   <url>
     <loc>https://lchml.com/technology/summary1/</loc>
-    <lastmod>2018-07-19T10:55:09.663Z</lastmod>
+    <lastmod>2018-07-19T10:55:10.000Z</lastmod>
     <data>
         <display>
         <title>近期小结</title>
@@ -311,7 +337,7 @@
     
   <url>
     <loc>https://lchml.com/life/suffer/</loc>
-    <lastmod>2018-07-19T10:55:07.543Z</lastmod>
+    <lastmod>2018-07-19T10:55:08.000Z</lastmod>
     <data>
         <display>
         <title>天行健，君子以自强不息</title>
@@ -333,7 +359,7 @@
     
   <url>
     <loc>https://lchml.com/life/some-principle/</loc>
-    <lastmod>2018-07-19T10:55:05.425Z</lastmod>
+    <lastmod>2018-07-19T10:55:06.000Z</lastmod>
     <data>
         <display>
         <title>悟道</title>
@@ -355,7 +381,7 @@
     
   <url>
     <loc>https://lchml.com/life/some-advices/</loc>
-    <lastmod>2018-07-19T10:55:03.431Z</lastmod>
+    <lastmod>2018-07-19T10:55:04.000Z</lastmod>
     <data>
         <display>
         <title>点滴生活</title>
@@ -377,7 +403,7 @@
     
   <url>
     <loc>https://lchml.com/technology/shell-commands/</loc>
-    <lastmod>2018-07-19T10:55:01.147Z</lastmod>
+    <lastmod>2018-07-19T10:55:02.000Z</lastmod>
     <data>
         <display>
         <title>Shell常用命令</title>
@@ -399,15 +425,15 @@
     
   <url>
     <loc>https://lchml.com/life/self-discipline/</loc>
-    <lastmod>2018-07-19T10:54:58.951Z</lastmod>
+    <lastmod>2018-07-19T10:55:00.000Z</lastmod>
     <data>
         <display>
         <title>少有人走的路</title>
         <pubTime>2015-12-15T16:00:00.000Z</pubTime>
         
-        <tag>转载</tag>
-         
         <tag>LC</tag>
+         
+        <tag>转载</tag>
          
          
            
@@ -421,7 +447,7 @@
     
   <url>
     <loc>https://lchml.com/life/sanya/</loc>
-    <lastmod>2018-07-19T10:54:57.128Z</lastmod>
+    <lastmod>2018-07-19T10:54:58.000Z</lastmod>
     <data>
         <display>
         <title>三亚记事</title>
@@ -445,7 +471,7 @@
     
   <url>
     <loc>https://lchml.com/life/rest/</loc>
-    <lastmod>2018-07-19T10:54:54.992Z</lastmod>
+    <lastmod>2018-07-19T10:54:56.000Z</lastmod>
     <data>
         <display>
         <title>这才叫休息</title>
@@ -467,7 +493,7 @@
     
   <url>
     <loc>https://lchml.com/technology/redis/</loc>
-    <lastmod>2018-07-19T10:54:52.929Z</lastmod>
+    <lastmod>2018-07-19T10:54:54.000Z</lastmod>
     <data>
         <display>
         <title>redis高可用</title>
@@ -489,7 +515,7 @@
     
   <url>
     <loc>https://lchml.com/life/ourworld/</loc>
-    <lastmod>2018-07-19T10:54:50.498Z</lastmod>
+    <lastmod>2018-07-19T10:54:52.000Z</lastmod>
     <data>
         <display>
         <title>我们的世界</title>
@@ -511,7 +537,7 @@
     
   <url>
     <loc>https://lchml.com/technology/nutcracker/</loc>
-    <lastmod>2018-07-19T10:54:48.383Z</lastmod>
+    <lastmod>2018-07-19T10:54:50.000Z</lastmod>
     <data>
         <display>
         <title>Twemproxy(nutcracker)容易误解的参数</title>
@@ -535,7 +561,7 @@
     
   <url>
     <loc>https://lchml.com/technology/netty2/</loc>
-    <lastmod>2018-07-19T10:54:46.184Z</lastmod>
+    <lastmod>2018-07-19T10:54:48.000Z</lastmod>
     <data>
         <display>
         <title>Netty源码分析·贰</title>
@@ -559,7 +585,7 @@
     
   <url>
     <loc>https://lchml.com/technology/netty1/</loc>
-    <lastmod>2018-07-19T10:54:44.232Z</lastmod>
+    <lastmod>2018-07-19T10:54:46.000Z</lastmod>
     <data>
         <display>
         <title>Netty源码分析·壹</title>
@@ -583,7 +609,7 @@
     
   <url>
     <loc>https://lchml.com/technology/netflix-eureka-rest/</loc>
-    <lastmod>2018-07-19T10:54:42.343Z</lastmod>
+    <lastmod>2018-07-19T10:54:44.000Z</lastmod>
     <data>
         <display>
         <title>Eureka文档翻译（下）</title>
@@ -607,7 +633,7 @@
     
   <url>
     <loc>https://lchml.com/technology/netflix-eureka-glance/</loc>
-    <lastmod>2018-07-19T10:54:40.351Z</lastmod>
+    <lastmod>2018-07-19T10:54:42.000Z</lastmod>
     <data>
         <display>
         <title>Eureka文档翻译（上）</title>
@@ -631,7 +657,7 @@
     
   <url>
     <loc>https://lchml.com/technology/nas-netgear/</loc>
-    <lastmod>2018-07-19T10:54:38.311Z</lastmod>
+    <lastmod>2018-07-19T10:54:40.000Z</lastmod>
     <data>
         <display>
         <title>家庭网络，科学上网</title>
@@ -657,7 +683,7 @@
     
   <url>
     <loc>https://lchml.com/technology/moviehell/</loc>
-    <lastmod>2018-07-19T10:54:35.464Z</lastmod>
+    <lastmod>2018-07-19T10:54:36.000Z</lastmod>
     <data>
         <display>
         <title>Movie Hell诞生之路</title>
@@ -681,7 +707,7 @@
     
   <url>
     <loc>https://lchml.com/life/mountaineering/</loc>
-    <lastmod>2018-07-19T10:54:32.906Z</lastmod>
+    <lastmod>2018-07-19T10:54:34.000Z</lastmod>
     <data>
         <display>
         <title>龙门 · 杏梅尖</title>
@@ -705,7 +731,7 @@
     
   <url>
     <loc>https://lchml.com/technology/mac-eclipse-svn/</loc>
-    <lastmod>2018-07-19T10:54:30.255Z</lastmod>
+    <lastmod>2018-07-19T10:54:32.000Z</lastmod>
     <data>
         <display>
         <title>Eclipse on Mac with svn</title>
@@ -727,7 +753,7 @@
     
   <url>
     <loc>https://lchml.com/technology/log-server/</loc>
-    <lastmod>2018-07-19T10:54:28.039Z</lastmod>
+    <lastmod>2018-07-19T10:54:30.000Z</lastmod>
     <data>
         <display>
         <title>小问题也是大问题</title>
@@ -749,7 +775,7 @@
     
   <url>
     <loc>https://lchml.com/life/kindle/</loc>
-    <lastmod>2018-07-19T10:54:24.709Z</lastmod>
+    <lastmod>2018-07-19T10:54:26.000Z</lastmod>
     <data>
         <display>
         <title>新版国行kindle paperwhite2开箱</title>
@@ -771,7 +797,7 @@
     
   <url>
     <loc>https://lchml.com/technology/jvm3/</loc>
-    <lastmod>2018-07-19T10:54:22.465Z</lastmod>
+    <lastmod>2018-07-19T10:54:24.000Z</lastmod>
     <data>
         <display>
         <title>java虚拟机 - 并发</title>
@@ -795,7 +821,7 @@
     
   <url>
     <loc>https://lchml.com/technology/jvm2/</loc>
-    <lastmod>2018-07-19T10:54:20.024Z</lastmod>
+    <lastmod>2018-07-19T10:54:22.000Z</lastmod>
     <data>
         <display>
         <title>java虚拟机 - Class</title>
@@ -819,7 +845,7 @@
     
   <url>
     <loc>https://lchml.com/technology/jvm1/</loc>
-    <lastmod>2018-07-19T10:54:17.383Z</lastmod>
+    <lastmod>2018-07-19T10:54:18.000Z</lastmod>
     <data>
         <display>
         <title>java虚拟机 - 内存</title>
@@ -845,7 +871,7 @@
     
   <url>
     <loc>https://lchml.com/technology/jekyll-hexo/</loc>
-    <lastmod>2018-07-19T10:54:15.040Z</lastmod>
+    <lastmod>2018-07-19T10:54:16.000Z</lastmod>
     <data>
         <display>
         <title>Jekyll迁移Hexo</title>
@@ -869,7 +895,7 @@
     
   <url>
     <loc>https://lchml.com/technology/java-interview/</loc>
-    <lastmod>2018-07-19T10:54:12.711Z</lastmod>
+    <lastmod>2018-07-19T10:54:14.000Z</lastmod>
     <data>
         <display>
         <title>学贵专·而不以泛滥为贤</title>
@@ -891,7 +917,7 @@
     
   <url>
     <loc>https://lchml.com/technology/java-exec-shell/</loc>
-    <lastmod>2018-07-19T10:54:10.432Z</lastmod>
+    <lastmod>2018-07-19T10:54:12.000Z</lastmod>
     <data>
         <display>
         <title>Java执行外部程序的问题</title>
@@ -913,7 +939,7 @@
     
   <url>
     <loc>https://lchml.com/technology/java-brief/</loc>
-    <lastmod>2018-07-19T10:54:07.982Z</lastmod>
+    <lastmod>2018-07-19T10:54:08.000Z</lastmod>
     <data>
         <display>
         <title>Java常见知识点</title>
@@ -937,7 +963,7 @@
     
   <url>
     <loc>https://lchml.com/technology/ipdb-creator/</loc>
-    <lastmod>2018-07-19T10:54:05.744Z</lastmod>
+    <lastmod>2018-07-19T10:54:06.000Z</lastmod>
     <data>
         <display>
         <title>IP数据库</title>
@@ -961,7 +987,7 @@
     
   <url>
     <loc>https://lchml.com/life/huangshan/</loc>
-    <lastmod>2018-07-19T10:54:03.599Z</lastmod>
+    <lastmod>2018-07-19T10:54:04.000Z</lastmod>
     <data>
         <display>
         <title>水墨黄山</title>
@@ -985,7 +1011,7 @@
     
   <url>
     <loc>https://lchml.com/life/hengdian/</loc>
-    <lastmod>2018-07-19T10:53:59.985Z</lastmod>
+    <lastmod>2018-07-19T10:54:00.000Z</lastmod>
     <data>
         <display>
         <title>横店·群演的故事</title>
@@ -1009,7 +1035,7 @@
     
   <url>
     <loc>https://lchml.com/technology/guava/</loc>
-    <lastmod>2018-07-19T10:53:57.904Z</lastmod>
+    <lastmod>2018-07-19T10:53:58.000Z</lastmod>
     <data>
         <display>
         <title>Guava源码阅读</title>
@@ -1017,9 +1043,9 @@
         
         <tag>LC</tag>
          
-        <tag>Guava</tag>
-         
         <tag>Java</tag>
+         
+        <tag>Guava</tag>
          
          
            
@@ -1033,7 +1059,7 @@
     
   <url>
     <loc>https://lchml.com/technology/grpc-trap/</loc>
-    <lastmod>2018-07-19T10:53:55.166Z</lastmod>
+    <lastmod>2018-07-19T10:53:56.000Z</lastmod>
     <data>
         <display>
         <title>GRPC丢包之路</title>
@@ -1057,15 +1083,15 @@
     
   <url>
     <loc>https://lchml.com/life/fenghuangshan/</loc>
-    <lastmod>2018-07-19T10:53:52.448Z</lastmod>
+    <lastmod>2018-07-19T10:53:54.000Z</lastmod>
     <data>
         <display>
         <title>凤凰山-玉皇山</title>
         <pubTime>2018-03-10T16:00:00.000Z</pubTime>
         
-        <tag>游记</tag>
-         
         <tag>LC</tag>
+         
+        <tag>游记</tag>
          
         <tag>玉皇山</tag>
          
@@ -1087,7 +1113,7 @@
     
   <url>
     <loc>https://lchml.com/technology/disconf/</loc>
-    <lastmod>2018-07-19T10:53:49.907Z</lastmod>
+    <lastmod>2018-07-19T10:53:50.000Z</lastmod>
     <data>
         <display>
         <title>配置中心</title>
@@ -1111,7 +1137,7 @@
     
   <url>
     <loc>https://lchml.com/life/deep-think/</loc>
-    <lastmod>2018-07-19T10:53:47.837Z</lastmod>
+    <lastmod>2018-07-19T10:53:48.000Z</lastmod>
     <data>
         <display>
         <title>碎片化思维</title>
@@ -1135,7 +1161,7 @@
     
   <url>
     <loc>https://lchml.com/life/damingshan/</loc>
-    <lastmod>2018-07-19T10:53:45.825Z</lastmod>
+    <lastmod>2018-07-19T10:53:46.000Z</lastmod>
     <data>
         <display>
         <title>临安·大明山</title>
@@ -1157,7 +1183,7 @@
     
   <url>
     <loc>https://lchml.com/life/cosmic-dream/</loc>
-    <lastmod>2018-07-19T10:53:43.345Z</lastmod>
+    <lastmod>2018-07-19T10:53:44.000Z</lastmod>
     <data>
         <display>
         <title>星辰和大海</title>
@@ -1181,7 +1207,7 @@
     
   <url>
     <loc>https://lchml.com/technology/bloomfilter/</loc>
-    <lastmod>2018-07-19T10:53:41.241Z</lastmod>
+    <lastmod>2018-07-19T10:53:42.000Z</lastmod>
     <data>
         <display>
         <title>BloomFilter</title>
@@ -1205,7 +1231,7 @@
     
   <url>
     <loc>https://lchml.com/life/beigaofeng/</loc>
-    <lastmod>2018-07-19T10:53:38.609Z</lastmod>
+    <lastmod>2018-07-19T10:53:40.000Z</lastmod>
     <data>
         <display>
         <title>登北高峰</title>
@@ -1231,7 +1257,7 @@
     
   <url>
     <loc>https://lchml.com/life/bashu/</loc>
-    <lastmod>2018-07-19T10:53:36.431Z</lastmod>
+    <lastmod>2018-07-19T10:53:38.000Z</lastmod>
     <data>
         <display>
         <title>巴蜀五日，风光旖旎</title>
@@ -1257,7 +1283,7 @@
     
   <url>
     <loc>https://lchml.com/life/bali/</loc>
-    <lastmod>2018-07-19T10:53:34.337Z</lastmod>
+    <lastmod>2018-07-19T10:53:36.000Z</lastmod>
     <data>
         <display>
         <title>巴厘——香港</title>
@@ -1283,7 +1309,7 @@
     
   <url>
     <loc>https://lchml.com/life/aboutmovie/</loc>
-    <lastmod>2018-07-19T10:53:32.200Z</lastmod>
+    <lastmod>2018-07-19T10:53:34.000Z</lastmod>
     <data>
         <display>
         <title>打开脑洞</title>
@@ -1305,7 +1331,7 @@
     
   <url>
     <loc>https://lchml.com/life/about-life/</loc>
-    <lastmod>2018-07-19T10:48:32.896Z</lastmod>
+    <lastmod>2018-07-19T10:48:34.000Z</lastmod>
     <data>
         <display>
         <title>感谢你让我上场</title>

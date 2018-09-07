@@ -81,17 +81,17 @@
 
 
 
-<meta name="description" content="问题描述在分布式系统中的一个dubbo服务，日志中经常出现：1[WARN ]2018-07-06 19:30:49.581 [DubboServerHandler-10.206.56.200:20008-thread-195]PoolBase | HikariPool-1 - Failed to validate connection com.mysql.jdbc.JDBC4Connection@">
+<meta name="description" content="问题描述在分布式系统中的一个dubbo服务，日志中经常出现： 1[WARN ]2018-07-06 19:30:49.581 [DubboServerHandler-10.206.56.200:20008-thread-195]PoolBase | HikariPool-1 - Failed to validate connection com.mysql.jdbc.JDBC4Connection">
 <meta name="keywords" content="Hirika,Failed to validate connection,db,数据库,连接池">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hikari经常出现Failed to validate connection并阻塞应用线程问题">
 <meta property="og:url" content="https://lchml.com/technology/hikari-maxlifetime/index.html">
 <meta property="og:site_name" content="LC&#39;s Blog">
-<meta property="og:description" content="问题描述在分布式系统中的一个dubbo服务，日志中经常出现：1[WARN ]2018-07-06 19:30:49.581 [DubboServerHandler-10.206.56.200:20008-thread-195]PoolBase | HikariPool-1 - Failed to validate connection com.mysql.jdbc.JDBC4Connection@">
-<meta property="og:updated_time" content="2018-07-19T12:35:49.372Z">
+<meta property="og:description" content="问题描述在分布式系统中的一个dubbo服务，日志中经常出现： 1[WARN ]2018-07-06 19:30:49.581 [DubboServerHandler-10.206.56.200:20008-thread-195]PoolBase | HikariPool-1 - Failed to validate connection com.mysql.jdbc.JDBC4Connection">
+<meta property="og:updated_time" content="2018-09-07T15:15:03.155Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hikari经常出现Failed to validate connection并阻塞应用线程问题">
-<meta name="twitter:description" content="问题描述在分布式系统中的一个dubbo服务，日志中经常出现：1[WARN ]2018-07-06 19:30:49.581 [DubboServerHandler-10.206.56.200:20008-thread-195]PoolBase | HikariPool-1 - Failed to validate connection com.mysql.jdbc.JDBC4Connection@">
+<meta name="twitter:description" content="问题描述在分布式系统中的一个dubbo服务，日志中经常出现： 1[WARN ]2018-07-06 19:30:49.581 [DubboServerHandler-10.206.56.200:20008-thread-195]PoolBase | HikariPool-1 - Failed to validate connection com.mysql.jdbc.JDBC4Connection">
 
 
 
@@ -393,7 +393,8 @@
       
 
       
-        <h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>在分布式系统中的一个dubbo服务，日志中经常出现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[WARN ]2018-07-06 19:30:49.581 [DubboServerHandler-10.206.56.200:20008-thread-195]PoolBase | HikariPool-1 - Failed to validate connection com.mysql.jdbc.JDBC4Connection@6a9ac783 (No operations allowed after connection closed.)</div></pre></td></tr></table></figure></p>
+        <h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>在分布式系统中的一个dubbo服务，日志中经常出现：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[WARN ]2018-07-06 19:30:49.581 [DubboServerHandler-10.206.56.200:20008-thread-195]PoolBase | HikariPool-1 - Failed to validate connection com.mysql.jdbc.JDBC4Connection@6a9ac783 (No operations allowed after connection closed.)</div></pre></td></tr></table></figure>
 <p>同时导致对应请求长时间阻塞，阻塞时间从5s~20s不等。</p>
 <h3 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h3><p>首先从Github上下载<a href="https://github.com/brettwooldridge/HikariCP" target="_blank" rel="external">Hikari源码</a>，在源码中直接搜索到对应的错误信息日志。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">isConnectionAlive</span><span class="params">(<span class="keyword">final</span> Connection connection)</span></span></div><div class="line">&#123;</div><div class="line">   <span class="keyword">try</span> &#123;</div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">         setNetworkTimeout(connection, validationTimeout);</div><div class="line"></div><div class="line">         <span class="keyword">final</span> <span class="keyword">int</span> validationSeconds = (<span class="keyword">int</span>) Math.max(<span class="number">1000L</span>, validationTimeout) / <span class="number">1000</span>;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (isUseJdbc4Validation) &#123;</div><div class="line">            <span class="keyword">return</span> connection.isValid(validationSeconds);</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">try</span> (Statement statement = connection.createStatement()) &#123;</div><div class="line">            <span class="keyword">if</span> (isNetworkTimeoutSupported != TRUE) &#123;</div><div class="line">               setQueryTimeout(statement, validationSeconds);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            statement.execute(config.getConnectionTestQuery());</div><div class="line">         &#125;</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">finally</span> &#123;</div><div class="line">         setNetworkTimeout(connection, networkTimeout);</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (isIsolateInternalQueries &amp;&amp; !isAutoCommit) &#123;</div><div class="line">            connection.rollback();</div><div class="line">         &#125;</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">   &#125;</div><div class="line">   <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">      lastConnectionFailure.set(e);</div><div class="line">      LOGGER.warn(<span class="string">"&#123;&#125; - Failed to validate connection &#123;&#125; (&#123;&#125;). Possibly consider using a shorter maxLifetime value."</span>, poolName, connection, e.getMessage());</div><div class="line">      <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>从代码中可以看出，错误是从这个isConnectionAlive()中抛出来的，从堆栈可以看出异常是从setNetworkTimeout()方法抛出，这个方法里面逻辑很简单，就是对当前数据库连接设置一个网络超时时间，其实相当于同时检查了连接是否可用。所以这个异常的根本原因就是当前数据库连接已经不可用，但是却依旧存在于Hikari的连接池中。</p>
@@ -452,9 +453,9 @@
           
             <a href="/tags/Java/" rel="tag"># Java</a>
           
-            <a href="/tags/Hirika/" rel="tag"># Hirika</a>
-          
             <a href="/tags/数据库/" rel="tag"># 数据库</a>
+          
+            <a href="/tags/Hirika/" rel="tag"># Hirika</a>
           
         </div>
       
@@ -567,7 +568,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">55</span>
+                  <span class="site-state-item-count">56</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -589,7 +590,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">69</span>
+                  <span class="site-state-item-count">70</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

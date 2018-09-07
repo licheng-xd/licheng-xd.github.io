@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Druid,The last packet,db,数据库,连接池" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="LC's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="又踩了一个数据库连接池的坑，纪念一下。公司的分布式数据库由于更新驱动层，并且目前还只支持Druid连接池，因此项目的数据库连接池也从Hikari换到了Druid。然后换上没多久，测试服就开始频繁报警。 123456The last packet successfully received from the server was 2,357,232 milliseconds ago.  The la">
+<meta name="keywords" content="Druid,The last packet,db,数据库,连接池">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Druid经常出现连接不可用的问题">
+<meta property="og:url" content="https://lchml.com/technology/druid-validation/index.html">
+<meta property="og:site_name" content="LC&#39;s Blog">
+<meta property="og:description" content="又踩了一个数据库连接池的坑，纪念一下。公司的分布式数据库由于更新驱动层，并且目前还只支持Druid连接池，因此项目的数据库连接池也从Hikari换到了Druid。然后换上没多久，测试服就开始频繁报警。 123456The last packet successfully received from the server was 2,357,232 milliseconds ago.  The la">
+<meta property="og:updated_time" content="2018-09-07T15:23:43.857Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Druid经常出现连接不可用的问题">
+<meta name="twitter:description" content="又踩了一个数据库连接池的坑，纪念一下。公司的分布式数据库由于更新驱动层，并且目前还只支持Druid连接池，因此项目的数据库连接池也从Hikari换到了Druid。然后换上没多久，测试服就开始频繁报警。 123456The last packet successfully received from the server was 2,357,232 milliseconds ago.  The la">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lchml.com/technology/druid-validation/"/>
+
+
+
+
+
+  <title>Druid经常出现连接不可用的问题 | LC's Blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-71702178-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LC's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">旅行的代码</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/druid-validation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LC&HML">
+      <meta itemprop="description" content="路漫漫其修远兮，吾将上下而求索">
+      <meta itemprop="image" content="/lc-icon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LC's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Druid经常出现连接不可用的问题</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-06T00:00:00+08:00">
+                2018-09-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/technology/" itemprop="url" rel="index">
+                    <span itemprop="name">technology</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/technology/druid-validation/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/technology/druid-validation/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/technology/druid-validation/" class="leancloud_visitors" data-flag-title="Druid经常出现连接不可用的问题">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>又踩了一个数据库连接池的坑，纪念一下。公司的分布式数据库由于更新驱动层，并且目前还只支持Druid连接池，因此项目的数据库连接池也从Hikari换到了Druid。然后换上没多久，测试服就开始频繁报警。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">The last packet successfully received from the server was 2,357,232 milliseconds ago.  </div><div class="line">The last packet sent successfully to the server was 931,359 milliseconds ago.</div><div class="line"></div><div class="line">CommunicationsException, druid version 1.1.10, jdbcUrl : jdbc:mysql:ddb://xx.xxx.xxx.xxx:6000/dbname, </div><div class="line">testWhileIdle true, idle millis 22216001, minIdle 20, poolingCount 19, timeBetweenEvictionRunsMillis 60000, </div><div class="line">lastValidIdleMillis 22216001, driver com.netease.lbd.LBDriver, exceptionSorter com.alibaba.druid.pool.vendor.MySqlExceptionSorter</div></pre></td></tr></table></figure>
+<p>这个错误的原因很明显，使用了一个已经失效的连接去做db操作，就会返回这个错误。也就是说db操作的时候从数据库连接池里拿到了一个烂的连接。然而首先我们是配置了time-between-eviction-runs-millis的，理论上应该是会定时对连接池中的连接做检查的，但是实际结果显然并没有。</p>
+<p>我们直接开始检查druid源码吧，在核心类DruidDataSource中我们可以看到初始化连接池的时候会调用createAndStartDestroyThread()创建一个定时任务来执行DestroyTask，再看DestroyTask里面做了什么。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DestroyTask</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        shrink(<span class="keyword">true</span>, keepAlive);</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (isRemoveAbandoned()) &#123;</div><div class="line">            removeAbandoned();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其中isRemoveAbandoned()没有配置，默认是false的。所以，这个task就执行了一句话：shrink(true, keepAlive)</p>
+<p>在shrink方法里面的最后我们可以看到有这段代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (keepAliveCount &gt; <span class="number">0</span>) &#123;</div><div class="line">    <span class="keyword">this</span>.getDataSourceStat().addKeepAliveCheckCount(keepAliveCount);</div><div class="line">    <span class="comment">// keep order</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = keepAliveCount - <span class="number">1</span>; i &gt;= <span class="number">0</span>; --i) &#123;</div><div class="line">        DruidConnectionHolder holer = keepAliveConnections[i];</div><div class="line">        Connection connection = holer.getConnection();</div><div class="line">        holer.incrementKeepAliveCheckCount();</div><div class="line"></div><div class="line">        <span class="keyword">boolean</span> validate = <span class="keyword">false</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">this</span>.validateConnection(connection);  <span class="comment">// 重点</span></div><div class="line">            validate = <span class="keyword">true</span>;</div><div class="line">        &#125; <span class="keyword">catch</span> (Throwable error) &#123;</div><div class="line">            <span class="keyword">if</span> (LOG.isDebugEnabled()) &#123;</div><div class="line">                LOG.debug(<span class="string">"keepAliveErr"</span>, error);</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// skip</span></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (validate) &#123;</div><div class="line">            holer.lastActiveTimeMillis = System.currentTimeMillis();</div><div class="line">            put(holer);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            JdbcUtils.close(connection);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    Arrays.fill(keepAliveConnections, <span class="keyword">null</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>用于检查经过shrink以后留存下来的连接是否可用。其中的主要方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">validateConnection</span><span class="params">(Connection conn)</span> <span class="keyword">throws</span> SQLException </span>&#123;</div><div class="line">    String query = getValidationQuery();</div><div class="line">    <span class="keyword">if</span> (conn.isClosed()) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> SQLException(<span class="string">"validateConnection: connection closed"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (validConnectionChecker != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">boolean</span> result = <span class="keyword">true</span>;</div><div class="line">        Exception error = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            result = validConnectionChecker.isValidConnection(conn, validationQuery, validationQueryTimeout);</div><div class="line">        &#125; <span class="keyword">catch</span> (SQLException ex) &#123;</div><div class="line">            <span class="keyword">throw</span> ex;</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception ex) &#123;</div><div class="line">            error = ex;</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="keyword">if</span> (!result) &#123;</div><div class="line">            SQLException sqlError = error != <span class="keyword">null</span> ? <span class="comment">//</span></div><div class="line">                <span class="keyword">new</span> SQLException(<span class="string">"validateConnection false"</span>, error) <span class="comment">//</span></div><div class="line">                : <span class="keyword">new</span> SQLException(<span class="string">"validateConnection false"</span>);</div><div class="line">            <span class="keyword">throw</span> sqlError;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (<span class="keyword">null</span> != query) &#123;</div><div class="line">        Statement stmt = <span class="keyword">null</span>;</div><div class="line">        ResultSet rs = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            stmt = conn.createStatement();</div><div class="line">            <span class="keyword">if</span> (getValidationQueryTimeout() &gt; <span class="number">0</span>) &#123;</div><div class="line">                stmt.setQueryTimeout(getValidationQueryTimeout());</div><div class="line">            &#125;</div><div class="line">            rs = stmt.executeQuery(query);</div><div class="line">            <span class="keyword">if</span> (!rs.next()) &#123;</div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> SQLException(<span class="string">"validationQuery didn't return a row"</span>);</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            JdbcUtils.close(rs);</div><div class="line">            JdbcUtils.close(stmt);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>再跟进去到validConnectionChecker.isValidConnection(conn, validationQuery, validationQueryTimeout)方法。在这个方法里面可以看到</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isValidConnection</span><span class="params">(Connection conn, String validateQuery, <span class="keyword">int</span> validationQueryTimeout)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="keyword">if</span> (conn.isClosed()) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 省略 。。。</span></div><div class="line"></div><div class="line">    String query = validateQuery;</div><div class="line">    <span class="keyword">if</span> (validateQuery == <span class="keyword">null</span> || validateQuery.isEmpty()) &#123;</div><div class="line">        query = DEFAULT_VALIDATION_QUERY;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    Statement stmt = <span class="keyword">null</span>;</div><div class="line">    ResultSet rs = <span class="keyword">null</span>;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        stmt = conn.createStatement();</div><div class="line">        <span class="keyword">if</span> (validationQueryTimeout &gt; <span class="number">0</span>) &#123;</div><div class="line">            stmt.setQueryTimeout(validationQueryTimeout);</div><div class="line">        &#125;</div><div class="line">        rs = stmt.executeQuery(query);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        JdbcUtils.close(rs);</div><div class="line">        JdbcUtils.close(stmt);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果没有配置validationQuery，会默认使用 “SELECT 1”。于是我们认为不配置validationQuery是没关系的。然后没过多久，还是继续出现了上面说的异常，说明就是有烂的连接留存在连接池里。</p>
+<p>重新再看一遍代码，注意到上面的validConnectionChecker有没有可能是null呢？于是找到validConnectionChecker的初始化方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initValidConnectionChecker</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.validConnectionChecker != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    String realDriverClassName = driver.getClass().getName();</div><div class="line">    <span class="keyword">if</span> (JdbcUtils.isMySqlDriver(realDriverClassName)) &#123;</div><div class="line">        <span class="keyword">this</span>.validConnectionChecker = <span class="keyword">new</span> MySqlValidConnectionChecker();</div><div class="line"></div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (realDriverClassName.equals(JdbcConstants.ORACLE_DRIVER)</div><div class="line">            || realDriverClassName.equals(JdbcConstants.ORACLE_DRIVER2)) &#123;</div><div class="line">        <span class="keyword">this</span>.validConnectionChecker = <span class="keyword">new</span> OracleValidConnectionChecker();</div><div class="line"></div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (realDriverClassName.equals(JdbcConstants.SQL_SERVER_DRIVER)</div><div class="line">               || realDriverClassName.equals(JdbcConstants.SQL_SERVER_DRIVER_SQLJDBC4)</div><div class="line">               || realDriverClassName.equals(JdbcConstants.SQL_SERVER_DRIVER_JTDS)) &#123;</div><div class="line">        <span class="keyword">this</span>.validConnectionChecker = <span class="keyword">new</span> MSSQLValidConnectionChecker();</div><div class="line"></div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (realDriverClassName.equals(JdbcConstants.POSTGRESQL_DRIVER)</div><div class="line">            || realDriverClassName.equals(JdbcConstants.ENTERPRISEDB_DRIVER)) &#123;</div><div class="line">        <span class="keyword">this</span>.validConnectionChecker = <span class="keyword">new</span> PGValidConnectionChecker();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>发现如果是数据库的标准驱动，那么validConnectionChecker就是对应数据库的checker，然后恰巧我们的项目中用的是自己实现的db driver。所以这个地方其实根本没有初始化成功。所以validConnectionChecker果然是个null。<br>因此上面的检查代码其实根本没有进到isValidConnection()方法中，所以默认的”SELECT 1”也不起作用了。<br>validateConnection()方法再往下可以看到if (null != query) 的条件下，druid还有一个兜底检查行为。<br>然而又恰好我们又没有配置validationQuery，所以最后兜底也没有兜到。</p>
+<p>总结：该配置的参数还是都要配上，不能因为有默认值就偷懒不配。还有，druid的代码写的真的是乱，非常乱。对比Hikari的代码，代码可读性差的不是一点点。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/donate-page/simple/images/wechat.jpg" alt="LC&HML 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/donate-page/simple/images/alipay.jpg" alt="LC&HML 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/LC/" rel="tag"># LC</a>
+          
+            <a href="/tags/Druid/" rel="tag"># Druid</a>
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/数据库/" rel="tag"># 数据库</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/technology/zipkin/" rel="next" title="分布式调用追踪系统Zipkin集成">
+                <i class="fa fa-chevron-left"></i> 分布式调用追踪系统Zipkin集成
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/lc-icon.jpg"
+                alt="LC&HML" />
+            
+              <p class="site-author-name" itemprop="name">LC&HML</p>
+              <p class="site-description motion-element" itemprop="description">路漫漫其修远兮，吾将上下而求索</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">56</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/licheng-xd" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:licheng_xd@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope-o"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://500px.me/lchml" target="_blank" title="500px">
+                      
+                        <i class="fa fa-fw fa-500px"></i>500px</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://jandan.net" target="_blank" title="Jandan">
+                      
+                        <i class="fa fa-fw fa-transgender-alt"></i>Jandan</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/4qg55j4w/home?wvr=5" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://moviehell.net" target="_blank" title="Movie">
+                      
+                        <i class="fa fa-fw fa-file-movie-o"></i>Movie</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LC&HML</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'licheng-xd',
+            repo: 'blog-comment',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: 'e66400d0dd1a8a7ea34db3e2ba22f071f3b93b83',
+            
+                client_id: 'a442d470922bbc39e7a0'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("MabW4tTRa4YhUWvISCsRLuzd-gzGzoHsz", "X8ewKXvEvIbA6C6S61dHMX5J");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
