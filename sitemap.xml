@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://lchml.com/technology/zipkin/</loc>
+    
+    <lastmod>2018-09-14T01:59:33.678Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://lchml.com/technology/druid-validation/</loc>
     
     <lastmod>2018-09-13T06:01:04.902Z</lastmod>
@@ -12,13 +19,6 @@
     <loc>https://lchml.com/technology/hikari-maxlifetime/</loc>
     
     <lastmod>2018-09-07T15:15:03.155Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://lchml.com/technology/zipkin/</loc>
-    
-    <lastmod>2018-07-19T10:57:10.000Z</lastmod>
     
   </url>
   

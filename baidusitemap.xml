@@ -4,6 +4,38 @@
 
     
   <url>
+    <loc>https://lchml.com/technology/zipkin/</loc>
+    <lastmod>2018-09-14T01:59:33.678Z</lastmod>
+    <data>
+        <display>
+        <title>分布式调用追踪系统Zipkin集成</title>
+        <pubTime>2018-07-16T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>zipkin</tag>
+         
+        <tag>sleuth</tag>
+         
+        <tag>springboot</tag>
+         
+        <tag>dubbo</tag>
+         
+        <tag>elasticsearch</tag>
+         
+        <tag>分布式追踪</tag>
+         
+         
+           
+             
+              <breadCrumb title="technology" url="https://lchml.com/categories/technology/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://lchml.com/technology/druid-validation/</loc>
     <lastmod>2018-09-13T06:01:04.902Z</lastmod>
     <data>
@@ -44,38 +76,6 @@
         <tag>数据库</tag>
          
         <tag>Hirika</tag>
-         
-         
-           
-             
-              <breadCrumb title="technology" url="https://lchml.com/categories/technology/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://lchml.com/technology/zipkin/</loc>
-    <lastmod>2018-07-19T10:57:10.000Z</lastmod>
-    <data>
-        <display>
-        <title>分布式调用追踪系统Zipkin集成</title>
-        <pubTime>2018-07-16T16:00:00.000Z</pubTime>
-        
-        <tag>LC</tag>
-         
-        <tag>zipkin</tag>
-         
-        <tag>sleuth</tag>
-         
-        <tag>springboot</tag>
-         
-        <tag>dubbo</tag>
-         
-        <tag>elasticsearch</tag>
-         
-        <tag>分布式追踪</tag>
          
          
            
