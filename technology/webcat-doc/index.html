@@ -88,7 +88,7 @@
 <meta property="og:url" content="https://lchml.com/technology/webcat-doc/index.html">
 <meta property="og:site_name" content="LC&#39;s Blog">
 <meta property="og:description" content="Webcat是一个基于netty的简单、高性能服务端框架，目前提供http和websocket两种协议的快速开发模式。webcat采用spring进行对象管理，因此工程需要依赖spring框架，Github地址。 下载源代码后，可以直接运行WebcatServerTest启动http和websocket服务，然后通过pytest文件夹中的两个python脚本对服务进行测试。 HTTP Server">
-<meta property="og:updated_time" content="2018-07-19T10:55:30.000Z">
+<meta property="og:updated_time" content="2018-09-14T02:08:25.938Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Webcat文档">
 <meta name="twitter:description" content="Webcat是一个基于netty的简单、高性能服务端框架，目前提供http和websocket两种协议的快速开发模式。webcat采用spring进行对象管理，因此工程需要依赖spring框架，Github地址。 下载源代码后，可以直接运行WebcatServerTest启动http和websocket服务，然后通过pytest文件夹中的两个python脚本对服务进行测试。 HTTP Server">
@@ -418,7 +418,7 @@
 <li>logResponse，默认日志中不会输入response内容。</li>
 </ul>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"com.lchml.webcat.config.WebcatWsConf"</span> <span class="attr">id</span>=<span class="string">"webcatConf"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"heartbeat"</span> <span class="attr">value</span>=<span class="string">"15"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"useProxy"</span> <span class="attr">value</span>=<span class="string">"false"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"logResponse"</span> <span class="attr">value</span>=<span class="string">"true"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"logEnable"</span> <span class="attr">value</span>=<span class="string">"true"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>websocket模式，采用json格式做协议交互，格式如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="string">"path"</span>: <span class="string">"/test/hello"</span>, <span class="comment">// 请求的path，对应controller中的path</span></div><div class="line">    <span class="string">"mid"</span>: <span class="number">1</span>, <span class="comment">// 请求的序号，用于对应请求和回包</span></div><div class="line">    <span class="string">"version"</span>: <span class="number">0</span>, <span class="comment">// 版本号，可不用</span></div><div class="line">    <span class="string">"params"</span>: &#123;<span class="string">"name"</span>: <span class="string">"holyshit"</span>&#125; <span class="comment">// 业务的参数</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>websocket模式，采用json格式做协议交互，格式如下：<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    "path": "/test/hello", // 请求的path，对应controller中的path</div><div class="line">    "mid": 1, // 请求的序号，用于对应请求和回包</div><div class="line">    "version": 0, // 版本号，可不用</div><div class="line">    "params": &#123;"name": "holyshit"&#125; // 业务的参数</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>所有的请求最后都会被组装为WsContext对象：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WsContext</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> String path;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> ChannelInfo ci;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mid;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> version;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Channel channel;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Map&lt;String, Object&gt; params;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>其中，ChannelInfo中会包含请求方的客户端ip，并且可以在ChannelConnectListener中自定义其他属性，params默认会根据Controller中方法定义映射到对应的参数上。</p>
 
@@ -588,7 +588,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">56</span>
+                  <span class="site-state-item-count">58</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -610,7 +610,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-count">75</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

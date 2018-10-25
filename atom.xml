@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://lchml.com/"/>
-  <updated>2018-09-13T06:01:04.902Z</updated>
+  <updated>2018-10-25T07:48:43.263Z</updated>
   <id>https://lchml.com/</id>
   
   <author>
@@ -14,6 +14,85 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Tomcat配置CloudFlare免费ssl证书问题</title>
+    <link href="https://lchml.com/technology/tomcat-ssl/"/>
+    <id>https://lchml.com/technology/tomcat-ssl/</id>
+    <published>2018-10-25T07:38:00.000Z</published>
+    <updated>2018-10-25T07:48:43.263Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>花了三个小时时间才解决这个小问题。</p>
+</blockquote>
+<h2 id="起因："><a href="#起因：" class="headerlink" title="起因："></a>起因：</h2><p>在tomcat上配置cloudflare的免费ssl证书，确不起作用。</p>
+<h2 id="过程："><a href="#过程：" class="headerlink" title="过程："></a>过程：</h2><p>在cloudflare上创建了免费的ssl证书，会拿到两个key，一个是证书，一个是私钥。分别保存为cert.pem和key.pem。</p>
+<p>这时候如果按照一般的步骤，通过keytool把cert.pem导入到keystore中，然后在tomcat的server.xml中配置对应的Connector。会发现，虽然443端口打开了，但是访问443端口没有任何回包。去看tomcat的catalina日志，会发现在启动时有一个异常：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Alias name [*] does not identify a key entry</div></pre></td></tr></table></figure></p>
+<p>但是通过<code>keytool -list -v</code>去查看jks中的证书，却又看到明明是有这个alias的。</p>
+<h2 id="分析："><a href="#分析：" class="headerlink" title="分析："></a>分析：</h2><p>就是因为被这个异常误导，所以花了大量时间在研究是不是生成jks的方法有问题，然而其实问题和alias本身没有关系。之所以会有这个问题，是因为上面的做法中，keystore只导入了pem证书，却没有证书对应的私钥，因此无法使用。</p>
+<h2 id="解决："><a href="#解决：" class="headerlink" title="解决："></a>解决：</h2><p>需要先把证书和私钥合并为p12证书，然后再把证书导入jks中。步骤如下：</p>
+<ol>
+<li>合并证书和私钥，会要求输入合并后的证书密码：xxxxxx</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">openssl pkcs12 -inkey key.pem -in cert.pem -export -out cert.p12</div></pre></td></tr></table></figure>
+<ol>
+<li>把生成后的证书导入jks中</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">keytool -importkeystore -srckeystore cert.p12 -srcstorepass xxxxxx -srcstoretype pkcs12 -destkeystore mydomain.jks -deststoretype jks -deststorepass xxxxxx</div></pre></td></tr></table></figure>
+<p>生成mydomain.jks后在tomcat中配置对应的Connector并重启tomcat。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">Connector</span> <span class="attr">port</span>=<span class="string">"443"</span> </span></div><div class="line">	<span class="attr">scheme</span>=<span class="string">"https"</span> </div><div class="line">	<span class="attr">secure</span>=<span class="string">"true"</span> </div><div class="line">	<span class="attr">SSLEnabled</span>=<span class="string">"true"</span> </div><div class="line">	<span class="attr">clientAuth</span>=<span class="string">"false"</span> </div><div class="line">	<span class="attr">sslProtocol</span>=<span class="string">"TLS"</span></div><div class="line">	<span class="attr">disableUploadTimeout</span>=<span class="string">"true"</span> </div><div class="line">	<span class="attr">keyAlias</span>=<span class="string">"1"</span> </div><div class="line">	<span class="attr">keystoreFile</span>=<span class="string">"/root/mydomain.jks"</span> </div><div class="line">	<span class="attr">keystorePass</span>=<span class="string">"xxxxxx"</span>/&gt;</div></pre></td></tr></table></figure>
+<p>现在可以正常访问了：<a href="https://moviehell.net" target="_blank" rel="external">https://moviehell.net</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;花了三个小时时间才解决这个小问题。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;起因：&quot;&gt;&lt;a href=&quot;#起因：&quot; class=&quot;headerlink&quot; title=&quot;起因：&quot;&gt;&lt;/a&gt;起因：&lt;/h2&gt;&lt;p&gt;在tomcat上配置clou
+    
+    </summary>
+    
+      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
+    
+    
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
+    
+      <category term="SSL" scheme="https://lchml.com/tags/SSL/"/>
+    
+      <category term="HTTPS" scheme="https://lchml.com/tags/HTTPS/"/>
+    
+      <category term="CloudFlare" scheme="https://lchml.com/tags/CloudFlare/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>bimaconf —— 圈圈联盟配置管理系统</title>
+    <link href="https://lchml.com/technology/bimaconf/"/>
+    <id>https://lchml.com/technology/bimaconf/</id>
+    <published>2018-09-13T16:00:00.000Z</published>
+    <updated>2018-09-14T05:27:35.994Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>目前市面上有很多开源的配置中心可以使用，为什么还要自己重新开发一套呢？之前在易信项目中基于disconf二次开发作为配置中心。但是在开发过程中可以看出来，disconf的代码写的非常冗余，而且真个逻辑不够清晰简洁。同时sdk的使用也不够方便，缺少一些常用功能，如暂停某个配置文件的同步等。其它的开元配置中心，如阿里的Diamond，spring cloud的config组件，经过调研都有各种问题。因此在新项目的开发中决定实现自研的配置中心，可以针对项目的需求实现各种定制化需求，通知也对整个代码完全可控。</p>
+<p>代码地址：<a href="https://g.hz.netease.com/bima/bimaconf" target="_blank" rel="external">https://g.hz.netease.com/bima/bimaconf</a>，有需要的同学可以申请权限。</p>
+<h2 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h2>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;目前市面上有很多开源的配置中心可以使用，为什么还要自己重新开发一套呢？之前在易信项目中基于disconf二次开发作为配置中心。但是在开发过程
+    
+    </summary>
+    
+      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
+    
+    
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
+    
+      <category term="bimaconf" scheme="https://lchml.com/tags/bimaconf/"/>
+    
+      <category term="配置中心" scheme="https://lchml.com/tags/%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/"/>
+    
+  </entry>
   
   <entry>
     <title>Druid经常出现连接不可用的问题</title>
@@ -479,7 +558,7 @@
     <link href="https://lchml.com/technology/webcat-doc/"/>
     <id>https://lchml.com/technology/webcat-doc/</id>
     <published>2017-11-23T12:00:00.000Z</published>
-    <updated>2018-07-19T10:55:30.000Z</updated>
+    <updated>2018-09-14T02:08:25.938Z</updated>
     
     <content type="html"><![CDATA[<p>Webcat是一个基于netty的简单、高性能服务端框架，目前提供http和websocket两种协议的快速开发模式。webcat采用spring进行对象管理，因此工程需要依赖spring框架，<a href="https://github.com/licheng-xd/webcat" target="_blank" rel="external">Github地址</a>。</p>
 <p>下载源代码后，可以直接运行WebcatServerTest启动http和websocket服务，然后通过pytest文件夹中的两个python脚本对服务进行测试。</p>
@@ -506,7 +585,7 @@
 <li>logResponse，默认日志中不会输入response内容。</li>
 </ul>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"com.lchml.webcat.config.WebcatWsConf"</span> <span class="attr">id</span>=<span class="string">"webcatConf"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"heartbeat"</span> <span class="attr">value</span>=<span class="string">"15"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"useProxy"</span> <span class="attr">value</span>=<span class="string">"false"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"logResponse"</span> <span class="attr">value</span>=<span class="string">"true"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"logEnable"</span> <span class="attr">value</span>=<span class="string">"true"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>websocket模式，采用json格式做协议交互，格式如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="string">"path"</span>: <span class="string">"/test/hello"</span>, <span class="comment">// 请求的path，对应controller中的path</span></div><div class="line">    <span class="string">"mid"</span>: <span class="number">1</span>, <span class="comment">// 请求的序号，用于对应请求和回包</span></div><div class="line">    <span class="string">"version"</span>: <span class="number">0</span>, <span class="comment">// 版本号，可不用</span></div><div class="line">    <span class="string">"params"</span>: &#123;<span class="string">"name"</span>: <span class="string">"holyshit"</span>&#125; <span class="comment">// 业务的参数</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>websocket模式，采用json格式做协议交互，格式如下：<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    "path": "/test/hello", // 请求的path，对应controller中的path</div><div class="line">    "mid": 1, // 请求的序号，用于对应请求和回包</div><div class="line">    "version": 0, // 版本号，可不用</div><div class="line">    "params": &#123;"name": "holyshit"&#125; // 业务的参数</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>所有的请求最后都会被组装为WsContext对象：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WsContext</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> String path;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> ChannelInfo ci;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mid;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> version;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Channel channel;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Map&lt;String, Object&gt; params;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>其中，ChannelInfo中会包含请求方的客户端ip，并且可以在ChannelConnectListener中自定义其他属性，params默认会根据Controller中方法定义映射到对应的参数上。</p>
 ]]></content>
@@ -947,110 +1026,6 @@
       <category term="服务发现" scheme="https://lchml.com/tags/%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/"/>
     
       <category term="Zookeeper" scheme="https://lchml.com/tags/Zookeeper/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>横店·群演的故事</title>
-    <link href="https://lchml.com/life/hengdian/"/>
-    <id>https://lchml.com/life/hengdian/</id>
-    <published>2016-06-26T16:00:00.000Z</published>
-    <updated>2018-07-19T10:54:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote>
-<p>一个人，一座城；这些人，这座城。                                   —— HML</p>
-</blockquote>
-<p>横店，作为影视城，娱乐行业并没有给横店带来更多的帮助，无论是经济上还是资源上，所以到今天它依然是一座小县城，尽管有时候明星云集，当红剧中也会时不时出现影视城中熟悉的场景，都改变不了它给人落后、单调的印象。<br>在骄阳似火的5月，我们来到这座小城，是观光，也是来看看在这个小城生活的那一群人的生活，看看是不是真如尔冬升讲述的那样，是一群路人甲的故事。</p>
-<p>为期两天的行程安排的是先参观秦王宫和明清宫苑，期盼能在参观过程中遇到剧组，实地感受下，有幸遇到大腕儿也不错。</p>
-<p>秦王宫-东西长廊<br><img src="hd1.jpg" alt=""></p>
-<p>明清宫苑-太和殿<br><img src="hd2.jpg" alt=""></p>
-<p>秦王宫-四海归一殿前全景<br><img src="hd3.jpg" alt=""></p>
-<p>明清宫苑-大明门外全景<br><img src="hd4.jpg" alt=""></p>
-<p>你更爱哪个呢？<br>秦王宫，张艺谋《英雄》拍摄地。还记得是初中某个周六的课上班主任从她宿舍办了电视音响到教室带我们欣赏英雄的艺术创作和老谋子的手法独到。现在想来，也真是一段美好的回忆。有时候，我们念诗词歌赋，不为张口经纶，若是能在身临其境之时，抒发情感也是好的。明清宫苑，素有江南紫禁城美誉，不单单是因为其格局酷似，更是各大清宫名剧拍摄点，它壮阔辽远，站在太和殿前俯瞰大地更有大好江山唯我独尊大气势。<br>我爱秦王宫，胜过明清宫苑。论建筑，秦宫地域不广，辽土不阔，没有清宫那般远大。轮奢华，秦汉自来不会给人奢华浮夸之感。有人爱明清的用色大胆张扬，有人喜秦汉的凛然气魄。我，更爱后者，说不上特别的理由，可能这常常的复道也可以作为一个理由。置身其中，往前，若是没有这门，是看不到的尽头。往上，是压迫和森严。这才是皇宫应有的气势，我喜伟岸，不喜铺张。</p>
-<p>秦王宫复道<br><img src="hd5.jpg" alt=""></p>
-<p>明清宫苑-偏殿<br><img src="hd6.jpg" alt=""></p>
-<p>初入秦王宫，凑巧遇到在前广场阙楼处拍摄“凤凰无双”的一出武戏，可惜剧组人员不让近身，无法一睹拍摄现场，真是出师不利。不过好在见缝插针还是抓到不少群演的镜头。</p>
-<p>暴晒的天气，披着厚重的戏服，如果不是那场明星梦，如何维系这样的工作状态？群演哥哥中场休息买水喝。</p>
-<p>假装一起入境<br><img src="hd7.jpg" alt=""></p>
-<p>烈日下，派饭中<br><img src="hd8.jpg" alt=""></p>
-<p>在明清宫苑遇到一位江湖艺人，靠着清宫戏中的江湖技艺耍戏卖笑求生，火中取钱口吞活蛇各种虐活都上——嘴上确实面子里子却都舍不得丢，非要强调自己也算是个半大不小的名角儿是来体验生活并不为挣钱，赏脸的观众并没有几个，可能最后给钱的并不在看在这艺上，更多的是卖的情，同情。后来想想，这位卖艺的大叔和他嘴上自我介绍的那位还并不是同一位，长得有几分相似而已，说不定也是一位龙套哥。</p>
-<p>身份也是一场戏<br><img src="hd9.jpg" alt=""></p>
-<p>原本满含希望而来，却没有在明清宫苑遇到任何剧组，只在离开的时候发现宫外亲王府幽闭之处正在拍摄某组抗战神剧，也是神不知鬼不觉，小成本到家——可见，今日抗战神剧市场已远远盖过宫廷戏，拍摄成本之小编剧脑洞之大更让其长驱直入大有侵占整个中国大陆电视剧市场势头。偷偷瞧了一眼，无奈还不让拍照。</p>
-<p>我冲着路人甲而来，真的很想了解群演这个群体的生活状态和心理状态是怎样，于是在我们的掘地三尺之下，循着攻略找到了“演员老公会”这个组织。据说所有背负着明星梦来到横店打算大干一番的年轻人都会来这个地方报道，并且从此每日驻守在此大本营、接戏、对台本、跑龙套，期望终有一天能够遇到下一个尔冬升。</p>
-<p>群演组织——老公会<br><img src="hd10.jpg" alt=""></p>
-<p>接了戏的群演对台本<br><img src="hd11.jpg" alt=""></p>
-<p>事实上，这些有着明星梦的青年们，大多非科班出身，也并不都有娇好的容颜，可能不具备任何一点走上星途的特质。但他们中大部分人执着地坚守这这个梦想，近乎偏执。我不能支持，但可以理解，不管是不是走捷径的心理还是真以为梦想可以无边无际，年轻都可一试。就像他们说的：梦想总是要有的，万一遇到尔冬升了呢。</p>
-<p><img src="hd12.jpg" alt=""><br>假期结束了，我们回到自己的城市，他们又开始在他们的城市里坚持梦想。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;一个人，一座城；这些人，这座城。                                   —— HML&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;横店，作为影视城，娱乐行业并没有给横店带来更多的帮助，无论是经济上还是资源上，所以到今天它
-    
-    </summary>
-    
-      <category term="life" scheme="https://lchml.com/categories/life/"/>
-    
-    
-      <category term="游记" scheme="https://lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
-    
-      <category term="HML" scheme="https://lchml.com/tags/HML/"/>
-    
-      <category term="横店" scheme="https://lchml.com/tags/%E6%A8%AA%E5%BA%97/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>临安·大明山</title>
-    <link href="https://lchml.com/life/damingshan/"/>
-    <id>https://lchml.com/life/damingshan/</id>
-    <published>2016-06-18T16:00:00.000Z</published>
-    <updated>2018-07-19T10:53:46.000Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote>
-<p>有那么一刻，感觉会就这样走到天荒地老没有尽头。                                   —— HML</p>
-</blockquote>
-<p>昨天的徒步是一段可能会记得很久很久的旅程。没有记得很多风景，倒是记得很多人和事。在嬉笑怒骂中我们走入重山，攀高、远望，在雨中奔跑。<br>其实到现在我也不清楚征服的是那座山峰，只记得是在大明山。清晨，在领队的有序安排下我们五壮士团按时乘大巴到达了大明山景区（所谓的五壮士团是我们给自己的战号，大明山五壮士是也），开始了我们的征程。先放一张“胜利大团结”镇楼吧。</p>
-<p>“胜利大团结”<br><img src="dms1.jpg" alt=""></p>
-<p>出发征途，像不像大山敞开的胸怀<br><img src="dms2.jpg" alt=""></p>
-<p>所谓的旅程，据说是心的修养，不过我们也是避不开拍拍拍的旧俗——就算眼睛能带走多少美景，岁月的橡皮擦也不会放过它们吧！瞧瞧我们这一路的走走停停。<br>大山在给予我们历练的前奏放了一支优美的华尔兹<br><img src="dms3.jpg" alt=""><br><img src="dms4.jpg" alt=""></p>
-<p>原本以为的是一眼望不到头的石板阶，原来是几乎全程手脚并用的艰难，用句网络语，“这山真的是野到没朋友”。前半段以瀑布为里程碑结束，中途还遇到了好几支队伍，从年龄来看属于中年，他们清一色专业装备、身手矫捷，真的是活力四射。</p>
-<p>大山内的一抹彩色<br><img src="dms5.jpg" alt=""></p>
-<p>飞流直下<br><img src="dms6.jpg" alt=""></p>
-<p>从早间10点半左右到正午12点，我们到达了瀑布下，顿觉心旷神怡，忽然有一种俯仰大地，吾辈看沧海的泠然之情。表现在行动上的就是各种角度自拍相互拍，此般美景只应天上有，人间能有几回闻，更何况可是跋山涉水历经艰辛才能见到的。</p>
-<p>像绢流，像丝幕<br><img src="dms7.jpg" alt=""></p>
-<p>大明山五壮士集结<br><img src="dms8.jpg" alt=""></p>
-<p>“顶”天“立”地<br><img src="dms9.jpg" alt=""></p>
-<p>多年以后，还能回味<br><img src="dms10.jpg" alt=""></p>
-<p>本以为此处就是终点，然而并没有，事后看来，到这里只是三分之一的艰辛，后面的路更难走。此处距离下山地点仍有2个多小时，后面的山路更抖更险，甚至需要借助绳索攀爬。好在领队几个壮实的男生冲锋陷阵，女孩子们也都顺利登顶了。可有爱，这个团队。</p>
-<p>我们走出了“一线天”<br><img src="dms11.jpg" alt=""></p>
-<p>你在我身后<br><img src="dms12.jpg" alt=""></p>
-<p>飞“度”<br><img src="dms13.jpg" alt=""></p>
-<p>总有类似俗话说“上山容易下山难”，我想说——真是这么回事！而且不是一般难，以至于我一张照片都没记录下来，全神贯注在脚步上还是摔了3次，惨烈的是屁股和手掌。有那么一刻，我甚至觉得就要这样走下去了，天荒地老，没有尽头，走不出大山，回不到家乡。不是绝望，是山路太难走。以至于，在踩到坚实的大路的那一刻，简直可以飞起来，从来没有觉得平坦是这样的幸福。好在美景，不可辜负。</p>
-<p>“大山的子孙呦”<br><img src="dms14.jpg" alt=""></p>
-<p>远山，眉黛<br><img src="dms15.jpg" alt=""></p>
-<p>你风尘仆仆，胜利的终点<br><img src="dms16.jpg" alt=""></p>
-<p>终于，在天黑前到达山脚，天公算作美——临了还给我们来了一场甘霖，让这次徒步的难度系数又加了一星，成就感也饱胀了几分。中途还出了一点小插曲，队友走岔了路，领队的不离不弃最终会合，让我对这个团队的青睐也加了几分，相信他们会做得更好。<br>我一直觉得安逸在这里会让自己感觉不到幸福，成长都会变慢。旅行的意义不仅仅是走过不一样的风景遇见不一样的人，最终还是让自己变得更好。你说对不对？</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;有那么一刻，感觉会就这样走到天荒地老没有尽头。                                   —— HML&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;昨天的徒步是一段可能会记得很久很久的旅程。没有记得很多风景，倒是记得很多人和
-    
-    </summary>
-    
-      <category term="life" scheme="https://lchml.com/categories/life/"/>
-    
-    
-      <category term="游记" scheme="https://lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
-    
-      <category term="HML" scheme="https://lchml.com/tags/HML/"/>
     
   </entry>
   
