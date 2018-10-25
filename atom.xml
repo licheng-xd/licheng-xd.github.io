@@ -67,34 +67,6 @@
   </entry>
   
   <entry>
-    <title>bimaconf —— 圈圈联盟配置管理系统</title>
-    <link href="https://lchml.com/technology/bimaconf/"/>
-    <id>https://lchml.com/technology/bimaconf/</id>
-    <published>2018-09-13T16:00:00.000Z</published>
-    <updated>2018-09-14T05:27:35.994Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>目前市面上有很多开源的配置中心可以使用，为什么还要自己重新开发一套呢？之前在易信项目中基于disconf二次开发作为配置中心。但是在开发过程中可以看出来，disconf的代码写的非常冗余，而且真个逻辑不够清晰简洁。同时sdk的使用也不够方便，缺少一些常用功能，如暂停某个配置文件的同步等。其它的开元配置中心，如阿里的Diamond，spring cloud的config组件，经过调研都有各种问题。因此在新项目的开发中决定实现自研的配置中心，可以针对项目的需求实现各种定制化需求，通知也对整个代码完全可控。</p>
-<p>代码地址：<a href="https://g.hz.netease.com/bima/bimaconf" target="_blank" rel="external">https://g.hz.netease.com/bima/bimaconf</a>，有需要的同学可以申请权限。</p>
-<h2 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h2>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;目前市面上有很多开源的配置中心可以使用，为什么还要自己重新开发一套呢？之前在易信项目中基于disconf二次开发作为配置中心。但是在开发过程
-    
-    </summary>
-    
-      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
-    
-    
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
-      <category term="bimaconf" scheme="https://lchml.com/tags/bimaconf/"/>
-    
-      <category term="配置中心" scheme="https://lchml.com/tags/%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Druid经常出现连接不可用的问题</title>
     <link href="https://lchml.com/technology/druid-validation/"/>
     <id>https://lchml.com/technology/druid-validation/</id>
@@ -1026,6 +998,59 @@
       <category term="服务发现" scheme="https://lchml.com/tags/%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/"/>
     
       <category term="Zookeeper" scheme="https://lchml.com/tags/Zookeeper/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>横店·群演的故事</title>
+    <link href="https://lchml.com/life/hengdian/"/>
+    <id>https://lchml.com/life/hengdian/</id>
+    <published>2016-06-26T16:00:00.000Z</published>
+    <updated>2018-07-19T10:54:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>一个人，一座城；这些人，这座城。                                   —— HML</p>
+</blockquote>
+<p>横店，作为影视城，娱乐行业并没有给横店带来更多的帮助，无论是经济上还是资源上，所以到今天它依然是一座小县城，尽管有时候明星云集，当红剧中也会时不时出现影视城中熟悉的场景，都改变不了它给人落后、单调的印象。<br>在骄阳似火的5月，我们来到这座小城，是观光，也是来看看在这个小城生活的那一群人的生活，看看是不是真如尔冬升讲述的那样，是一群路人甲的故事。</p>
+<p>为期两天的行程安排的是先参观秦王宫和明清宫苑，期盼能在参观过程中遇到剧组，实地感受下，有幸遇到大腕儿也不错。</p>
+<p>秦王宫-东西长廊<br><img src="hd1.jpg" alt=""></p>
+<p>明清宫苑-太和殿<br><img src="hd2.jpg" alt=""></p>
+<p>秦王宫-四海归一殿前全景<br><img src="hd3.jpg" alt=""></p>
+<p>明清宫苑-大明门外全景<br><img src="hd4.jpg" alt=""></p>
+<p>你更爱哪个呢？<br>秦王宫，张艺谋《英雄》拍摄地。还记得是初中某个周六的课上班主任从她宿舍办了电视音响到教室带我们欣赏英雄的艺术创作和老谋子的手法独到。现在想来，也真是一段美好的回忆。有时候，我们念诗词歌赋，不为张口经纶，若是能在身临其境之时，抒发情感也是好的。明清宫苑，素有江南紫禁城美誉，不单单是因为其格局酷似，更是各大清宫名剧拍摄点，它壮阔辽远，站在太和殿前俯瞰大地更有大好江山唯我独尊大气势。<br>我爱秦王宫，胜过明清宫苑。论建筑，秦宫地域不广，辽土不阔，没有清宫那般远大。轮奢华，秦汉自来不会给人奢华浮夸之感。有人爱明清的用色大胆张扬，有人喜秦汉的凛然气魄。我，更爱后者，说不上特别的理由，可能这常常的复道也可以作为一个理由。置身其中，往前，若是没有这门，是看不到的尽头。往上，是压迫和森严。这才是皇宫应有的气势，我喜伟岸，不喜铺张。</p>
+<p>秦王宫复道<br><img src="hd5.jpg" alt=""></p>
+<p>明清宫苑-偏殿<br><img src="hd6.jpg" alt=""></p>
+<p>初入秦王宫，凑巧遇到在前广场阙楼处拍摄“凤凰无双”的一出武戏，可惜剧组人员不让近身，无法一睹拍摄现场，真是出师不利。不过好在见缝插针还是抓到不少群演的镜头。</p>
+<p>暴晒的天气，披着厚重的戏服，如果不是那场明星梦，如何维系这样的工作状态？群演哥哥中场休息买水喝。</p>
+<p>假装一起入境<br><img src="hd7.jpg" alt=""></p>
+<p>烈日下，派饭中<br><img src="hd8.jpg" alt=""></p>
+<p>在明清宫苑遇到一位江湖艺人，靠着清宫戏中的江湖技艺耍戏卖笑求生，火中取钱口吞活蛇各种虐活都上——嘴上确实面子里子却都舍不得丢，非要强调自己也算是个半大不小的名角儿是来体验生活并不为挣钱，赏脸的观众并没有几个，可能最后给钱的并不在看在这艺上，更多的是卖的情，同情。后来想想，这位卖艺的大叔和他嘴上自我介绍的那位还并不是同一位，长得有几分相似而已，说不定也是一位龙套哥。</p>
+<p>身份也是一场戏<br><img src="hd9.jpg" alt=""></p>
+<p>原本满含希望而来，却没有在明清宫苑遇到任何剧组，只在离开的时候发现宫外亲王府幽闭之处正在拍摄某组抗战神剧，也是神不知鬼不觉，小成本到家——可见，今日抗战神剧市场已远远盖过宫廷戏，拍摄成本之小编剧脑洞之大更让其长驱直入大有侵占整个中国大陆电视剧市场势头。偷偷瞧了一眼，无奈还不让拍照。</p>
+<p>我冲着路人甲而来，真的很想了解群演这个群体的生活状态和心理状态是怎样，于是在我们的掘地三尺之下，循着攻略找到了“演员老公会”这个组织。据说所有背负着明星梦来到横店打算大干一番的年轻人都会来这个地方报道，并且从此每日驻守在此大本营、接戏、对台本、跑龙套，期望终有一天能够遇到下一个尔冬升。</p>
+<p>群演组织——老公会<br><img src="hd10.jpg" alt=""></p>
+<p>接了戏的群演对台本<br><img src="hd11.jpg" alt=""></p>
+<p>事实上，这些有着明星梦的青年们，大多非科班出身，也并不都有娇好的容颜，可能不具备任何一点走上星途的特质。但他们中大部分人执着地坚守这这个梦想，近乎偏执。我不能支持，但可以理解，不管是不是走捷径的心理还是真以为梦想可以无边无际，年轻都可一试。就像他们说的：梦想总是要有的，万一遇到尔冬升了呢。</p>
+<p><img src="hd12.jpg" alt=""><br>假期结束了，我们回到自己的城市，他们又开始在他们的城市里坚持梦想。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;一个人，一座城；这些人，这座城。                                   —— HML&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;横店，作为影视城，娱乐行业并没有给横店带来更多的帮助，无论是经济上还是资源上，所以到今天它
+    
+    </summary>
+    
+      <category term="life" scheme="https://lchml.com/categories/life/"/>
+    
+    
+      <category term="游记" scheme="https://lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
+    
+      <category term="HML" scheme="https://lchml.com/tags/HML/"/>
+    
+      <category term="横店" scheme="https://lchml.com/tags/%E6%A8%AA%E5%BA%97/"/>
     
   </entry>
   
