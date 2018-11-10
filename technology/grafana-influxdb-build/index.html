@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Grafana,InfluxDB,时序数据库,李城,服务器,数据大盘,SRE" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="LC's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="分析在任何项目中，一个可以直观表示当前系统运行状态的数据大盘对开发和运维人员都是非常有价值的。通常互联网大厂内部都会有一些提供监控运维供的公共平台。比如网易内部有哨兵、NDP等。这些平台通常能完成各种监控数据采集和展示。但也正是因为作为公共服务平台，它们无法做到为每个业务产生定制化的数据展示服务，甚至是基于数据的自动运维能力。因此，当项目达到一定量级以后，构建项目自身的数据大盘和自动运维系统就非常">
+<meta name="keywords" content="Grafana,InfluxDB,时序数据库,李城,服务器,数据大盘,SRE">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Grafana+InfluxDB构建项目数据大盘">
+<meta property="og:url" content="https://lchml.com/technology/grafana-influxdb-build/index.html">
+<meta property="og:site_name" content="LC&#39;s Blog">
+<meta property="og:description" content="分析在任何项目中，一个可以直观表示当前系统运行状态的数据大盘对开发和运维人员都是非常有价值的。通常互联网大厂内部都会有一些提供监控运维供的公共平台。比如网易内部有哨兵、NDP等。这些平台通常能完成各种监控数据采集和展示。但也正是因为作为公共服务平台，它们无法做到为每个业务产生定制化的数据展示服务，甚至是基于数据的自动运维能力。因此，当项目达到一定量级以后，构建项目自身的数据大盘和自动运维系统就非常">
+<meta property="og:image" content="https://lchml.com/technology/grafana-influxdb-build/grafana-influxdb-build.png">
+<meta property="og:updated_time" content="2018-11-10T04:46:53.709Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Grafana+InfluxDB构建项目数据大盘">
+<meta name="twitter:description" content="分析在任何项目中，一个可以直观表示当前系统运行状态的数据大盘对开发和运维人员都是非常有价值的。通常互联网大厂内部都会有一些提供监控运维供的公共平台。比如网易内部有哨兵、NDP等。这些平台通常能完成各种监控数据采集和展示。但也正是因为作为公共服务平台，它们无法做到为每个业务产生定制化的数据展示服务，甚至是基于数据的自动运维能力。因此，当项目达到一定量级以后，构建项目自身的数据大盘和自动运维系统就非常">
+<meta name="twitter:image" content="https://lchml.com/technology/grafana-influxdb-build/grafana-influxdb-build.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lchml.com/technology/grafana-influxdb-build/"/>
+
+
+
+
+
+  <title>Grafana+InfluxDB构建项目数据大盘 | LC's Blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-71702178-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LC's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">旅行的代码</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/grafana-influxdb-build/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LC&HML">
+      <meta itemprop="description" content="路漫漫其修远兮，吾将上下而求索">
+      <meta itemprop="image" content="/lc-icon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LC's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Grafana+InfluxDB构建项目数据大盘</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-10T00:00:00+08:00">
+                2018-11-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/technology/" itemprop="url" rel="index">
+                    <span itemprop="name">technology</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/technology/grafana-influxdb-build/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/technology/grafana-influxdb-build/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/technology/grafana-influxdb-build/" class="leancloud_visitors" data-flag-title="Grafana+InfluxDB构建项目数据大盘">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>在任何项目中，一个可以直观表示当前系统运行状态的数据大盘对开发和运维人员都是非常有价值的。通常互联网大厂内部都会有一些提供监控运维供的公共平台。比如网易内部有哨兵、NDP等。这些平台通常能完成各种监控数据采集和展示。但也正是因为作为公共服务平台，它们无法做到为每个业务产生定制化的数据展示服务，甚至是基于数据的自动运维能力。因此，当项目达到一定量级以后，构建项目自身的数据大盘和自动运维系统就非常必要了。</p>
+<p>目前业界使用最广泛的开源监控数据展示框架应属Grafana，它提供种类丰富的仪表盘，可以满足绝大多数的数据展示需求。同时它支持各种常见的数据库作为数据源，并对HQL做了可视化配置，可以快速搭建数据大盘。在数据源方便，虽然现在Grafana已经支持了MySQL之类的传统数据库和ElasticSearch之类的搜索引擎。但通常如果是作为数据大盘使用，最适合的还是时序数据库。时序数据库的数据存储方式本身就是完美匹配了监控数据的展示方式。在时序数据库中，InfluxDB属于老牌了，应该也是业界使用最广泛的时序数据库，其它常见的有OpenTSDB、Druid、Beringei，以及近年兴起的提供整套监控能力的Prometheus。至于选型的过程及原因这里就不做说明了。</p>
+<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><h3 id="InfluxDB搭建"><a href="#InfluxDB搭建" class="headerlink" title="InfluxDB搭建"></a>InfluxDB搭建</h3><p>InfluxDB单机搭建非常简单，首先在官方下载页面找到对应版本下载地址并下载到主机上。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget https://dl.influxdata.com/influxdb/releases/influxdb-1.6.4_linux_amd64.tar.gz</div></pre></td></tr></table></figure>
+<p>解压后进入influxdb-1.6.4-1文件夹，会看到里面有三个子文件夹：etc、usr、var。其中etc/influxdb中有配置文件influxdb.conf，用于配置各种启动参数和数据库属性。usr/bin目录中是启动脚本，influx是启动客户端程序，默认连接当前主机的默认地址和端口，influxd用于启动数据库。运行./influxd help可以看各种命令参数。位置文件中的各项配置都有英文注释，根据需求配置后以后。运行<code>./influxd &amp;</code>启动，默认端口是8086。</p>
+<p>启动以后就可以通过./influx运行客户端连接到当前数据库，influxdb的命令与mysql很接近，稍微看一下就可以学会了。其中有几个主要的常用概念：</p>
+<ul>
+<li>Database，表示数据库，与mysql的database类似。</li>
+<li>Measurement，描述数据库存储结构，可以理解为mysql的table概念，只是不需要手动创建，可以再写入数据时自动创建。</li>
+<li>Tag，类似于mysql中的字段，但是他不能被修改，且默认是被索引的。因此写入数据时最好都带上tag。只能是String类型</li>
+<li>Field，类似于mysql中的字段，可以被修改。支持类型有floats，integers，strings，booleans。</li>
+<li>Timestamp，每条数据都会有一个时间戳，精确到纳秒。</li>
+<li>Series，measurement, tag set, retention policy 相同的数据集合算做一个series。理解这个概念至关重要，因为这些数据存储在内存中，如果series太多，会导致OOM。</li>
+<li>Retention Policy，保留策略，可以在创建数据库时配置也可以在写入数据时指定，默认是永久保存，副本为1.</li>
+<li>Continuous Query，CQ 是预先配置好的一些查询命令，定期自动执行这些命令并将查询结果写入指定的 measurement 中，这个功能主要用于数据聚合。具体可参考：<a href="https://docs.influxdata.com/influxdb/v1.2/query_language/continuous_queries/" target="_blank" rel="external">官方文档</a>。</li>
+<li>Shard，存储一定时间间隔的数据，每个目录对应一个shard，目录的名字就是shard id。每一个shard都有自己的cache、wal、tsm file 以及 compactor，目的就是通过时间来快速定位到要查询数据的相关资源，加速查询的过程，并且也让之后的批量删除数据的操作变得非常简单且高效。</li>
+</ul>
+<p>目前官方说明，在1.7以后的版本中，将不再开源InfluxDB的集群模式。1.7及之前版本还可以通过官方的集群模式来部署高可用的InfluxDB集群。</p>
+<h3 id="Grafana搭建"><a href="#Grafana搭建" class="headerlink" title="Grafana搭建"></a>Grafana搭建</h3><p>完成数据库搭建以后，接下来就是前端展示框架Grafana的搭建。同样在官网上找到对应的下载地址并下载到主机。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-5.3.2.linux-amd64.tar.gz</div></pre></td></tr></table></figure>
+<p>解压后进入grafana-5.3.2文件夹，其中conf/default.ini用于各种参数配置，bin/grafana-server用于启动grafana服务。我们主要需要对defalut.ini中的参数进行修改。首先[path]目录下是关于数据库存储的一些配置，可以不修改。[server]目录下是关于服务的一些参数，如果是提供https访问，就需要把protocol改为https，并设置对应的cert_file和cert_key。http_port是提供服务的端口，domain是提供服务的域名。要注意，如果配置了domain但是又不是通过domain来访问Grafana的话会导致服务器不可用，并在页面会提示你。其中有一个root_url的配置需要注意，如果需要配置公司内的Opneid登陆，那么这个root_url会作为openbid认证的跳转链接。需要配置为在openid认证注册的跳转url。</p>
+<p>接下来是Database目录，用于配置grafana自身的sqlite的配置。默认sqlite3文件在data/grafana.db，可以通过sqlite3客户端直接访问，其中存储了一些用户信息数据和监控表盘配置数据。</p>
+<p>再往下有各种认证支持的配置，如Google OAuth,Github OAuth等等，如果要接入公司内的Openid认证，那就找到Generic OAuth目录，把enable改为true，并配置上oauth相关的参数。如果没问题的话，这时候刷新页面应该就可以通过openid登录了。如果为了数据安全，不想让全公司的人都可以看，那就把其中allow_sign_up一项改为false，这样的话，用户就需要通过邀请才能登录。</p>
+<p>其它各种配置这里就不一一说明了，基本都有英文注释，很容易看懂。</p>
+<p>启动Grafana以后，首先以admin的默认账号登录，系统会引导你修改账号密码，创建dashboard等操作。如果是只允许openid用户登录，建议把普通登录框隐藏掉。disable_login_form改为false。不过这里似乎有个小bug，当隐藏了登录框以后，邀请用户的按钮会消失，不过可以直接在url上输入/org/users/invite进入邀请页面。如果想要发送邀请邮件，需要在default.ini中配置stmp相关的参数。不配置的话，也可以直接在邀请页面把邀请链接复制给对方。</p>
+<h3 id="数据采集"><a href="#数据采集" class="headerlink" title="数据采集"></a>数据采集</h3><p>数据采集工作，就根据业务的需求来定制了，可以从公共监控平台获取已经采集好的数据按时序导入到Influxdb，也可以通过kafka得到业务抄送出来的直接数据，自己做清洗分析以后导入influxdb。还可以从ElasticSearch中获取采集好的日志，分析以后导入。总之数据源可以来自各种途径。</p>
+<h3 id="表盘插件"><a href="#表盘插件" class="headerlink" title="表盘插件"></a>表盘插件</h3><p>Grafana支持插件模式，比如比较常用的Pie Chart和WorldMap，可以在官网上看到安装和实用方式。</p>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><p>在搭建好基础的监控系统以后，接下来就可以根据数据分析得到的结果来进行自动运维的工作，如自动拉起进程，自动调整路由权重等等，这快内容相对就更加复杂和个性化了，在以后的文章中再另做分析。</p>
+<h2 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h2><p><img src="grafana-influxdb-build.png" alt=""></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/donate-page/simple/images/wechat.jpg" alt="LC&HML 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/donate-page/simple/images/alipay.jpg" alt="LC&HML 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/LC/" rel="tag"># LC</a>
+          
+            <a href="/tags/Grafana/" rel="tag"># Grafana</a>
+          
+            <a href="/tags/InfluxDB/" rel="tag"># InfluxDB</a>
+          
+            <a href="/tags/数据大盘/" rel="tag"># 数据大盘</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/technology/tomcat-ssl/" rel="next" title="Tomcat配置CloudFlare免费ssl证书问题">
+                <i class="fa fa-chevron-left"></i> Tomcat配置CloudFlare免费ssl证书问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/lc-icon.jpg"
+                alt="LC&HML" />
+            
+              <p class="site-author-name" itemprop="name">LC&HML</p>
+              <p class="site-description motion-element" itemprop="description">路漫漫其修远兮，吾将上下而求索</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">58</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/licheng-xd" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:licheng_xd@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope-o"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://500px.me/lchml" target="_blank" title="500px">
+                      
+                        <i class="fa fa-fw fa-500px"></i>500px</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://jandan.net" target="_blank" title="Jandan">
+                      
+                        <i class="fa fa-fw fa-transgender-alt"></i>Jandan</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/4qg55j4w/home?wvr=5" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://moviehell.net" target="_blank" title="Movie">
+                      
+                        <i class="fa fa-fw fa-file-movie-o"></i>Movie</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#分析"><span class="nav-number">1.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实践"><span class="nav-number">2.</span> <span class="nav-text">实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InfluxDB搭建"><span class="nav-number">2.1.</span> <span class="nav-text">InfluxDB搭建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Grafana搭建"><span class="nav-number">2.2.</span> <span class="nav-text">Grafana搭建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据采集"><span class="nav-number">2.3.</span> <span class="nav-text">数据采集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#表盘插件"><span class="nav-number">2.4.</span> <span class="nav-text">表盘插件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展"><span class="nav-number">3.</span> <span class="nav-text">扩展</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最终效果"><span class="nav-number">4.</span> <span class="nav-text">最终效果</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LC&HML</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'licheng-xd',
+            repo: 'blog-comment',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: 'e66400d0dd1a8a7ea34db3e2ba22f071f3b93b83',
+            
+                client_id: 'a442d470922bbc39e7a0'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("MabW4tTRa4YhUWvISCsRLuzd-gzGzoHsz", "X8ewKXvEvIbA6C6S61dHMX5J");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

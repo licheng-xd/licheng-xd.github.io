@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://lchml.com/"/>
-  <updated>2018-10-25T07:48:43.263Z</updated>
+  <updated>2018-11-10T04:46:53.709Z</updated>
   <id>https://lchml.com/</id>
   
   <author>
@@ -14,6 +14,63 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Grafana+InfluxDB构建项目数据大盘</title>
+    <link href="https://lchml.com/technology/grafana-influxdb-build/"/>
+    <id>https://lchml.com/technology/grafana-influxdb-build/</id>
+    <published>2018-11-09T16:00:00.000Z</published>
+    <updated>2018-11-10T04:46:53.709Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>在任何项目中，一个可以直观表示当前系统运行状态的数据大盘对开发和运维人员都是非常有价值的。通常互联网大厂内部都会有一些提供监控运维供的公共平台。比如网易内部有哨兵、NDP等。这些平台通常能完成各种监控数据采集和展示。但也正是因为作为公共服务平台，它们无法做到为每个业务产生定制化的数据展示服务，甚至是基于数据的自动运维能力。因此，当项目达到一定量级以后，构建项目自身的数据大盘和自动运维系统就非常必要了。</p>
+<p>目前业界使用最广泛的开源监控数据展示框架应属Grafana，它提供种类丰富的仪表盘，可以满足绝大多数的数据展示需求。同时它支持各种常见的数据库作为数据源，并对HQL做了可视化配置，可以快速搭建数据大盘。在数据源方便，虽然现在Grafana已经支持了MySQL之类的传统数据库和ElasticSearch之类的搜索引擎。但通常如果是作为数据大盘使用，最适合的还是时序数据库。时序数据库的数据存储方式本身就是完美匹配了监控数据的展示方式。在时序数据库中，InfluxDB属于老牌了，应该也是业界使用最广泛的时序数据库，其它常见的有OpenTSDB、Druid、Beringei，以及近年兴起的提供整套监控能力的Prometheus。至于选型的过程及原因这里就不做说明了。</p>
+<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><h3 id="InfluxDB搭建"><a href="#InfluxDB搭建" class="headerlink" title="InfluxDB搭建"></a>InfluxDB搭建</h3><p>InfluxDB单机搭建非常简单，首先在官方下载页面找到对应版本下载地址并下载到主机上。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget https://dl.influxdata.com/influxdb/releases/influxdb-1.6.4_linux_amd64.tar.gz</div></pre></td></tr></table></figure>
+<p>解压后进入influxdb-1.6.4-1文件夹，会看到里面有三个子文件夹：etc、usr、var。其中etc/influxdb中有配置文件influxdb.conf，用于配置各种启动参数和数据库属性。usr/bin目录中是启动脚本，influx是启动客户端程序，默认连接当前主机的默认地址和端口，influxd用于启动数据库。运行./influxd help可以看各种命令参数。位置文件中的各项配置都有英文注释，根据需求配置后以后。运行<code>./influxd &amp;</code>启动，默认端口是8086。</p>
+<p>启动以后就可以通过./influx运行客户端连接到当前数据库，influxdb的命令与mysql很接近，稍微看一下就可以学会了。其中有几个主要的常用概念：</p>
+<ul>
+<li>Database，表示数据库，与mysql的database类似。</li>
+<li>Measurement，描述数据库存储结构，可以理解为mysql的table概念，只是不需要手动创建，可以再写入数据时自动创建。</li>
+<li>Tag，类似于mysql中的字段，但是他不能被修改，且默认是被索引的。因此写入数据时最好都带上tag。只能是String类型</li>
+<li>Field，类似于mysql中的字段，可以被修改。支持类型有floats，integers，strings，booleans。</li>
+<li>Timestamp，每条数据都会有一个时间戳，精确到纳秒。</li>
+<li>Series，measurement, tag set, retention policy 相同的数据集合算做一个series。理解这个概念至关重要，因为这些数据存储在内存中，如果series太多，会导致OOM。</li>
+<li>Retention Policy，保留策略，可以在创建数据库时配置也可以在写入数据时指定，默认是永久保存，副本为1.</li>
+<li>Continuous Query，CQ 是预先配置好的一些查询命令，定期自动执行这些命令并将查询结果写入指定的 measurement 中，这个功能主要用于数据聚合。具体可参考：<a href="https://docs.influxdata.com/influxdb/v1.2/query_language/continuous_queries/" target="_blank" rel="external">官方文档</a>。</li>
+<li>Shard，存储一定时间间隔的数据，每个目录对应一个shard，目录的名字就是shard id。每一个shard都有自己的cache、wal、tsm file 以及 compactor，目的就是通过时间来快速定位到要查询数据的相关资源，加速查询的过程，并且也让之后的批量删除数据的操作变得非常简单且高效。</li>
+</ul>
+<p>目前官方说明，在1.7以后的版本中，将不再开源InfluxDB的集群模式。1.7及之前版本还可以通过官方的集群模式来部署高可用的InfluxDB集群。</p>
+<h3 id="Grafana搭建"><a href="#Grafana搭建" class="headerlink" title="Grafana搭建"></a>Grafana搭建</h3><p>完成数据库搭建以后，接下来就是前端展示框架Grafana的搭建。同样在官网上找到对应的下载地址并下载到主机。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-5.3.2.linux-amd64.tar.gz</div></pre></td></tr></table></figure>
+<p>解压后进入grafana-5.3.2文件夹，其中conf/default.ini用于各种参数配置，bin/grafana-server用于启动grafana服务。我们主要需要对defalut.ini中的参数进行修改。首先[path]目录下是关于数据库存储的一些配置，可以不修改。[server]目录下是关于服务的一些参数，如果是提供https访问，就需要把protocol改为https，并设置对应的cert_file和cert_key。http_port是提供服务的端口，domain是提供服务的域名。要注意，如果配置了domain但是又不是通过domain来访问Grafana的话会导致服务器不可用，并在页面会提示你。其中有一个root_url的配置需要注意，如果需要配置公司内的Opneid登陆，那么这个root_url会作为openbid认证的跳转链接。需要配置为在openid认证注册的跳转url。</p>
+<p>接下来是Database目录，用于配置grafana自身的sqlite的配置。默认sqlite3文件在data/grafana.db，可以通过sqlite3客户端直接访问，其中存储了一些用户信息数据和监控表盘配置数据。</p>
+<p>再往下有各种认证支持的配置，如Google OAuth,Github OAuth等等，如果要接入公司内的Openid认证，那就找到Generic OAuth目录，把enable改为true，并配置上oauth相关的参数。如果没问题的话，这时候刷新页面应该就可以通过openid登录了。如果为了数据安全，不想让全公司的人都可以看，那就把其中allow_sign_up一项改为false，这样的话，用户就需要通过邀请才能登录。</p>
+<p>其它各种配置这里就不一一说明了，基本都有英文注释，很容易看懂。</p>
+<p>启动Grafana以后，首先以admin的默认账号登录，系统会引导你修改账号密码，创建dashboard等操作。如果是只允许openid用户登录，建议把普通登录框隐藏掉。disable_login_form改为false。不过这里似乎有个小bug，当隐藏了登录框以后，邀请用户的按钮会消失，不过可以直接在url上输入/org/users/invite进入邀请页面。如果想要发送邀请邮件，需要在default.ini中配置stmp相关的参数。不配置的话，也可以直接在邀请页面把邀请链接复制给对方。</p>
+<h3 id="数据采集"><a href="#数据采集" class="headerlink" title="数据采集"></a>数据采集</h3><p>数据采集工作，就根据业务的需求来定制了，可以从公共监控平台获取已经采集好的数据按时序导入到Influxdb，也可以通过kafka得到业务抄送出来的直接数据，自己做清洗分析以后导入influxdb。还可以从ElasticSearch中获取采集好的日志，分析以后导入。总之数据源可以来自各种途径。</p>
+<h3 id="表盘插件"><a href="#表盘插件" class="headerlink" title="表盘插件"></a>表盘插件</h3><p>Grafana支持插件模式，比如比较常用的Pie Chart和WorldMap，可以在官网上看到安装和实用方式。</p>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><p>在搭建好基础的监控系统以后，接下来就可以根据数据分析得到的结果来进行自动运维的工作，如自动拉起进程，自动调整路由权重等等，这快内容相对就更加复杂和个性化了，在以后的文章中再另做分析。</p>
+<h2 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h2><p><img src="grafana-influxdb-build.png" alt=""></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;分析&quot;&gt;&lt;a href=&quot;#分析&quot; class=&quot;headerlink&quot; title=&quot;分析&quot;&gt;&lt;/a&gt;分析&lt;/h2&gt;&lt;p&gt;在任何项目中，一个可以直观表示当前系统运行状态的数据大盘对开发和运维人员都是非常有价值的。通常互联网大厂内部都会有一些提供监控运维供的公共平
+    
+    </summary>
+    
+      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
+    
+    
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
+    
+      <category term="Grafana" scheme="https://lchml.com/tags/Grafana/"/>
+    
+      <category term="InfluxDB" scheme="https://lchml.com/tags/InfluxDB/"/>
+    
+      <category term="数据大盘" scheme="https://lchml.com/tags/%E6%95%B0%E6%8D%AE%E5%A4%A7%E7%9B%98/"/>
+    
+  </entry>
   
   <entry>
     <title>Tomcat配置CloudFlare免费ssl证书问题</title>
@@ -765,7 +822,7 @@
     <link href="https://lchml.com/technology/grpc-trap/"/>
     <id>https://lchml.com/technology/grpc-trap/</id>
     <published>2017-06-17T16:00:00.000Z</published>
-    <updated>2018-07-19T10:53:56.000Z</updated>
+    <updated>2018-11-10T04:46:13.470Z</updated>
     
     <content type="html"><![CDATA[<p>GRPC是Google开源的一个高性能、跨语言的RPC框架，基于HTTP2协议，基于protobuf-3.x，基于Netty-4.x。</p>
 <p>最近开发一个公司的游戏项目，采用分布式的服务器架构，内部服务之间均采用GRPC进行通信。但是在测试过程中发现一个重大的bug，<strong>偶现丢包</strong>。</p>
@@ -998,59 +1055,6 @@
       <category term="服务发现" scheme="https://lchml.com/tags/%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/"/>
     
       <category term="Zookeeper" scheme="https://lchml.com/tags/Zookeeper/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>横店·群演的故事</title>
-    <link href="https://lchml.com/life/hengdian/"/>
-    <id>https://lchml.com/life/hengdian/</id>
-    <published>2016-06-26T16:00:00.000Z</published>
-    <updated>2018-07-19T10:54:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote>
-<p>一个人，一座城；这些人，这座城。                                   —— HML</p>
-</blockquote>
-<p>横店，作为影视城，娱乐行业并没有给横店带来更多的帮助，无论是经济上还是资源上，所以到今天它依然是一座小县城，尽管有时候明星云集，当红剧中也会时不时出现影视城中熟悉的场景，都改变不了它给人落后、单调的印象。<br>在骄阳似火的5月，我们来到这座小城，是观光，也是来看看在这个小城生活的那一群人的生活，看看是不是真如尔冬升讲述的那样，是一群路人甲的故事。</p>
-<p>为期两天的行程安排的是先参观秦王宫和明清宫苑，期盼能在参观过程中遇到剧组，实地感受下，有幸遇到大腕儿也不错。</p>
-<p>秦王宫-东西长廊<br><img src="hd1.jpg" alt=""></p>
-<p>明清宫苑-太和殿<br><img src="hd2.jpg" alt=""></p>
-<p>秦王宫-四海归一殿前全景<br><img src="hd3.jpg" alt=""></p>
-<p>明清宫苑-大明门外全景<br><img src="hd4.jpg" alt=""></p>
-<p>你更爱哪个呢？<br>秦王宫，张艺谋《英雄》拍摄地。还记得是初中某个周六的课上班主任从她宿舍办了电视音响到教室带我们欣赏英雄的艺术创作和老谋子的手法独到。现在想来，也真是一段美好的回忆。有时候，我们念诗词歌赋，不为张口经纶，若是能在身临其境之时，抒发情感也是好的。明清宫苑，素有江南紫禁城美誉，不单单是因为其格局酷似，更是各大清宫名剧拍摄点，它壮阔辽远，站在太和殿前俯瞰大地更有大好江山唯我独尊大气势。<br>我爱秦王宫，胜过明清宫苑。论建筑，秦宫地域不广，辽土不阔，没有清宫那般远大。轮奢华，秦汉自来不会给人奢华浮夸之感。有人爱明清的用色大胆张扬，有人喜秦汉的凛然气魄。我，更爱后者，说不上特别的理由，可能这常常的复道也可以作为一个理由。置身其中，往前，若是没有这门，是看不到的尽头。往上，是压迫和森严。这才是皇宫应有的气势，我喜伟岸，不喜铺张。</p>
-<p>秦王宫复道<br><img src="hd5.jpg" alt=""></p>
-<p>明清宫苑-偏殿<br><img src="hd6.jpg" alt=""></p>
-<p>初入秦王宫，凑巧遇到在前广场阙楼处拍摄“凤凰无双”的一出武戏，可惜剧组人员不让近身，无法一睹拍摄现场，真是出师不利。不过好在见缝插针还是抓到不少群演的镜头。</p>
-<p>暴晒的天气，披着厚重的戏服，如果不是那场明星梦，如何维系这样的工作状态？群演哥哥中场休息买水喝。</p>
-<p>假装一起入境<br><img src="hd7.jpg" alt=""></p>
-<p>烈日下，派饭中<br><img src="hd8.jpg" alt=""></p>
-<p>在明清宫苑遇到一位江湖艺人，靠着清宫戏中的江湖技艺耍戏卖笑求生，火中取钱口吞活蛇各种虐活都上——嘴上确实面子里子却都舍不得丢，非要强调自己也算是个半大不小的名角儿是来体验生活并不为挣钱，赏脸的观众并没有几个，可能最后给钱的并不在看在这艺上，更多的是卖的情，同情。后来想想，这位卖艺的大叔和他嘴上自我介绍的那位还并不是同一位，长得有几分相似而已，说不定也是一位龙套哥。</p>
-<p>身份也是一场戏<br><img src="hd9.jpg" alt=""></p>
-<p>原本满含希望而来，却没有在明清宫苑遇到任何剧组，只在离开的时候发现宫外亲王府幽闭之处正在拍摄某组抗战神剧，也是神不知鬼不觉，小成本到家——可见，今日抗战神剧市场已远远盖过宫廷戏，拍摄成本之小编剧脑洞之大更让其长驱直入大有侵占整个中国大陆电视剧市场势头。偷偷瞧了一眼，无奈还不让拍照。</p>
-<p>我冲着路人甲而来，真的很想了解群演这个群体的生活状态和心理状态是怎样，于是在我们的掘地三尺之下，循着攻略找到了“演员老公会”这个组织。据说所有背负着明星梦来到横店打算大干一番的年轻人都会来这个地方报道，并且从此每日驻守在此大本营、接戏、对台本、跑龙套，期望终有一天能够遇到下一个尔冬升。</p>
-<p>群演组织——老公会<br><img src="hd10.jpg" alt=""></p>
-<p>接了戏的群演对台本<br><img src="hd11.jpg" alt=""></p>
-<p>事实上，这些有着明星梦的青年们，大多非科班出身，也并不都有娇好的容颜，可能不具备任何一点走上星途的特质。但他们中大部分人执着地坚守这这个梦想，近乎偏执。我不能支持，但可以理解，不管是不是走捷径的心理还是真以为梦想可以无边无际，年轻都可一试。就像他们说的：梦想总是要有的，万一遇到尔冬升了呢。</p>
-<p><img src="hd12.jpg" alt=""><br>假期结束了，我们回到自己的城市，他们又开始在他们的城市里坚持梦想。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;一个人，一座城；这些人，这座城。                                   —— HML&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;横店，作为影视城，娱乐行业并没有给横店带来更多的帮助，无论是经济上还是资源上，所以到今天它
-    
-    </summary>
-    
-      <category term="life" scheme="https://lchml.com/categories/life/"/>
-    
-    
-      <category term="游记" scheme="https://lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
-    
-      <category term="HML" scheme="https://lchml.com/tags/HML/"/>
-    
-      <category term="横店" scheme="https://lchml.com/tags/%E6%A8%AA%E5%BA%97/"/>
     
   </entry>
   
