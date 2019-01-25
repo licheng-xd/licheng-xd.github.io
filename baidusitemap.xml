@@ -4,6 +4,31 @@
 
     
   <url>
+    <loc>https://lchml.com/technology/bimaconf/</loc>
+    <lastmod>2019-01-25T05:33:16.345Z</lastmod>
+    <data>
+        <display>
+        <title>Bimaconf —— 开源配置中心</title>
+        <pubTime>2019-01-24T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>bimaconf</tag>
+         
+        <tag>配置中心</tag>
+         
+         
+           
+             
+              <breadCrumb title="technology" url="https://lchml.com/categories/technology/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+    
+  <url>
     <loc>https://lchml.com/technology/grafana-influxdb-build/</loc>
     <lastmod>2018-11-10T04:46:53.709Z</lastmod>
     <data>
@@ -1405,7 +1430,6 @@
     </data>
     </url>
 
-    
     
     
     
