@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://lchml.com/"/>
-  <updated>2019-01-25T05:33:16.345Z</updated>
+  <updated>2019-05-10T09:01:06.293Z</updated>
   <id>https://lchml.com/</id>
   
   <author>
@@ -14,6 +14,42 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Java技能总结</title>
+    <link href="https://lchml.com/technology/java-engineer/"/>
+    <id>https://lchml.com/technology/java-engineer/</id>
+    <published>2019-05-09T16:00:00.000Z</published>
+    <updated>2019-05-10T09:01:06.293Z</updated>
+    
+    <content type="html"><![CDATA[<p>由于公司业务调整的原因，之前一个多月没有太多工作，所以抽时间出去看看外面的行业动向（面试）。经过一多月的时间，最终拿到了两个offer，一个是字节跳动（头条）杭州的服务端开发，一个是蚂蚁金服保险中台的P7服务端开发。两个offer的待遇总包差不多，头条的现金大于蚂蚁，期权少于蚂蚁。你猜我会选择哪一个呢？</p>
+<p>我都拒了，继续留在大网易搬砖吧，哈哈哈。虽然都拒了，但是过程还是有挺多收获的，所以专门在这里总结一下吧。</p>
+<p>首先说说头条的面试，一共有3轮技术面加一轮hr面。头条的面试最有意思的一点是，会在每轮面试前发邮件直接告诉你，去多刷刷leetcode的算法题或者准备点什么，我们要考的，这是第一次碰到面试前告诉你我要考什么的公司。在面试过程中确实以算法为主，全部都是视频面试，通过桌面共享来现场算法编程，除此之外主要是简单的聊了一些项目经验和架构设计，都不是特别深入。可能由于头条是GoLang技术栈为主的原因，所以整个面试过程中，没有问过任何和java相关的问题。</p>
+<p>然后就是蚂蚁的面试，蚂蚁面试其实一共面了三个部门，第一个是蚂蚁小程序团队，hr面结束以后天真的以为应该通过了，没想到居然第二天收到反馈说hr面挂了，我也是服。后来仔细回想了一下，当时hr问我薪资期望的时候，我可能要价太直接了，哈哈。然后很快简历被花呗的朋友捞过去，可能因为小程序那边通过了技术面的原因吧，所以花呗直接就是CTO聊的，聊得也还可以，但是最后他跟我说他是我现在所在部门大boss的同学，然后坏笑了一下，我就知道没搞头了，最后面试反馈上说的是业务匹配度较低。最后简历又被捞到了蚂蚁保险部门，约我去一个他们的招聘专场，说是可以一天走完所有流程。这次的面试整体都比较顺利，三面面试官是个很不错的人，在面试结束后还给我详细解释分析了我目前存在的不足，技术深度够了，但是广度和高度不够，需要提高自己的格局，形成个人的知识体系。让我更明确接下去该努力的方向，很感谢他，名字就不写出来了，最后顺利拿到offer，中间还博弈了一次薪资。</p>
+<p>最后把面试的一些关键点总结成一张图，方便温故而知新吧。</p>
+<p><img src="java-engineer.png" alt=""></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;由于公司业务调整的原因，之前一个多月没有太多工作，所以抽时间出去看看外面的行业动向（面试）。经过一多月的时间，最终拿到了两个offer，一个是字节跳动（头条）杭州的服务端开发，一个是蚂蚁金服保险中台的P7服务端开发。两个offer的待遇总包差不多，头条的现金大于蚂蚁，期权少
+    
+    </summary>
+    
+      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
+    
+    
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
+    
+      <category term="Java" scheme="https://lchml.com/tags/Java/"/>
+    
+      <category term="面试" scheme="https://lchml.com/tags/%E9%9D%A2%E8%AF%95/"/>
+    
+      <category term="架构" scheme="https://lchml.com/tags/%E6%9E%B6%E6%9E%84/"/>
+    
+      <category term="Java基础" scheme="https://lchml.com/tags/Java%E5%9F%BA%E7%A1%80/"/>
+    
+  </entry>
   
   <entry>
     <title>Bimaconf —— 开源配置中心</title>
@@ -1245,40 +1281,6 @@
       <category term="翻墙" scheme="https://lchml.com/tags/%E7%BF%BB%E5%A2%99/"/>
     
       <category term="NAS" scheme="https://lchml.com/tags/NAS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>星辰和大海</title>
-    <link href="https://lchml.com/life/cosmic-dream/"/>
-    <id>https://lchml.com/life/cosmic-dream/</id>
-    <published>2016-10-16T16:00:00.000Z</published>
-    <updated>2018-07-19T10:53:44.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>今日清晨 2016-10-17 7:30 神州十一号飞船成功发射，两名宇航员进入太空。</p>
-<p>对于从小就有着探索太空梦想的我，这是一件激动人心的事。虽然梦想没能自己实现，但只要看到人类踏上宇宙的征程，内心总会澎湃不已。总会想起《星际迷航》中的经典台词：</p>
-<p><strong>Space: the final frontier. These are the voyages of the starship Enterprise. Its continuing mission: to explore strange new worlds, to seek out new lifes and new civilizations, to boldly go where no one has gone before.</strong></p>
-<p><strong>宇宙，人类最后的边疆。这是星舰“企业号”的航程。它继续的任务，是去探索未知的新世界，找寻新的生命和新的文明，勇敢地航向前人所未至的领域。</strong></p>
-<p>这是每一部《星际迷航》片头都会出现的一段话，它代表了人类对未来、未知的渴求。<br><img src="enterprise.jpg" alt=""></p>
-<p><img src="shenzhou.png" alt="神州十一号发射"></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;今日清晨 2016-10-17 7:30 神州十一号飞船成功发射，两名宇航员进入太空。&lt;/p&gt;
-&lt;p&gt;对于从小就有着探索太空梦想的我，这是一件激动人心的事。虽然梦想没能自己实现，但只要看到人类踏上宇宙的征程，内心总会澎湃不已。总会想起《星际迷航》中的经典台词：&lt;/p&gt;
-&lt;p
-    
-    </summary>
-    
-      <category term="life" scheme="https://lchml.com/categories/life/"/>
-    
-    
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
-      <category term="随想" scheme="https://lchml.com/tags/%E9%9A%8F%E6%83%B3/"/>
-    
-      <category term="科幻" scheme="https://lchml.com/tags/%E7%A7%91%E5%B9%BB/"/>
     
   </entry>
   

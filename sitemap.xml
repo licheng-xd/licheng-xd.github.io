@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://lchml.com/technology/java-engineer/</loc>
+    
+    <lastmod>2019-05-10T09:01:06.293Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://lchml.com/technology/redis/</loc>
+    
+    <lastmod>2019-05-08T05:29:47.678Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://lchml.com/resume/index.html</loc>
     
     <lastmod>2019-01-25T05:39:24.709Z</lastmod>
@@ -180,13 +194,6 @@
     <loc>https://lchml.com/life/rest/</loc>
     
     <lastmod>2018-07-19T10:54:56.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://lchml.com/technology/redis/</loc>
-    
-    <lastmod>2018-07-19T10:54:54.000Z</lastmod>
     
   </url>
   

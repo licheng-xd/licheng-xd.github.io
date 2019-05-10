@@ -3,6 +3,56 @@
 
 
     
+  <url>
+    <loc>https://lchml.com/technology/java-engineer/</loc>
+    <lastmod>2019-05-10T09:01:06.293Z</lastmod>
+    <data>
+        <display>
+        <title>Java技能总结</title>
+        <pubTime>2019-05-09T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>Java</tag>
+         
+        <tag>面试</tag>
+         
+        <tag>架构</tag>
+         
+        <tag>Java基础</tag>
+         
+         
+           
+             
+              <breadCrumb title="technology" url="https://lchml.com/categories/technology/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://lchml.com/technology/redis/</loc>
+    <lastmod>2019-05-08T05:29:47.678Z</lastmod>
+    <data>
+        <display>
+        <title>redis高可用</title>
+        <pubTime>2015-02-11T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>redis</tag>
+         
+         
+           
+             
+              <breadCrumb title="technology" url="https://lchml.com/categories/technology/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
     
   <url>
     <loc>https://lchml.com/technology/bimaconf/</loc>
@@ -615,28 +665,6 @@
            
              
               <breadCrumb title="life" url="https://lchml.com/categories/life/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://lchml.com/technology/redis/</loc>
-    <lastmod>2018-07-19T10:54:54.000Z</lastmod>
-    <data>
-        <display>
-        <title>redis高可用</title>
-        <pubTime>2015-02-11T16:00:00.000Z</pubTime>
-        
-        <tag>LC</tag>
-         
-        <tag>redis</tag>
-         
-         
-           
-             
-              <breadCrumb title="technology" url="https://lchml.com/categories/technology/"/>
           
         </display>
     </data>
