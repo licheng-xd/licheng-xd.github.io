@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://lchml.com/technology/log/</loc>
+    
+    <lastmod>2019-06-03T03:22:48.791Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://lchml.com/life/zengguofan/</loc>
     
-    <lastmod>2019-05-25T04:54:03.878Z</lastmod>
+    <lastmod>2019-06-03T03:15:15.237Z</lastmod>
     
   </url>
   
@@ -54,6 +61,13 @@
     <loc>https://lchml.com/technology/grpc-trap/</loc>
     
     <lastmod>2018-11-10T04:46:13.470Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://lchml.com/life/cosmic-dream/</loc>
+    
+    <lastmod>2018-10-25T07:52:25.663Z</lastmod>
     
   </url>
   
@@ -383,13 +397,6 @@
     <loc>https://lchml.com/life/damingshan/</loc>
     
     <lastmod>2018-07-19T10:53:46.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://lchml.com/life/cosmic-dream/</loc>
-    
-    <lastmod>2018-07-19T10:53:44.000Z</lastmod>
     
   </url>
   

@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="李城,Java,日志,log" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="LC's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="日志对于一个软件系统的重要程度是不言而喻的，线上问题定位、运营数据统计、用户画像分析、系统状态监控等都离不开日志。然而，由于日志通常与业务系统的核心能力没有直接关联，所以经常会被开发人员忽视。对于一些简单的小规模应用程序，也许不需要在日志上花费大量精力。但是对于高复杂度的大型系统来说，日志是保证系统可靠运行必不可少的一环。 日志需要包含什么内容 良好的日志内容应该是记录的信息不多不少刚刚好的。记录">
+<meta name="keywords" content="李城,Java,日志,log">
+<meta property="og:type" content="article">
+<meta property="og:title" content="最佳日志实践">
+<meta property="og:url" content="https://lchml.com/technology/log/index.html">
+<meta property="og:site_name" content="LC&#39;s Blog">
+<meta property="og:description" content="日志对于一个软件系统的重要程度是不言而喻的，线上问题定位、运营数据统计、用户画像分析、系统状态监控等都离不开日志。然而，由于日志通常与业务系统的核心能力没有直接关联，所以经常会被开发人员忽视。对于一些简单的小规模应用程序，也许不需要在日志上花费大量精力。但是对于高复杂度的大型系统来说，日志是保证系统可靠运行必不可少的一环。 日志需要包含什么内容 良好的日志内容应该是记录的信息不多不少刚刚好的。记录">
+<meta property="og:image" content="https://lchml.com/technology/log/log_framework.png">
+<meta property="og:image" content="https://lchml.com/technology/log/log_impl.jpg">
+<meta property="og:image" content="https://lchml.com/technology/log/log_policy.png">
+<meta property="og:updated_time" content="2019-06-03T03:22:48.791Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="最佳日志实践">
+<meta name="twitter:description" content="日志对于一个软件系统的重要程度是不言而喻的，线上问题定位、运营数据统计、用户画像分析、系统状态监控等都离不开日志。然而，由于日志通常与业务系统的核心能力没有直接关联，所以经常会被开发人员忽视。对于一些简单的小规模应用程序，也许不需要在日志上花费大量精力。但是对于高复杂度的大型系统来说，日志是保证系统可靠运行必不可少的一环。 日志需要包含什么内容 良好的日志内容应该是记录的信息不多不少刚刚好的。记录">
+<meta name="twitter:image" content="https://lchml.com/technology/log/log_framework.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lchml.com/technology/log/"/>
+
+
+
+
+
+  <title>最佳日志实践 | LC's Blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-71702178-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LC's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">旅行的代码</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/log/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LC&HML">
+      <meta itemprop="description" content="路漫漫其修远兮，吾将上下而求索">
+      <meta itemprop="image" content="/lc-icon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LC's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">最佳日志实践</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-03T00:00:00+08:00">
+                2019-06-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/technology/" itemprop="url" rel="index">
+                    <span itemprop="name">technology</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/technology/log/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/technology/log/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/technology/log/" class="leancloud_visitors" data-flag-title="最佳日志实践">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>日志对于一个软件系统的重要程度是不言而喻的，线上问题定位、运营数据统计、用户画像分析、系统状态监控等都离不开日志。然而，由于日志通常与业务系统的核心能力没有直接关联，所以经常会被开发人员忽视。对于一些简单的小规模应用程序，也许不需要在日志上花费大量精力。但是对于高复杂度的大型系统来说，日志是保证系统可靠运行必不可少的一环。</p>
+<h2 id="日志需要包含什么内容"><a href="#日志需要包含什么内容" class="headerlink" title="日志需要包含什么内容"></a>日志需要包含什么内容</h2><blockquote>
+<p>良好的日志内容应该是记录的信息不多不少刚刚好的。记录信息太少的问题很明显，但是太多也同样会有问题，会导致真正有用的信息被稀释，增加整个日志系统的负担，甚至影响到核心业务的性能。</p>
+</blockquote>
+<p>通常日志中应该包含的信息包含四类：错误信息、调试信息、运行信息、状态信息。不同的应用类型有不一样的信息，以常用dubbo服务为例，日志应该包含dubbo的调用方IP、接口名、方法名、入参、结果、线程、开始时间、消耗时间、其它关键信息等等。对于webapp应用，日志应该包含调用方IP、请求path、参数、返回码、开始时间、消耗时间等等。对于某些非必须的信息，或者不确定是否需要输出的信息，可以结合配置中心做动态控制。如下所示，是一个典型的dubbo请求日志：</p>
+<p>前缀<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[INFO ]2019-03-22 16:39:19.877 [DubboServerHandler-10.122.79.159:32001-thread-242]DS |</div></pre></td></tr></table></figure></p>
+<p>主体<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"trace"</span>:<span class="string">"5c949f372393dfdd18b9c417fd3b7960"</span>,</div><div class="line">    <span class="attr">"service"</span>:<span class="string">"com.netease.nbim.service.api.JackpotService"</span>,</div><div class="line">    <span class="attr">"method"</span>:<span class="string">"queryAwardTotal"</span>,</div><div class="line">    <span class="attr">"spend"</span>:<span class="number">12</span>,</div><div class="line">    <span class="attr">"params"</span>:[<span class="string">"f4f0c38d9ca14f2e9522c4f3fee3b8e8"</span>],</div><div class="line">    <span class="attr">"props"</span>:&#123;<span class="attr">"ex"</span>:<span class="number">0</span>&#125;,</div><div class="line">    <span class="attr">"result"</span>:&#123;<span class="attr">"inviteCount"</span>:<span class="number">0</span>,<span class="attr">"award"</span>:<span class="number">142.81</span>,<span class="attr">"awardWait"</span>:<span class="number">350.40</span>,<span class="attr">"awardUsed"</span>:<span class="number">142.81</span>,<span class="attr">"level"</span>:<span class="number">1</span>,<span class="attr">"levelTodo"</span>:<span class="number">1</span>&#125;,</div><div class="line">    <span class="attr">"peer"</span>:<span class="string">"10.122.79.155"</span>,</div><div class="line">    <span class="attr">"beginTime"</span>:<span class="number">1553243959864</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="常用日志框架"><a href="#常用日志框架" class="headerlink" title="常用日志框架"></a>常用日志框架</h2><p>Java体系中有很多的日志框架，目前常用的包括log4j、log4j2、commons-logging、slf4j、logback、JUL。这些日志框架总体分为两类：一类是日志门面或者称为接口标准，是一种标准API的封装，例如commons-logging和slf4j，另一类是剩下的日志实现框架。</p>
+<p>在早期比较流行的日志门面是Apache的commons-logging，它通过动态查找机制，在程序运行时，使用自己的ClassLoader寻找和载入本地具体的实现。目前使用最广泛的日志门面是slf4j，slf4j在编译期间，静态绑定本地的LOG库使得通用性要比commons-logging要好，它的实现机制决定了slf4j限制较少，使用范围更广。</p>
+<p>在日志实现框架中，log4j是最老牌的，也是早期使用最多的。log4j2的log4j的升级版，但是与log4j不兼容。logback是由log4j的作者后来另外出品的（slf4j也是他写的），JUL是jdk官方推出的日志实现。</p>
+<p>在各种组合中，常用的组合有：slf4j+logback，slf4j+log4j，commons-logging+log4j。对于新项目，<code>建议使用slf4j+logback组合</code>。</p>
+<p><img src="log_framework.png" alt=""></p>
+<h2 id="日志单元和日志链路"><a href="#日志单元和日志链路" class="headerlink" title="日志单元和日志链路"></a>日志单元和日志链路</h2><p>在实际业务中如何有效的管理和使用日志？日志单元+日志链路</p>
+<h3 id="日志单元"><a href="#日志单元" class="headerlink" title="日志单元"></a>日志单元</h3><p>什么是日志最小单元？对于业务日志，我们可以把业务进程分为三类：webapp、RPC(dubbo)、javaapp。webapp和rpc服务都有非常明确的输入输出，可以以一个请求作为日志的最小单元，一个请求内的所有信息汇总到一条日志内。对于其他javaapp进程，也同样可以找出一个日志最小单元，例如mq消费者中的每一次消费可以做为一个最小单元。</p>
+<p>被汇总的最小单元日志相比平铺式的日志有很多好处。如在需要定位问题时，日志单元可以有足够的汇总信息，而普通的平铺式日志中，你需要去查询非常多的日志，每条日志都只包含了很小一部分的信息，甚至很多时候你都不知道哪条日志是属于哪个请求的，定位问题会非常困难。在同步输出的情况下日志单元可以减少了落盘次数，减小磁盘IO。日志单元有统一的生命周期管理，可以规范代码中的日志使用。实现方式如下：</p>
+<p><img src="log_impl.jpg" alt=""></p>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><p>以webapp为例，首先定义好日志单元LogBean：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebLogBean</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(<span class="string">"static"</span>);</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ThreadLocal&lt;WebLogBean&gt; LOG_BEAN_THREAD_LOCAL = ThreadLocal.withInitial(WebLogBean::<span class="keyword">new</span>);</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">long</span> uid = <span class="number">0</span>;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> String path = <span class="string">""</span>;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> String ip = <span class="string">""</span>;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> code = <span class="number">0</span>;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">long</span> begintime = <span class="number">0</span>;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">long</span> spendtime = <span class="number">0</span>;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Object headers;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Object params;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Object payload;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> String traceid;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Map&lt;String, Object&gt; props = <span class="keyword">new</span> LinkedHashMap&lt;&gt;();</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Object result;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Object error;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getUid</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> uid;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUid</span><span class="params">(<span class="keyword">long</span> uid)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.uid = uid;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">uid</span><span class="params">(<span class="keyword">long</span> uid)</span> </span>&#123;</div><div class="line">        get().setUid(uid);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getPath</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> path;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPath</span><span class="params">(String path)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.path = path;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTraceid</span><span class="params">(String traceid)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.traceid = traceid;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getTraceid</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> traceid;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getIp</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> ip;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setIp</span><span class="params">(String ip)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.ip = ip;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCode</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> code;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCode</span><span class="params">(<span class="keyword">int</span> code)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.code = code;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">code</span><span class="params">(<span class="keyword">int</span> code)</span> </span>&#123;</div><div class="line">        get().setCode(code);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getBegintime</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> begintime;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setBegintime</span><span class="params">(<span class="keyword">long</span> begintime)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.begintime = begintime;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getSpendtime</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> spendtime;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSpendtime</span><span class="params">(<span class="keyword">long</span> spendtime)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.spendtime = spendtime;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getHeaders</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> headers;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setHeaders</span><span class="params">(Object headers)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.headers = headers;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getParams</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> params;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setParams</span><span class="params">(Object params)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.params = params;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getPayload</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> payload;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPayload</span><span class="params">(Object payload)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.payload = payload;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Map&lt;String, Object&gt; <span class="title">getProps</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> props;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setProps</span><span class="params">(Map&lt;String, Object&gt; props)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.props = props;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getResult</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setResult</span><span class="params">(Object result)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.result = result;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getError</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> error;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setError</span><span class="params">(Object error)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.error = error;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> WebLogBean <span class="title">addProp</span><span class="params">(String key, Object value)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.getProps() != <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">this</span>.getProps().put(key, (value == <span class="keyword">null</span> ? <span class="string">"null"</span> : value));</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">prop</span><span class="params">(String key, Object value)</span> </span>&#123;</div><div class="line">        get().props.put(key, value);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">delProp</span><span class="params">(String key)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.getProps() != <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">this</span>.getProps().remove(key);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getProp</span><span class="params">(String key)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.getProps() != <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">this</span>.getProps().get(key);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">log</span><span class="params">()</span> </span>&#123;</div><div class="line">        logger.info(GsonBox.LOG.gson().toJson(<span class="keyword">this</span>));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.print(System.currentTimeMillis());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="keyword">long</span> now)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.setSpendtime(now - <span class="keyword">this</span>.getBegintime());</div><div class="line">        <span class="keyword">this</span>.log();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> WebLogBean <span class="title">get</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> LOG_BEAN_THREAD_LOCAL.get();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</div><div class="line">        LOG_BEAN_THREAD_LOCAL.remove();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> WebLogBean <span class="title">start</span><span class="params">()</span> </span>&#123;</div><div class="line">        WebLogBean logBean = get();</div><div class="line">        logBean.setBegintime(System.currentTimeMillis());</div><div class="line">        <span class="keyword">return</span> logBean;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">end</span><span class="params">()</span> </span>&#123;</div><div class="line">        get().print();</div><div class="line">        remove();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后通过interceptor进行日志管理：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LogInterceptor</span> <span class="keyword">extends</span> <span class="title">HandlerInterceptorAdapter</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(LogInterceptor.class);</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">preHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler)</span> </span>&#123;</div><div class="line">        WebLogBean.start();</div><div class="line">        WebLogBean logBean = WebLogBean.get();</div><div class="line">        logBean.setPath(request.getRequestURI());</div><div class="line">        logBean.setIp(RequestUtil.getIp(request));</div><div class="line">        logBean.setHeaders(RequestUtil.getHeaders(request));</div><div class="line">        logBean.setParams(request.getParameterMap());</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterCompletion</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)</span> </span>&#123;</div><div class="line">        WebLogBean.end();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>由interceptor统一管理日志单元以后（dubbo可以由filter管理，其它类型可以由aop切面管理），在业务中不再需要关心请求的其它信息，只需要往日志中添加自己需要内容即可。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">WebLogBean.prop(<span class="string">"toAccid"</span>, toAccid);</div><div class="line">WebLogBean.prop(<span class="string">"dbRet"</span>, <span class="number">1</span>);</div><div class="line">WebLogBean.prop(<span class="string">"antispamRet"</span>, <span class="keyword">false</span>);</div></pre></td></tr></table></figure></p>
+<p>上面在LogBean中我们可以看到Logger的名称不是类名，而是一个字符串“static”，这是为了将统一管理的日志单元单独输出到独立的日志文件中，便于后续的日志收集。只需要在logback的配置文件中单独为static配置一个appender就可以了：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">"static"</span> <span class="attr">level</span>=<span class="string">"INFO"</span> <span class="attr">additivity</span>=<span class="string">"false"</span> &gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">"STATS"</span> /&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">logger</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<h3 id="日志链路"><a href="#日志链路" class="headerlink" title="日志链路"></a>日志链路</h3><p>有了日志单元，我们可以看到一个请求内的所有信息，但是在分布式系统中，光靠一个请求的信息有时候还不能定位出问题所在，所以我们需要有日志链路。把一次调用中的所有日志按先后顺序汇总在一起组成日志链路。要完成这个任务，光靠日志框架本身是做不到的，我们需要引入链路追踪组件。如常见的zipkin、pinpoint和网易云提供的NAPM。只需要把追踪的traceid和spanid信息输出到日志单元即可。</p>
+<h3 id="异常日志"><a href="#异常日志" class="headerlink" title="异常日志"></a>异常日志</h3><p>除了正常的业务日志以外，通常进程中还会存在一些不可预见的异常日志，例如由于Exception导致的异常日志，通常会包含完整的堆栈信息，这种堆栈信息不适合直接放入日志单元，通常做法应该是把简要的异常描述放入日志单元，日志堆栈则直接通过ERROR级别日志输出。后续可以通过哨兵对ERROR日志进行监控报警。</p>
+<h3 id="其它问题"><a href="#其它问题" class="headerlink" title="其它问题"></a>其它问题</h3><p>日志单元中有可能出现异步逻辑的情况，由于LogBean是基于ThreadLocal实现的，因此在异步逻辑中需要注意不能直接使用LogBean来添加日志信息，而应该通过原子类或其它中间变量来实现，虽然InheritableThreadLocal是可以继承的，但是实际业务中的异步逻辑通常会是线程池的实现，所以依然不能直接使用。</p>
+<h2 id="日志输出方式"><a href="#日志输出方式" class="headerlink" title="日志输出方式"></a>日志输出方式</h2><h3 id="同步异步"><a href="#同步异步" class="headerlink" title="同步异步"></a>同步异步</h3><p>对于logback的日志实现，输出方式主要分为两种，同步和异步。</p>
+<p>同步方式会在每次调用logger方法时直接写入磁盘并返回，因此它是会阻塞业务线程的，如果磁盘IO跟不上，就会导致业务逻辑被卡住，影响性能。好处是日志会及时输出，不会出现丢失情况。</p>
+<p>异步方式在每次调用logger方法时不会落盘，只是把日志放到了一个内存队列中，会由另一个异步线程来负责把内存中的日志数据落盘，当队列超出限制时，会按规则丢弃低级别的日志。好处是异步的方式对业务的性能影响更小。异步配置：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">appender</span> <span class="attr">name</span> =<span class="string">"ASYNC"</span> <span class="attr">class</span>= <span class="string">"ch.qos.logback.classic.AsyncAppender"</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!-- 默认0不丢失日志。如果队列剩余20%空闲,则会丢弃TRACT、DEBUG、INFO级别的日志 --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">discardingThreshold</span> &gt;</span>20<span class="tag">&lt;/<span class="name">discardingThreshold</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!-- 更改默认的队列的深度,该值会影响性能.默认值为256 --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">queueSize</span>&gt;</span>256<span class="tag">&lt;/<span class="name">queueSize</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span> =<span class="string">"FILE"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">appender</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<h3 id="动态变更"><a href="#动态变更" class="headerlink" title="动态变更"></a>动态变更</h3><p>logback支持定时reload配置文件并按照新的规则进行输出，通过这种方式可以临时修改日志输出级别和内容，日志文件等等。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- 默认不reload，每隔60s reload一次 --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">configuration</span> <span class="attr">scan</span>=<span class="string">"true"</span> <span class="attr">scanPeriod</span>=<span class="string">"60000"</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>除了logback本身的配置可以reload以外，我们还可以结合配置中心来动态修改日志输出内容，例如可以在配置中心配置是否输出result，或根据param的长度决定是否要输出所有param到日志中等等。</p>
+<h3 id="日志滚动"><a href="#日志滚动" class="headerlink" title="日志滚动"></a>日志滚动</h3><p>logback主要提供了两种日志文件的滚动方式：FixedWindowRollingPolicy和SizeAndTimeBasedRollingPolicy。<br><img src="log_policy.png" alt=""></p>
+<p>简单的解释，FixedWindowRollingPolicy就是按照文件名加索引的方式滚动，日志文件将会是yeaf.log、yeaf.log.1、yeaf.log.2这样的，SizeAndTimeBasedRollingPolicy是按照时间加索引进行滚动。日志文件将会是yeaf.log、yeaf.log.2019-05-15_0这样的。用哪种方式可以根据需求决定，这里推荐使用SizeAndTimeBasedRollingPolicy，<code>不管用哪种一定要注意配置日志文件的存储限制，以免把机器磁盘跑满导致异常</code>。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">appender</span> <span class="attr">name</span>=<span class="string">"FILE"</span> <span class="attr">class</span>=<span class="string">"ch.qos.logback.core.rolling.RollingFileAppender"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">file</span>&gt;</span>$&#123;LOG_HOME&#125;/$&#123;LOG_FILE&#125;<span class="tag">&lt;/<span class="name">file</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">rollingPolicy</span> <span class="attr">class</span>=<span class="string">"ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">fileNamePattern</span>&gt;</span>$&#123;LOG_HOME&#125;/$&#123;LOG_FILE&#125;.%d&#123;yyyy-MM-dd&#125;_%i<span class="tag">&lt;/<span class="name">fileNamePattern</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">maxFileSize</span>&gt;</span>512MB<span class="tag">&lt;/<span class="name">maxFileSize</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">maxHistory</span>&gt;</span>10<span class="tag">&lt;/<span class="name">maxHistory</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">totalSizeCap</span>&gt;</span>5GB<span class="tag">&lt;/<span class="name">totalSizeCap</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">rollingPolicy</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">encoder</span> <span class="attr">class</span>=<span class="string">"ch.qos.logback.classic.encoder.PatternLayoutEncoder"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">pattern</span>&gt;</span>[%-5level]%d&#123;yyyy-MM-dd HH:mm:ss.SSS&#125; [%thread]%logger&#123;0&#125; | %msg%n<span class="tag">&lt;/<span class="name">pattern</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">encoder</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">appender</span>&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>日志输出到磁盘以后，改怎么使用它们呢？在分布式系统中，日志文件分散在成千上万的主机中，我们不可能为了一条日志，去登陆所有机器一台一台的查。因此日志输出以后需要进行收集汇总。</p>
+<p>通常我们使用logstash之类的工具来做收集，用elk和HDFS来做存储。</p>
+<p>收集日志时，应该把不同类型的日志分开收集，如dubbo服务的日志收集到一起，webapp的日志收集到一起，mq消费者的日志收集到一起，这样做的好处是日志导入elk后，可以为每种类型的日志建立不同的索引，可以提高搜索效率。</p>
+<p>线上问题定位是可以通过elk快出查出调用的日志链路，也可以通过业务日志来做一些业务系统的监控，如每分钟登陆的人数，登陆用户的地理位置分布，每分钟的消息数，消息的地理位置分布，等。</p>
+<p>还可以通过对HDFS中的日志进行数据挖掘分析，得出一些有价值的结果。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/donate-page/simple/images/wechat.jpg" alt="LC&HML 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/donate-page/simple/images/alipay.jpg" alt="LC&HML 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/LC/" rel="tag"># LC</a>
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/日志/" rel="tag"># 日志</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/life/zengguofan/" rel="next" title="曾国藩传">
+                <i class="fa fa-chevron-left"></i> 曾国藩传
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/lc-icon.jpg"
+                alt="LC&HML" />
+            
+              <p class="site-author-name" itemprop="name">LC&HML</p>
+              <p class="site-description motion-element" itemprop="description">路漫漫其修远兮，吾将上下而求索</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/licheng-xd" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:licheng_xd@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope-o"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://500px.me/lchml" target="_blank" title="500px">
+                      
+                        <i class="fa fa-fw fa-500px"></i>500px</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://jandan.net" target="_blank" title="Jandan">
+                      
+                        <i class="fa fa-fw fa-transgender-alt"></i>Jandan</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/4qg55j4w/home?wvr=5" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://moviehell.net" target="_blank" title="Movie">
+                      
+                        <i class="fa fa-fw fa-file-movie-o"></i>Movie</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#日志需要包含什么内容"><span class="nav-number">1.</span> <span class="nav-text">日志需要包含什么内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用日志框架"><span class="nav-number">2.</span> <span class="nav-text">常用日志框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#日志单元和日志链路"><span class="nav-number">3.</span> <span class="nav-text">日志单元和日志链路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#日志单元"><span class="nav-number">3.1.</span> <span class="nav-text">日志单元</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码实现"><span class="nav-number">3.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#日志链路"><span class="nav-number">3.3.</span> <span class="nav-text">日志链路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#异常日志"><span class="nav-number">3.4.</span> <span class="nav-text">异常日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其它问题"><span class="nav-number">3.5.</span> <span class="nav-text">其它问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#日志输出方式"><span class="nav-number">4.</span> <span class="nav-text">日志输出方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#同步异步"><span class="nav-number">4.1.</span> <span class="nav-text">同步异步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态变更"><span class="nav-number">4.2.</span> <span class="nav-text">动态变更</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#日志滚动"><span class="nav-number">4.3.</span> <span class="nav-text">日志滚动</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用"><span class="nav-number">5.</span> <span class="nav-text">使用</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LC&HML</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'licheng-xd',
+            repo: 'blog-comment',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: 'e66400d0dd1a8a7ea34db3e2ba22f071f3b93b83',
+            
+                client_id: 'a442d470922bbc39e7a0'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("MabW4tTRa4YhUWvISCsRLuzd-gzGzoHsz", "X8ewKXvEvIbA6C6S61dHMX5J");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

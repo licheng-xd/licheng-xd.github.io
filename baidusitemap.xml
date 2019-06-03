@@ -4,8 +4,32 @@
 
     
   <url>
+    <loc>https://lchml.com/technology/log/</loc>
+    <lastmod>2019-06-03T03:22:48.791Z</lastmod>
+    <data>
+        <display>
+        <title>最佳日志实践</title>
+        <pubTime>2019-06-02T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>Java</tag>
+         
+        <tag>日志</tag>
+         
+         
+           
+             
+              <breadCrumb title="technology" url="https://lchml.com/categories/technology/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://lchml.com/life/zengguofan/</loc>
-    <lastmod>2019-05-25T04:54:03.878Z</lastmod>
+    <lastmod>2019-06-03T03:15:15.237Z</lastmod>
     <data>
         <display>
         <title>曾国藩传</title>
@@ -35,11 +59,11 @@
          
         <tag>Java</tag>
          
-        <tag>面试</tag>
-         
         <tag>架构</tag>
          
         <tag>Java基础</tag>
+         
+        <tag>面试</tag>
          
          
            
@@ -178,6 +202,30 @@
     
     
   <url>
+    <loc>https://lchml.com/life/cosmic-dream/</loc>
+    <lastmod>2018-10-25T07:52:25.663Z</lastmod>
+    <data>
+        <display>
+        <title>星辰和大海</title>
+        <pubTime>2016-10-16T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>随想</tag>
+         
+        <tag>科幻</tag>
+         
+         
+           
+             
+              <breadCrumb title="life" url="https://lchml.com/categories/life/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://lchml.com/technology/tomcat-ssl/</loc>
     <lastmod>2018-10-25T07:48:43.263Z</lastmod>
     <data>
@@ -273,11 +321,11 @@
         
         <tag>LC</tag>
          
-        <tag>Druid</tag>
-         
         <tag>Java</tag>
          
         <tag>数据库</tag>
+         
+        <tag>Druid</tag>
          
          
            
@@ -299,11 +347,11 @@
         
         <tag>LC</tag>
          
+        <tag>Hirika</tag>
+         
         <tag>Java</tag>
          
         <tag>数据库</tag>
-         
-        <tag>Hirika</tag>
          
          
            
@@ -1312,30 +1360,6 @@
 
     
   <url>
-    <loc>https://lchml.com/life/cosmic-dream/</loc>
-    <lastmod>2018-07-19T10:53:44.000Z</lastmod>
-    <data>
-        <display>
-        <title>星辰和大海</title>
-        <pubTime>2016-10-16T16:00:00.000Z</pubTime>
-        
-        <tag>LC</tag>
-         
-        <tag>随想</tag>
-         
-        <tag>科幻</tag>
-         
-         
-           
-             
-              <breadCrumb title="life" url="https://lchml.com/categories/life/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>https://lchml.com/technology/bloomfilter/</loc>
     <lastmod>2018-07-19T10:53:42.000Z</lastmod>
     <data>
@@ -1367,13 +1391,13 @@
         <title>登北高峰</title>
         <pubTime>2015-03-06T16:00:00.000Z</pubTime>
         
-        <tag>游记</tag>
-         
-        <tag>HML</tag>
-         
         <tag>北高峰</tag>
          
         <tag>西湖</tag>
+         
+        <tag>游记</tag>
+         
+        <tag>HML</tag>
          
          
            
@@ -1419,13 +1443,13 @@
         <title>巴厘——香港</title>
         <pubTime>2015-11-29T16:00:00.000Z</pubTime>
         
-        <tag>巴厘岛</tag>
-         
-        <tag>香港</tag>
-         
         <tag>游记</tag>
          
         <tag>HML</tag>
+         
+        <tag>巴厘岛</tag>
+         
+        <tag>香港</tag>
          
          
            
