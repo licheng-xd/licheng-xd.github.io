@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://lchml.com/"/>
-  <updated>2019-11-10T08:29:32.976Z</updated>
+  <updated>2019-11-22T07:24:47.048Z</updated>
   <id>https://lchml.com/</id>
   
   <author>
@@ -14,6 +14,44 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>延时消息队列</title>
+    <link href="https://lchml.com/technology/delayq/"/>
+    <id>https://lchml.com/technology/delayq/</id>
+    <published>2019-11-22T16:00:00.000Z</published>
+    <updated>2019-11-22T07:24:47.048Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="延时-定时队列"><a href="#延时-定时队列" class="headerlink" title="延时/定时队列"></a>延时/定时队列</h2><p>延时/定时消息是指生产者(producer)发送消息到server后，server并不将消息立即发送给消费者(consumer)，而是在producer指定的时间之后送达。<br>比如在电商交易中，经常有这样的场景：下单后如果半个小时内没有支付，自动将订单取消。那么如果不使用延时/定时消息，则一般的做法是使用定时任务定期扫描订单状态表，如果半个小时后订单状态还未支付，则将订单取消。而使用延时/定时消息实现起来更高效更优雅：用户下单后，发送一个延时消息，指定半个小时后消息送达，那么消费者在半个小时后收到消息就查询消息状态，如果这个时候订单是未支付状态，则取消订单。</p>
+<p>Kafka是目前行业使用最广泛的消息队列之一，大部分业务系统中都会部署kafka作为消息队列来实现异步解耦，但是kafka本身并不支持延时投递的能力。RocketMq是阿里基于kafka的理念用java实现的一个消息队列，在开源版本中它也只支持了某几个特定时长的延时投递，满足不了大部分业务场景。因此我们基于kafka实现了自研的延时消息队列，该延时队列基于Kafka扩展，使用方只需对接kafka接口，而无需关心延时队列服务的存在，接入方便快捷。</p>
+<h2 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h2><p><img src="delayq.png" alt="delayq"></p>
+<h2 id="消息流转"><a href="#消息流转" class="headerlink" title="消息流转"></a>消息流转</h2><p><img src="delayq-msg.png" alt="delayq-msg"></p>
+<h2 id="发送延时消息"><a href="#发送延时消息" class="headerlink" title="发送延时消息"></a>发送延时消息</h2><p>延时消息是指消息在当前时间之后一段时间后发送（以发送方本地时间为准）。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 通过kafkaTemplate初始化DelayqClient</span></div><div class="line">DelayqClient client = <span class="keyword">new</span> DelayqClient(kafkaTemplate);</div><div class="line"><span class="comment">// 往test-topic发送一条hello delayq消息，并指定1分钟以后触发。</span></div><div class="line">client.delay(<span class="string">"test-topic"</span>, <span class="string">"hello delayq"</span>, <span class="number">60000L</span>);</div></pre></td></tr></table></figure></p>
+<h2 id="发送定时消息"><a href="#发送定时消息" class="headerlink" title="发送定时消息"></a>发送定时消息</h2><p>定时消息是指指定消息的发送时间（以delayq-server的时间为准）。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// 通过kafkaTemplate初始化DelayqClient</div><div class="line">DelayqClient client = new DelayqClient(kafkaTemplate);</div><div class="line">// 往test-topic发送一条hello delayq消息，并指定触发时间戳。</div><div class="line">client.trigger(&quot;test-topic&quot;, &quot;hello delayq&quot;, 1560253828888L);</div></pre></td></tr></table></figure></p>
+<h2 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h2><p>生产者的value-serializer必须是：com.netease.ysf.delayq.DelayMsg2JsonSerializer<br>消费者的value-deserializer必须是：org.apache.kafka.common.serialization.StringDeserializer</p>
+<h2 id="时间信息"><a href="#时间信息" class="headerlink" title="时间信息"></a>时间信息</h2><p>延时消息的消费方可以通过KafkaMessage的header（kafka版本&gt;=0.11）获得与消息有关的时间信息<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@KafkaListener</span>(topics = &#123;<span class="string">"DelayqDemoTopic"</span>&#125;)</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">listen</span><span class="params">(@Payload String msg, // 消息内容</span></span></div><div class="line">                   @Header(<span class="string">"produceTime"</span>) <span class="keyword">long</span> produceTime, <span class="comment">// 消息生产时间</span></div><div class="line">                   @<span class="title">Header</span><span class="params">(<span class="string">"triggerTime"</span>)</span> <span class="keyword">long</span> triggerTime, <span class="comment">// 消息设定触发时间</span></div><div class="line">                   @<span class="title">Header</span><span class="params">(<span class="string">"reputTime"</span>)</span> <span class="keyword">long</span> reputTime) &#123;   <span class="comment">// 消息实际触发时间</span></div><div class="line">	<span class="comment">// TODO</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;延时-定时队列&quot;&gt;&lt;a href=&quot;#延时-定时队列&quot; class=&quot;headerlink&quot; title=&quot;延时/定时队列&quot;&gt;&lt;/a&gt;延时/定时队列&lt;/h2&gt;&lt;p&gt;延时/定时消息是指生产者(producer)发送消息到server后，server并不将消息立即发送
+    
+    </summary>
+    
+      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
+    
+    
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
+    
+      <category term="消息队列" scheme="https://lchml.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/"/>
+    
+      <category term="MQ" scheme="https://lchml.com/tags/MQ/"/>
+    
+      <category term="Kafka" scheme="https://lchml.com/tags/Kafka/"/>
+    
+      <category term="延时消息" scheme="https://lchml.com/tags/%E5%BB%B6%E6%97%B6%E6%B6%88%E6%81%AF/"/>
+    
+  </entry>
   
   <entry>
     <title>研发团队和项目管理</title>
@@ -1237,60 +1275,6 @@
       <category term="JVM" scheme="https://lchml.com/tags/JVM/"/>
     
       <category term="GC" scheme="https://lchml.com/tags/GC/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>GRPC丢包之路</title>
-    <link href="https://lchml.com/technology/grpc-trap/"/>
-    <id>https://lchml.com/technology/grpc-trap/</id>
-    <published>2017-06-17T16:00:00.000Z</published>
-    <updated>2018-11-10T04:46:13.470Z</updated>
-    
-    <content type="html"><![CDATA[<p>GRPC是Google开源的一个高性能、跨语言的RPC框架，基于HTTP2协议，基于protobuf-3.x，基于Netty-4.x。</p>
-<p>最近开发一个公司的游戏项目，采用分布式的服务器架构，内部服务之间均采用GRPC进行通信。但是在测试过程中发现一个重大的bug，<strong>偶现丢包</strong>。</p>
-<p>前置信息：ServerA（作为grpc的client端）通过futureStub异步调用ServerB（作为server端）。</p>
-<p>查看日志发现，client中有调用发送请求的日志，但server端却没有任何收到请求的日志。于是怀疑server在接收请求的过程中吃掉了异常，对整个过程加上try-catch，然而并没有任何发现，于是怀疑根本没有收到请求。通过tcpdump抓包后发现确实是client没发包到网络层，由此确定了是client端问题。</p>
-<p>怀疑是grpc的futureStub有bug，于是在finally中加入future.get()打印出调用结果。结果一天下来一直没有发现任何丢包，”完美“。懵逼了，去掉finally中的future get以后又出现丢包。这个时候，直觉判断，由于调用futue.get()会block当前线程，所以不会出现丢包，而不block就会丢包。有种接近真相的感觉。检查代码后发现client端创建stub的时候没有指定线程池，grpc会默认使用当前线程，结合偶现的表现，觉得非常像是线程在异步发送的过程中被销毁导致。</p>
-<p>然而，指定线程池以后，依旧发现丢包。无奈之下只有开始查看grpc源码，并打印出grpc的日志。在日志中发现了如下错误：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">----------------OUTBOUND--------------------</div><div class="line">[id: 0x7dee8b32, L:/10.82.7.14:60365 - R:/10.82.7.14:9001] RST_STREAM: streamId=4025, errorCode=8</div><div class="line">------------------------------------</div></pre></td></tr></table></figure>
-<p>看到errorCode=8，并结合grpc源码中对io.grpc.Status的定义：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Some resource has been exhausted, perhaps a per-user quota, or</div><div class="line"> * perhaps the entire file system is out of space.</div><div class="line"> */</div><div class="line">RESOURCE_EXHAUSTED(<span class="number">8</span>),</div></pre></td></tr></table></figure>
-<p>推断是由于系统文件句柄资源耗尽导致，查看服务器系统文件句柄限制为65535，而进程打开的限制远不止这么多。于是找sa将文件句柄限制改为100w，然后信心满满的重启了全部服务，重新进行测试。结果很快又发现了丢包，内心崩溃！</p>
-<p>由于当future.get()方法阻塞线程时，就不会出现丢包，无法重现。于是想到把futureStub改为stub，在保持异步的同时，通过observer回调来观察调用结果,这次在回调的onError方法中发现了如下异常：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">CANCELLED,</div><div class="line">io.grpc.Status.asRuntimeException(Status.java:<span class="number">543</span>), </div><div class="line">io.grpc.stub.ClientCalls$StreamObserverToCallListenerAdapter.onClose(ClientCalls.java:<span class="number">395</span>), </div><div class="line">io.grpc.internal.ClientCallImpl.closeObserver(ClientCallImpl.java:<span class="number">426</span>), </div><div class="line">io.grpc.internal.ClientCallImpl.access$<span class="number">100</span>(ClientCallImpl.java:<span class="number">76</span>), </div><div class="line">io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.close(ClientCallImpl.java:<span class="number">512</span>), </div><div class="line">io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.access$<span class="number">700</span>(ClientCallImpl.java:<span class="number">429</span>), </div><div class="line">io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl$<span class="number">1</span>StreamClosed.runInContext(ClientCallImpl.java:<span class="number">544</span>), </div><div class="line">io.grpc.internal.ContextRunnable.run(ContextRunnable.java:<span class="number">52</span>), </div><div class="line">io.grpc.internal.SerializingExecutor.run(SerializingExecutor.java:<span class="number">117</span>), </div><div class="line">java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:<span class="number">1142</span>), </div><div class="line">java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:<span class="number">617</span>), </div><div class="line">java.lang.Thread.run(Thread.java:<span class="number">745</span></div></pre></td></tr></table></figure>
-<p>终于发现原来是这个call被grpc在底层cancel掉了。查代码发现原来上面的errorCode=8是指http2的code定义：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Mapped to call cancellation when sent by a client. </div><div class="line"> * Mapped to CANCELLED when sent by a server. </div><div class="line"> * Note that servers should only use this mechanism when they need to cancel a call but the payload byte sequence is incomplete.</div><div class="line"> */</div><div class="line">CANCEL(<span class="number">8</span>)</div></pre></td></tr></table></figure>
-<p>知道了是由于被cancel才导致的丢包，那么就要查找为什么会被cancel，由于grpc的stub调用是通过异步的线性执行器执行io.grpc.ClientCall。所以堆栈中无法看到整个调用过程，只能通过源码来看。不管是哪种stub的调用，最后都会走到ClientCalls.startCall()方法中，然后进ClientCallImpl.start()中，在这个方法中，可以看到与cancel有关的代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (context.isCancelled()) &#123;</div><div class="line">  <span class="comment">// Context is already cancelled so no need to create a real stream, just notify the observer</span></div><div class="line">  <span class="comment">// of cancellation via callback on the executor</span></div><div class="line">  stream = NoopClientStream.INSTANCE;</div><div class="line">  <span class="class"><span class="keyword">class</span> <span class="title">ClosedByContext</span> <span class="keyword">extends</span> <span class="title">ContextRunnable</span> </span>&#123;</div><div class="line">    ClosedByContext() &#123;</div><div class="line">      <span class="keyword">super</span>(context);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runInContext</span><span class="params">()</span> </span>&#123;</div><div class="line">      closeObserver(observer, statusFromCancelled(context), <span class="keyword">new</span> Metadata());</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  callExecutor.execute(<span class="keyword">new</span> ClosedByContext());</div><div class="line">  <span class="keyword">return</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>可以看出来cancel的原因是由于context.isCancelled()的结果为true</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isCancelled</span><span class="params">()</span> </span>&#123;</div><div class="line">  <span class="keyword">if</span> (parent == <span class="keyword">null</span> || !cascadesCancellation) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">return</span> parent.isCancelled();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>可以看出，如果parent==null，则不可能为true，所以必然是由于parent.isCancelled()为true导致的。由此我们基本可以猜测出来，当前的ClientCall被cancel的原因是由于它的parent context canceled导致。</p>
-<p>回到ClientCallImpl中，可以看到this.context = Context.current();表明每个ClientCall被创建的时候，context都会被赋值为Context.current()</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Context <span class="title">current</span><span class="params">()</span> </span>&#123;</div><div class="line">  Context current = storage().current();</div><div class="line">  <span class="keyword">if</span> (current == <span class="keyword">null</span>) &#123;</div><div class="line">    <span class="keyword">return</span> ROOT;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> current;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>如果当前没有context，则用ROOT作为context</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * The logical root context which is the ultimate ancestor of all contexts. This context</div><div class="line"> * is not cancellable and so will not cascade cancellation or retain listeners.</div><div class="line"> *</div><div class="line"> * Never assume this is the default context for new threads, because &#123;<span class="doctag">@link</span> Storage&#125; may define</div><div class="line"> * a default context that is different from ROOT.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Context ROOT = <span class="keyword">new</span> Context(<span class="keyword">null</span>);</div></pre></td></tr></table></figure>
-<p>在注释中可以看出，ROOT是不可以被cancel的，所以可以判断，当前必然有一个grpc的context存在。</p>
-<p>最后联想到由于业务代码中，ClientCall是在ServerA处理grpc请求的过程中执行的，那么这个Context必然是由GrpcServer处理请求的时候生成的，并赋值给了ClientCall。而由于ClientCall是线性执行器中异步执行，当真正执行ContextRunnable的时候，GrpcServer的context可能已经被cancel，导致当前ClientCall被cancel。</p>
-<p>解决办法：可以对当前context进行fork，或者把每个call都封装为Runnable，通过Context提供的run静态方法执行。</p>
-<p>至此，终于弄清楚了grpc丢包的原因。虽然，这个问题通过业务层代码可以避免掉，但是我觉得grpc在底层默默的把这件事做了，并且没有往上层抛出任何信息，这对开发者是非常不友好的。同时，这个cancel逻辑的处理上，我觉得也有待商榷。毕竟在GrpcServer中异步的去执行GrpcCall是一个非常普遍合理的模型。也许以后Google会改吧。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;GRPC是Google开源的一个高性能、跨语言的RPC框架，基于HTTP2协议，基于protobuf-3.x，基于Netty-4.x。&lt;/p&gt;
-&lt;p&gt;最近开发一个公司的游戏项目，采用分布式的服务器架构，内部服务之间均采用GRPC进行通信。但是在测试过程中发现一个重大的bug
-    
-    </summary>
-    
-      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
-    
-    
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
-      <category term="GRPC" scheme="https://lchml.com/tags/GRPC/"/>
-    
-      <category term="java" scheme="https://lchml.com/tags/java/"/>
     
   </entry>
   

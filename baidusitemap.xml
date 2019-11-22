@@ -4,6 +4,34 @@
 
     
   <url>
+    <loc>https://lchml.com/technology/delayq/</loc>
+    <lastmod>2019-11-22T07:24:47.048Z</lastmod>
+    <data>
+        <display>
+        <title>延时消息队列</title>
+        <pubTime>2019-11-22T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>消息队列</tag>
+         
+        <tag>MQ</tag>
+         
+        <tag>Kafka</tag>
+         
+        <tag>延时消息</tag>
+         
+         
+           
+             
+              <breadCrumb title="technology" url="https://lchml.com/categories/technology/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://lchml.com/technology/develop-and-manager/</loc>
     <lastmod>2019-11-10T08:29:32.976Z</lastmod>
     <data>
