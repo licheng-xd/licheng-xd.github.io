@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://lchml.com/"/>
-  <updated>2019-11-22T07:24:47.048Z</updated>
+  <updated>2020-05-04T06:43:01.529Z</updated>
   <id>https://lchml.com/</id>
   
   <author>
@@ -14,6 +14,57 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>两个小问题</title>
+    <link href="https://lchml.com/technology/two-bugs/"/>
+    <id>https://lchml.com/technology/two-bugs/</id>
+    <published>2020-05-02T16:00:00.000Z</published>
+    <updated>2020-05-04T06:43:01.529Z</updated>
+    
+    <content type="html"><![CDATA[<p>好久没有写东西了，下个月要给智慧企业技术公众号写一篇文章，得抓紧时间找找感觉了，就记录一下最近业务上遇到的两个小问题吧。</p>
+<h2 id="httpclient请求偶现异常"><a href="#httpclient请求偶现异常" class="headerlink" title="httpclient请求偶现异常"></a>httpclient请求偶现异常</h2><p>业务上请求第三方http服务时，偶尔会出现<code>org.apache.http.NoHttpResponseException: The target server failed to respond</code>异常报警。一开始以为是对方服务的偶尔不可能用，但后来发现对于多个第三方服务都会出现一样的情况，那基本可以断定问题是出在自己这里。（当觉得别人都有问题的时候，要想一下是不是自己有问题。）</p>
+<p>首先通过异常堆栈我们可以判断，请求是通过apache的httpclient发起的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Caused by: org.apache.http.NoHttpResponseException: *********** failed to respond</div><div class="line">    at org.apache.http.impl.conn.DefaultHttpResponseParser.parseHead(DefaultHttpResponseParser.java:143)</div><div class="line">    at org.apache.http.impl.conn.DefaultHttpResponseParser.parseHead(DefaultHttpResponseParser.java:57)</div></pre></td></tr></table></figure></p>
+<p>可以从网上查到相关的错误原因：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">org.apache.commons.httpclient.NoHttpResponseException java.io.IOException </div><div class="line">+- org.apache.commons.httpclient.NoHttpResponseException</div><div class="line">In some circumstances, usually when under heavy load, the web server may be able to receive requests but unable to process them. </div><div class="line">A lack of sufficient resources like worker threads is a good example. </div><div class="line">This may cause the server to drop the connection to the client without giving any response. </div><div class="line">HttpClient throws NoHttpResponseException when it encounters such a condition. </div><div class="line">In most cases it is safe to retry a method that failed with NoHttpResponseException.</div></pre></td></tr></table></figure></p>
+<p>可以看到产生错误的原因是，服务关闭连接时没有通知客户端，当客户端再次使用该连接时会产生这个错误。打开httpclient的debug日志，我们可以看到，出现错误时最后的日志是<code>end of steam</code>，我们知道一般产生end of stream的原因是TCP连接的服务端主动关闭连接造成。查看http服务端的nginx配置，发现设置了keepAlive 32s，也就是说当连接空闲超过32s时，服务端就会主动发起FIN请求，进入tcp关闭的四次挥手流程。由于httpclient没有主动关闭连接，导致连接处于半关闭状态，而连接还存在于连接池中，所以当下次再被取出来用时就会收到服务端的RST。</p>
+<p>apache httpclient提供了两个办法来解决这个问题，具体源码实现可以在<code>AbstractConnPool.java</code>中看到，这里就不贴了。</p>
+<ul>
+<li>1、通过<code>PoolingHttpClientConnectionManager.setValidateAfterInactivity(evictIdle);</code>设置连接空闲多久以后需要进行validate检查</li>
+<li>2、通过<code>HttpClientBuilder.evictIdleConnections(evictIdle, TimeUnit.MILLISECONDS)</code>设置连接空闲多久后将被清理出连接池。<br>因此只要我们配置上这两个参数，保证它小于服务端保持连接的时间就可以了。</li>
+</ul>
+<h2 id="jvm进程异常崩溃"><a href="#jvm进程异常崩溃" class="headerlink" title="jvm进程异常崩溃"></a>jvm进程异常崩溃</h2><p>最近线上某个服务的进程相继发生崩溃，jvm进程直接崩溃了。通过服务监控平台可以看到，在崩溃的时间点，cpu、内存、磁盘等资源都没有出现异常，只有load彪到了100。找SA排查了宿主机steal等因素，都没有发现可疑的情况。怀疑load飙升不是引起进程崩溃的原因，而是进程崩溃系统生成coredump才引起load飙升。而该服务之前半年都没有发生过崩溃，上个版本的最大的改动是引入了系统ffmpeg的调用。因此首先怀疑是ffmpeg调用引起的，接下来找到系统的崩溃日志hs_err_pid103051.log，该日志的最上方有一个总结性的描述：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># JRE version: Java(TM) SE Runtime Environment (8.0_101-b13) (build 1.8.0_101-b13)</div><div class="line"># Java VM: Java HotSpot(TM) 64-Bit Server VM (25.101-b13 mixed mode linux-amd64 compressed oops)</div><div class="line"># Problematic frame:</div><div class="line"># J 11860 C2 com.google.gson.internal.bind. .write(Lcom/google/gson/stream/JsonWriter;Ljava/lang/Object;)V (81 bytes) @ 0x00007fa06f256b66 [0x00007fa06f256ae0+0x86]</div><div class="line">#</div><div class="line"># Core dump written. Default location: /xxx/xxx/core or core.103051</div></pre></td></tr></table></figure></p>
+<p>可以看到它指出可能的问题是gson的序列化引起的，但是这个gson库已经在其他线上业务使用了几年了，从来没有发生过这样的问题，所以还是有怀疑，继续找到上面描述的core dump文件。</p>
+<blockquote>
+<p>常情况下，coredump（亦称为core文件）文件包含程序运行时的内存信息，含寄存器状态、堆栈指针、内存管理信息、操作系统flags及其他信息，可以理解为把程序工作的当前状态存储成一个文件。Coredump文件通常于程序异常终止（crashed）时自动生成，常用于辅助分析和解决bug，可通过 coredump 文件进行栈回溯和反汇编。</p>
+</blockquote>
+<p>通过gdb对core文件进行backtrace操作，可以看到如下信息：<br><img src="backtrace.png" alt="1"></p>
+<p>说明引起崩溃的进程并不是我们怀疑的ffmpeg进程，而是jvm本身引起的，所以看来只能继续从jvm的原因入手，网上找关于gson序列化引起崩溃的例子，很少有提到类似的情况，我们找到上面错误日志里说的导致崩溃的方法源码，从方法中并没有看出有什么会引起jvm崩溃的地方。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(JsonWriter out, T value)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">  <span class="comment">// Order of preference for choosing type adapters</span></div><div class="line">  <span class="comment">// First preference: a type adapter registered for the runtime type</span></div><div class="line">  <span class="comment">// Second preference: a type adapter registered for the declared type</span></div><div class="line">  <span class="comment">// Third preference: reflective type adapter for the runtime type (if it is a sub class of the declared type)</span></div><div class="line">  <span class="comment">// Fourth preference: reflective type adapter for the declared type</span></div><div class="line"></div><div class="line">  TypeAdapter chosen = delegate;</div><div class="line">  Type runtimeType = getRuntimeTypeIfMoreSpecific(type, value);</div><div class="line">  <span class="keyword">if</span> (runtimeType != type) &#123;</div><div class="line">    TypeAdapter runtimeTypeAdapter = context.getAdapter(TypeToken.get(runtimeType));</div><div class="line">    <span class="keyword">if</span> (!(runtimeTypeAdapter <span class="keyword">instanceof</span> ReflectiveTypeAdapterFactory.Adapter)) &#123;</div><div class="line">      <span class="comment">// The user registered a type adapter for the runtime type, so we will use that</span></div><div class="line">      chosen = runtimeTypeAdapter;</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!(delegate <span class="keyword">instanceof</span> ReflectiveTypeAdapterFactory.Adapter)) &#123;</div><div class="line">      <span class="comment">// The user registered a type adapter for Base class, so we prefer it over the</span></div><div class="line">      <span class="comment">// reflective type adapter for the runtime type</span></div><div class="line">      chosen = delegate;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      <span class="comment">// Use the type adapter for runtime type</span></div><div class="line">      chosen = runtimeTypeAdapter;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  chosen.write(out, value);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>最后我们给所有进程都加上了<code>-XX:+HeapDumpOnOutOfMemoryError</code>参数，等再次发生进程崩溃时，我们可以拿到对应的堆栈信息，更精确的定位问题。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;好久没有写东西了，下个月要给智慧企业技术公众号写一篇文章，得抓紧时间找找感觉了，就记录一下最近业务上遇到的两个小问题吧。&lt;/p&gt;
+&lt;h2 id=&quot;httpclient请求偶现异常&quot;&gt;&lt;a href=&quot;#httpclient请求偶现异常&quot; class=&quot;headerlink&quot;
+    
+    </summary>
+    
+      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
+    
+    
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
+    
+      <category term="Java" scheme="https://lchml.com/tags/Java/"/>
+    
+      <category term="httpclient" scheme="https://lchml.com/tags/httpclient/"/>
+    
+      <category term="jvm" scheme="https://lchml.com/tags/jvm/"/>
+    
+      <category term="coredump" scheme="https://lchml.com/tags/coredump/"/>
+    
+      <category term="crash" scheme="https://lchml.com/tags/crash/"/>
+    
+  </entry>
   
   <entry>
     <title>延时消息队列</title>
@@ -1237,60 +1288,6 @@
       <category term="JVM" scheme="https://lchml.com/tags/JVM/"/>
     
       <category term="GC" scheme="https://lchml.com/tags/GC/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>GRPC丢包之路</title>
-    <link href="https://lchml.com/technology/grpc-trap/"/>
-    <id>https://lchml.com/technology/grpc-trap/</id>
-    <published>2017-06-17T16:00:00.000Z</published>
-    <updated>2018-11-10T04:46:13.470Z</updated>
-    
-    <content type="html"><![CDATA[<p>GRPC是Google开源的一个高性能、跨语言的RPC框架，基于HTTP2协议，基于protobuf-3.x，基于Netty-4.x。</p>
-<p>最近开发一个公司的游戏项目，采用分布式的服务器架构，内部服务之间均采用GRPC进行通信。但是在测试过程中发现一个重大的bug，<strong>偶现丢包</strong>。</p>
-<p>前置信息：ServerA（作为grpc的client端）通过futureStub异步调用ServerB（作为server端）。</p>
-<p>查看日志发现，client中有调用发送请求的日志，但server端却没有任何收到请求的日志。于是怀疑server在接收请求的过程中吃掉了异常，对整个过程加上try-catch，然而并没有任何发现，于是怀疑根本没有收到请求。通过tcpdump抓包后发现确实是client没发包到网络层，由此确定了是client端问题。</p>
-<p>怀疑是grpc的futureStub有bug，于是在finally中加入future.get()打印出调用结果。结果一天下来一直没有发现任何丢包，”完美“。懵逼了，去掉finally中的future get以后又出现丢包。这个时候，直觉判断，由于调用futue.get()会block当前线程，所以不会出现丢包，而不block就会丢包。有种接近真相的感觉。检查代码后发现client端创建stub的时候没有指定线程池，grpc会默认使用当前线程，结合偶现的表现，觉得非常像是线程在异步发送的过程中被销毁导致。</p>
-<p>然而，指定线程池以后，依旧发现丢包。无奈之下只有开始查看grpc源码，并打印出grpc的日志。在日志中发现了如下错误：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">----------------OUTBOUND--------------------</div><div class="line">[id: 0x7dee8b32, L:/10.82.7.14:60365 - R:/10.82.7.14:9001] RST_STREAM: streamId=4025, errorCode=8</div><div class="line">------------------------------------</div></pre></td></tr></table></figure>
-<p>看到errorCode=8，并结合grpc源码中对io.grpc.Status的定义：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Some resource has been exhausted, perhaps a per-user quota, or</div><div class="line"> * perhaps the entire file system is out of space.</div><div class="line"> */</div><div class="line">RESOURCE_EXHAUSTED(<span class="number">8</span>),</div></pre></td></tr></table></figure>
-<p>推断是由于系统文件句柄资源耗尽导致，查看服务器系统文件句柄限制为65535，而进程打开的限制远不止这么多。于是找sa将文件句柄限制改为100w，然后信心满满的重启了全部服务，重新进行测试。结果很快又发现了丢包，内心崩溃！</p>
-<p>由于当future.get()方法阻塞线程时，就不会出现丢包，无法重现。于是想到把futureStub改为stub，在保持异步的同时，通过observer回调来观察调用结果,这次在回调的onError方法中发现了如下异常：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">CANCELLED,</div><div class="line">io.grpc.Status.asRuntimeException(Status.java:<span class="number">543</span>), </div><div class="line">io.grpc.stub.ClientCalls$StreamObserverToCallListenerAdapter.onClose(ClientCalls.java:<span class="number">395</span>), </div><div class="line">io.grpc.internal.ClientCallImpl.closeObserver(ClientCallImpl.java:<span class="number">426</span>), </div><div class="line">io.grpc.internal.ClientCallImpl.access$<span class="number">100</span>(ClientCallImpl.java:<span class="number">76</span>), </div><div class="line">io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.close(ClientCallImpl.java:<span class="number">512</span>), </div><div class="line">io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.access$<span class="number">700</span>(ClientCallImpl.java:<span class="number">429</span>), </div><div class="line">io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl$<span class="number">1</span>StreamClosed.runInContext(ClientCallImpl.java:<span class="number">544</span>), </div><div class="line">io.grpc.internal.ContextRunnable.run(ContextRunnable.java:<span class="number">52</span>), </div><div class="line">io.grpc.internal.SerializingExecutor.run(SerializingExecutor.java:<span class="number">117</span>), </div><div class="line">java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:<span class="number">1142</span>), </div><div class="line">java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:<span class="number">617</span>), </div><div class="line">java.lang.Thread.run(Thread.java:<span class="number">745</span></div></pre></td></tr></table></figure>
-<p>终于发现原来是这个call被grpc在底层cancel掉了。查代码发现原来上面的errorCode=8是指http2的code定义：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Mapped to call cancellation when sent by a client. </div><div class="line"> * Mapped to CANCELLED when sent by a server. </div><div class="line"> * Note that servers should only use this mechanism when they need to cancel a call but the payload byte sequence is incomplete.</div><div class="line"> */</div><div class="line">CANCEL(<span class="number">8</span>)</div></pre></td></tr></table></figure>
-<p>知道了是由于被cancel才导致的丢包，那么就要查找为什么会被cancel，由于grpc的stub调用是通过异步的线性执行器执行io.grpc.ClientCall。所以堆栈中无法看到整个调用过程，只能通过源码来看。不管是哪种stub的调用，最后都会走到ClientCalls.startCall()方法中，然后进ClientCallImpl.start()中，在这个方法中，可以看到与cancel有关的代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (context.isCancelled()) &#123;</div><div class="line">  <span class="comment">// Context is already cancelled so no need to create a real stream, just notify the observer</span></div><div class="line">  <span class="comment">// of cancellation via callback on the executor</span></div><div class="line">  stream = NoopClientStream.INSTANCE;</div><div class="line">  <span class="class"><span class="keyword">class</span> <span class="title">ClosedByContext</span> <span class="keyword">extends</span> <span class="title">ContextRunnable</span> </span>&#123;</div><div class="line">    ClosedByContext() &#123;</div><div class="line">      <span class="keyword">super</span>(context);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runInContext</span><span class="params">()</span> </span>&#123;</div><div class="line">      closeObserver(observer, statusFromCancelled(context), <span class="keyword">new</span> Metadata());</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  callExecutor.execute(<span class="keyword">new</span> ClosedByContext());</div><div class="line">  <span class="keyword">return</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>可以看出来cancel的原因是由于context.isCancelled()的结果为true</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isCancelled</span><span class="params">()</span> </span>&#123;</div><div class="line">  <span class="keyword">if</span> (parent == <span class="keyword">null</span> || !cascadesCancellation) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">return</span> parent.isCancelled();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>可以看出，如果parent==null，则不可能为true，所以必然是由于parent.isCancelled()为true导致的。由此我们基本可以猜测出来，当前的ClientCall被cancel的原因是由于它的parent context canceled导致。</p>
-<p>回到ClientCallImpl中，可以看到this.context = Context.current();表明每个ClientCall被创建的时候，context都会被赋值为Context.current()</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Context <span class="title">current</span><span class="params">()</span> </span>&#123;</div><div class="line">  Context current = storage().current();</div><div class="line">  <span class="keyword">if</span> (current == <span class="keyword">null</span>) &#123;</div><div class="line">    <span class="keyword">return</span> ROOT;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> current;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>如果当前没有context，则用ROOT作为context</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * The logical root context which is the ultimate ancestor of all contexts. This context</div><div class="line"> * is not cancellable and so will not cascade cancellation or retain listeners.</div><div class="line"> *</div><div class="line"> * Never assume this is the default context for new threads, because &#123;<span class="doctag">@link</span> Storage&#125; may define</div><div class="line"> * a default context that is different from ROOT.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Context ROOT = <span class="keyword">new</span> Context(<span class="keyword">null</span>);</div></pre></td></tr></table></figure>
-<p>在注释中可以看出，ROOT是不可以被cancel的，所以可以判断，当前必然有一个grpc的context存在。</p>
-<p>最后联想到由于业务代码中，ClientCall是在ServerA处理grpc请求的过程中执行的，那么这个Context必然是由GrpcServer处理请求的时候生成的，并赋值给了ClientCall。而由于ClientCall是线性执行器中异步执行，当真正执行ContextRunnable的时候，GrpcServer的context可能已经被cancel，导致当前ClientCall被cancel。</p>
-<p>解决办法：可以对当前context进行fork，或者把每个call都封装为Runnable，通过Context提供的run静态方法执行。</p>
-<p>至此，终于弄清楚了grpc丢包的原因。虽然，这个问题通过业务层代码可以避免掉，但是我觉得grpc在底层默默的把这件事做了，并且没有往上层抛出任何信息，这对开发者是非常不友好的。同时，这个cancel逻辑的处理上，我觉得也有待商榷。毕竟在GrpcServer中异步的去执行GrpcCall是一个非常普遍合理的模型。也许以后Google会改吧。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;GRPC是Google开源的一个高性能、跨语言的RPC框架，基于HTTP2协议，基于protobuf-3.x，基于Netty-4.x。&lt;/p&gt;
-&lt;p&gt;最近开发一个公司的游戏项目，采用分布式的服务器架构，内部服务之间均采用GRPC进行通信。但是在测试过程中发现一个重大的bug
-    
-    </summary>
-    
-      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
-    
-    
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
-      <category term="GRPC" scheme="https://lchml.com/tags/GRPC/"/>
-    
-      <category term="java" scheme="https://lchml.com/tags/java/"/>
     
   </entry>
   

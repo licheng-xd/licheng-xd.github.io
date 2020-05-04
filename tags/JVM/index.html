@@ -84,7 +84,7 @@
 <meta name="description" content="李城 | Java | 游记 | 服务器 | 架构 | JVM | GC | Python | 垃圾回收 | 微服务 | 高可用 | 高并发 | 分布式 | HTTP | Websocket | TCP">
 <meta property="og:type" content="website">
 <meta property="og:title" content="LC&#39;s Blog">
-<meta property="og:url" content="https://lchml.com/tags/JVM/index.html">
+<meta property="og:url" content="https://lchml.com/tags/jvm/index.html">
 <meta property="og:site_name" content="LC&#39;s Blog">
 <meta property="og:description" content="李城 | Java | 游记 | 服务器 | 架构 | JVM | GC | Python | 垃圾回收 | 微服务 | 高可用 | 高并发 | 分布式 | HTTP | Websocket | TCP">
 <meta name="twitter:card" content="summary">
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="https://lchml.com/tags/JVM/"/>
+  <link rel="canonical" href="https://lchml.com/tags/jvm/"/>
 
 
 
 
 
-  <title>标签: JVM | LC's Blog</title>
+  <title>标签: jvm | LC's Blog</title>
   
 
 
@@ -274,7 +274,7 @@
 
     <div id="posts" class="posts-collapse">
       <div class="collection-title">
-        <h2>JVM<small>标签</small>
+        <h2>jvm<small>标签</small>
         </h2>
       </div>
 
@@ -286,37 +286,9 @@
 
       <h3 class="post-title">
         
-            <a class="post-title-link" href="/technology/jvm3/" itemprop="url">
+            <a class="post-title-link" href="/technology/two-bugs/" itemprop="url">
               
-                <span itemprop="name">java虚拟机 - 并发</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-11-18T11:07:00+08:00"
-              content="2017-11-18" >
-          11-18
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/technology/jvm2/" itemprop="url">
-              
-                <span itemprop="name">java虚拟机 - Class</span>
+                <span itemprop="name">两个小问题</span>
               
             </a>
         
@@ -324,37 +296,9 @@
 
       <div class="post-meta">
         <time class="post-time" itemprop="dateCreated"
-              datetime="2017-11-15T11:07:00+08:00"
-              content="2017-11-15" >
-          11-15
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/technology/jvm1/" itemprop="url">
-              
-                <span itemprop="name">java虚拟机 - 内存</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-11-12T11:07:00+08:00"
-              content="2017-11-12" >
-          11-12
+              datetime="2020-05-03T00:00:00+08:00"
+              content="2020-05-03" >
+          05-03
         </time>
       </div>
 
@@ -418,7 +362,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-count">64</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -440,7 +384,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">87</span>
+                  <span class="site-state-item-count">91</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -805,6 +749,67 @@
       var Counter = AV.Object.extend("Counter");
       if ($('.leancloud_visitors').length == 1) {
         addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
+dCount(Counter);
       } else if ($('.post-title-link').length > 1) {
         showTime(Counter);
       }

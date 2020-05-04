@@ -4,6 +4,36 @@
 
     
   <url>
+    <loc>https://lchml.com/technology/two-bugs/</loc>
+    <lastmod>2020-05-04T06:43:01.529Z</lastmod>
+    <data>
+        <display>
+        <title>两个小问题</title>
+        <pubTime>2020-05-02T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>Java</tag>
+         
+        <tag>httpclient</tag>
+         
+        <tag>jvm</tag>
+         
+        <tag>coredump</tag>
+         
+        <tag>crash</tag>
+         
+         
+           
+             
+              <breadCrumb title="technology" url="https://lchml.com/categories/technology/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://lchml.com/technology/delayq/</loc>
     <lastmod>2019-11-22T07:24:47.048Z</lastmod>
     <data>
