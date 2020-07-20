@@ -4,6 +4,32 @@
 
     
   <url>
+    <loc>https://lchml.com/life/newzealand/</loc>
+    <lastmod>2020-07-20T15:52:26.680Z</lastmod>
+    <data>
+        <display>
+        <title>自驾新西兰</title>
+        <pubTime>2019-05-04T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>游记</tag>
+         
+        <tag>新西兰</tag>
+         
+        <tag>自驾</tag>
+         
+         
+           
+             
+              <breadCrumb title="life" url="https://lchml.com/categories/life/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://lchml.com/technology/two-bugs/</loc>
     <lastmod>2020-05-04T06:43:01.529Z</lastmod>
     <data>
@@ -116,13 +142,13 @@
         
         <tag>LC</tag>
          
+        <tag>面试</tag>
+         
         <tag>Java</tag>
          
         <tag>架构</tag>
          
         <tag>Java基础</tag>
-         
-        <tag>面试</tag>
          
          
            
