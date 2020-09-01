@@ -4,6 +4,31 @@
 
     
   <url>
+    <loc>https://lchml.com/life/mao-jiang/</loc>
+    <lastmod>2020-09-01T06:29:20.577Z</lastmod>
+    <data>
+        <display>
+        <title>《毛泽东传》&《蒋介石与现代中国》</title>
+        <pubTime>2020-07-20T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>毛泽东</tag>
+         
+        <tag>蒋介石</tag>
+         
+         
+           
+             
+              <breadCrumb title="life" url="https://lchml.com/categories/life/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+    
+  <url>
     <loc>https://lchml.com/life/newzealand/</loc>
     <lastmod>2020-07-21T02:35:01.738Z</lastmod>
     <data>
@@ -86,7 +111,6 @@
     </data>
     </url>
 
-    
     
   <url>
     <loc>https://lchml.com/technology/log/</loc>
