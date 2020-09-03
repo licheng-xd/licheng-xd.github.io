@@ -4,23 +4,305 @@
 
     
   <url>
-    <loc>https://lchml.com/life/mao-jiang/</loc>
-    <lastmod>2020-09-01T06:29:20.577Z</lastmod>
+    <loc>https://lchml.com/book/xiangcunjiaoshi/</loc>
+    <lastmod>2020-09-03T09:37:07.345Z</lastmod>
     <data>
         <display>
-        <title>《毛泽东传》&《蒋介石与现代中国》</title>
-        <pubTime>2020-07-20T16:00:00.000Z</pubTime>
+        <title>《乡村教师》</title>
+        <pubTime>2020-08-28T16:00:00.000Z</pubTime>
         
         <tag>LC</tag>
          
-        <tag>毛泽东</tag>
-         
-        <tag>蒋介石</tag>
+        <tag>科幻</tag>
          
          
            
              
-              <breadCrumb title="life" url="https://lchml.com/categories/life/"/>
+              <breadCrumb title="book" url="https://lchml.com/categories/book/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://lchml.com/book/napolun/</loc>
+    <lastmod>2020-09-03T09:33:00.423Z</lastmod>
+    <data>
+        <display>
+        <title>《拿破仑传》</title>
+        <pubTime>2019-12-24T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>传记</tag>
+         
+         
+           
+             
+              <breadCrumb title="book" url="https://lchml.com/categories/book/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://lchml.com/book/dafenqi/</loc>
+    <lastmod>2020-09-03T09:29:40.211Z</lastmod>
+    <data>
+        <display>
+        <title>《列奥纳多·达·芬奇传》</title>
+        <pubTime>2019-10-24T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>传记</tag>
+         
+         
+           
+             
+              <breadCrumb title="book" url="https://lchml.com/categories/book/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://lchml.com/book/rlqxsys/</loc>
+    <lastmod>2020-09-03T09:20:38.904Z</lastmod>
+    <data>
+        <display>
+        <title>《人类群星闪耀时》</title>
+        <pubTime>2019-07-21T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>传记</tag>
+         
+         
+           
+             
+              <breadCrumb title="book" url="https://lchml.com/categories/book/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://lchml.com/book/yangmingxueshuyao/</loc>
+    <lastmod>2020-09-03T09:16:08.351Z</lastmod>
+    <data>
+        <display>
+        <title>《阳明学述要》</title>
+        <pubTime>2019-05-31T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>心学</tag>
+         
+         
+           
+             
+              <breadCrumb title="book" url="https://lchml.com/categories/book/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://lchml.com/book/beiou/</loc>
+    <lastmod>2020-09-03T09:08:49.376Z</lastmod>
+    <data>
+        <display>
+        <title>《北欧，冰与火之地的寻真之旅》</title>
+        <pubTime>2019-02-14T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>文化</tag>
+         
+         
+           
+             
+              <breadCrumb title="book" url="https://lchml.com/categories/book/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://lchml.com/book/qiaobusi/</loc>
+    <lastmod>2020-09-03T09:03:37.081Z</lastmod>
+    <data>
+        <display>
+        <title>《史蒂夫·乔布斯传》</title>
+        <pubTime>2019-02-10T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>传记</tag>
+         
+         
+           
+             
+              <breadCrumb title="book" url="https://lchml.com/categories/book/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://lchml.com/book/jiqirenduanpian/</loc>
+    <lastmod>2020-09-03T08:57:17.757Z</lastmod>
+    <data>
+        <display>
+        <title>《机器人短篇全集》</title>
+        <pubTime>2019-01-19T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>科幻</tag>
+         
+         
+           
+             
+              <breadCrumb title="book" url="https://lchml.com/categories/book/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://lchml.com/book/jiangjieshi/</loc>
+    <lastmod>2020-09-03T08:55:23.622Z</lastmod>
+    <data>
+        <display>
+        <title>《蒋介石与现代中国》</title>
+        <pubTime>2020-05-03T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>传记</tag>
+         
+         
+           
+             
+              <breadCrumb title="book" url="https://lchml.com/categories/book/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://lchml.com/book/maozedong/</loc>
+    <lastmod>2020-09-03T08:55:18.042Z</lastmod>
+    <data>
+        <display>
+        <title>《毛泽东传》</title>
+        <pubTime>2020-02-23T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>传记</tag>
+         
+         
+           
+             
+              <breadCrumb title="book" url="https://lchml.com/categories/book/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://lchml.com/book/wanlishiwunian/</loc>
+    <lastmod>2020-09-03T08:51:15.527Z</lastmod>
+    <data>
+        <display>
+        <title>《万历十五年》</title>
+        <pubTime>2018-11-24T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>历史</tag>
+         
+         
+           
+             
+              <breadCrumb title="book" url="https://lchml.com/categories/book/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://lchml.com/book/weilaijianshi/</loc>
+    <lastmod>2020-09-03T08:44:24.746Z</lastmod>
+    <data>
+        <display>
+        <title>《未来简史》</title>
+        <pubTime>2018-11-04T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>历史</tag>
+         
+         
+           
+             
+              <breadCrumb title="book" url="https://lchml.com/categories/book/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://lchml.com/book/renleijianshi/</loc>
+    <lastmod>2020-09-03T08:36:33.304Z</lastmod>
+    <data>
+        <display>
+        <title>《人类简史》</title>
+        <pubTime>2018-09-17T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>历史</tag>
+         
+         
+           
+             
+              <breadCrumb title="book" url="https://lchml.com/categories/book/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://lchml.com/book/zengguofan/</loc>
+    <lastmod>2020-09-03T08:08:37.766Z</lastmod>
+    <data>
+        <display>
+        <title>《曾国藩传》</title>
+        <pubTime>2019-05-24T16:00:00.000Z</pubTime>
+        
+        <tag>传记</tag>
+         
+         
+           
+             
+              <breadCrumb title="book" url="https://lchml.com/categories/book/"/>
           
         </display>
     </data>
@@ -130,26 +412,6 @@
            
              
               <breadCrumb title="technology" url="https://lchml.com/categories/technology/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://lchml.com/life/zengguofan/</loc>
-    <lastmod>2019-06-03T03:15:15.237Z</lastmod>
-    <data>
-        <display>
-        <title>曾国藩传</title>
-        <pubTime>2019-05-24T16:00:00.000Z</pubTime>
-        
-        <tag>读书</tag>
-         
-         
-           
-             
-              <breadCrumb title="life" url="https://lchml.com/categories/life/"/>
           
         </display>
     </data>
