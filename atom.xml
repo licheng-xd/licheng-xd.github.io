@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://lchml.com/"/>
-  <updated>2020-09-09T03:04:18.736Z</updated>
+  <updated>2020-09-09T03:10:53.652Z</updated>
   <id>https://lchml.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://lchml.com/technology/pyqt/"/>
     <id>https://lchml.com/technology/pyqt/</id>
     <published>2020-09-08T16:00:00.000Z</published>
-    <updated>2020-09-09T03:04:18.736Z</updated>
+    <updated>2020-09-09T03:10:53.652Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>网易互客Mac版：<a href="https://drive.google.com/file/d/1yzJEVV1U20pl7Zg7sZB2zK60HTy6F_S1/view?usp=sharing" target="_blank" rel="external">下载地址</a></p>
@@ -36,7 +36,9 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$sudo pyinstaller --windowed --icon huke.icns --osx-bundle-identifier com.netease.huke --onedir huke.py --name 网易互客</div><div class="line">$sudo pyinstaller huke.spec</div></pre></td></tr></table></figure>
 <p>这样在dist目录下就可以找到最后的可执行程序了</p>
 <p><img src="2020-09-09-10-33-27.png" alt=""></p>
-<p>运行效果</p>
+<p>如果你在高分辨率的屏幕上打开这个程序，会发现字体非常模糊。需要在spec文件中加上如下配置</p>
+<p><img src="2020-09-09-11-10-35.png" alt=""></p>
+<p>然后重新对spec文件打包，最后的运行效果</p>
 <p><img src="2020-09-09-11-03-54.png" alt=""></p>
 ]]></content>
     

@@ -89,8 +89,9 @@
 <meta property="og:site_name" content="LC&#39;s Blog">
 <meta property="og:description" content="网易互客Mac版：下载地址  现在越来越多的服务都只在web端提供，很少有人去开发原生的桌面应用。但桌面应用依然有它的便捷性，有什么办法把web服务封装成桌面应用呢？ 以网易互客的SaaS服务为例，在浏览器中使用，通常会被其他tab干扰，或者容易误关。如果可以把它变成一个桌面应用就会方便许多。Python的UI框架有很多，Tkinter是最轻量级的，但它不支持WebEngine，所以我们选择Py">
 <meta property="og:image" content="https://lchml.com/technology/pyqt/2020-09-09-10-33-27.png">
+<meta property="og:image" content="https://lchml.com/technology/pyqt/2020-09-09-11-10-35.png">
 <meta property="og:image" content="https://lchml.com/technology/pyqt/2020-09-09-11-03-54.png">
-<meta property="og:updated_time" content="2020-09-09T03:04:18.736Z">
+<meta property="og:updated_time" content="2020-09-09T03:10:53.652Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网易互客Mac版">
 <meta name="twitter:description" content="网易互客Mac版：下载地址  现在越来越多的服务都只在web端提供，很少有人去开发原生的桌面应用。但桌面应用依然有它的便捷性，有什么办法把web服务封装成桌面应用呢？ 以网易互客的SaaS服务为例，在浏览器中使用，通常会被其他tab干扰，或者容易误关。如果可以把它变成一个桌面应用就会方便许多。Python的UI框架有很多，Tkinter是最轻量级的，但它不支持WebEngine，所以我们选择Py">
@@ -410,7 +411,9 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$sudo pyinstaller --windowed --icon huke.icns --osx-bundle-identifier com.netease.huke --onedir huke.py --name 网易互客</div><div class="line">$sudo pyinstaller huke.spec</div></pre></td></tr></table></figure>
 <p>这样在dist目录下就可以找到最后的可执行程序了</p>
 <p><img src="2020-09-09-10-33-27.png" alt=""></p>
-<p>运行效果</p>
+<p>如果你在高分辨率的屏幕上打开这个程序，会发现字体非常模糊。需要在spec文件中加上如下配置</p>
+<p><img src="2020-09-09-11-10-35.png" alt=""></p>
+<p>然后重新对spec文件打包，最后的运行效果</p>
 <p><img src="2020-09-09-11-03-54.png" alt=""></p>
 
       
