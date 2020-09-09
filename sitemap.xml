@@ -2,6 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://lchml.com/technology/pyqt/</loc>
+    
+    <lastmod>2020-09-09T02:54:00.738Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://lchml.com/book/beiou/</loc>
+    
+    <lastmod>2020-09-06T06:13:44.380Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://lchml.com/life/bali/</loc>
+    
+    <lastmod>2020-09-04T10:18:51.211Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://lchml.com/book/dafenqi/</loc>
+    
+    <lastmod>2020-09-04T10:15:05.459Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://lchml.com/book/xiangcunjiaoshi/</loc>
     
     <lastmod>2020-09-03T09:37:07.345Z</lastmod>
@@ -16,13 +44,6 @@
   </url>
   
   <url>
-    <loc>https://lchml.com/book/dafenqi/</loc>
-    
-    <lastmod>2020-09-03T09:29:40.211Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://lchml.com/book/rlqxsys/</loc>
     
     <lastmod>2020-09-03T09:20:38.904Z</lastmod>
@@ -33,13 +54,6 @@
     <loc>https://lchml.com/book/yangmingxueshuyao/</loc>
     
     <lastmod>2020-09-03T09:16:08.351Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://lchml.com/book/beiou/</loc>
-    
-    <lastmod>2020-09-03T09:08:49.376Z</lastmod>
     
   </url>
   
@@ -96,6 +110,13 @@
     <loc>https://lchml.com/book/zengguofan/</loc>
     
     <lastmod>2020-09-03T08:08:37.766Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://lchml.com/about/index.html</loc>
+    
+    <lastmod>2020-07-21T02:43:44.307Z</lastmod>
     
   </url>
   
@@ -534,13 +555,6 @@
   </url>
   
   <url>
-    <loc>https://lchml.com/life/bali/</loc>
-    
-    <lastmod>2018-07-19T10:53:36.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://lchml.com/life/aboutmovie/</loc>
     
     <lastmod>2018-07-19T10:53:34.000Z</lastmod>
@@ -572,13 +586,6 @@
     <loc>https://lchml.com/tags/index.html</loc>
     
     <lastmod>2018-07-19T06:41:20.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://lchml.com/about/index.html</loc>
-    
-    <lastmod>2018-07-08T05:46:12.000Z</lastmod>
     
   </url>
   

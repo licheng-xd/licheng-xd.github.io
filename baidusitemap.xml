@@ -4,6 +4,98 @@
 
     
   <url>
+    <loc>https://lchml.com/technology/pyqt/</loc>
+    <lastmod>2020-09-09T02:54:00.738Z</lastmod>
+    <data>
+        <display>
+        <title>网易互客Mac版</title>
+        <pubTime>2020-09-08T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>python</tag>
+         
+         
+           
+             
+              <breadCrumb title="technology" url="https://lchml.com/categories/technology/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://lchml.com/book/beiou/</loc>
+    <lastmod>2020-09-06T06:13:44.380Z</lastmod>
+    <data>
+        <display>
+        <title>《北欧，冰与火之地的寻真之旅》</title>
+        <pubTime>2019-02-14T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>文化</tag>
+         
+         
+           
+             
+              <breadCrumb title="book" url="https://lchml.com/categories/book/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://lchml.com/life/bali/</loc>
+    <lastmod>2020-09-04T10:18:51.211Z</lastmod>
+    <data>
+        <display>
+        <title>巴厘——香港</title>
+        <pubTime>2015-11-29T16:00:00.000Z</pubTime>
+        
+        <tag>游记</tag>
+         
+        <tag>HML</tag>
+         
+        <tag>巴厘岛</tag>
+         
+        <tag>香港</tag>
+         
+         
+           
+             
+              <breadCrumb title="life" url="https://lchml.com/categories/life/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://lchml.com/book/dafenqi/</loc>
+    <lastmod>2020-09-04T10:15:05.459Z</lastmod>
+    <data>
+        <display>
+        <title>《列奥纳多·达·芬奇传》</title>
+        <pubTime>2019-10-24T16:00:00.000Z</pubTime>
+        
+        <tag>LC</tag>
+         
+        <tag>传记</tag>
+         
+         
+           
+             
+              <breadCrumb title="book" url="https://lchml.com/categories/book/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://lchml.com/book/xiangcunjiaoshi/</loc>
     <lastmod>2020-09-03T09:37:07.345Z</lastmod>
     <data>
@@ -32,28 +124,6 @@
         <display>
         <title>《拿破仑传》</title>
         <pubTime>2019-12-24T16:00:00.000Z</pubTime>
-        
-        <tag>LC</tag>
-         
-        <tag>传记</tag>
-         
-         
-           
-             
-              <breadCrumb title="book" url="https://lchml.com/categories/book/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://lchml.com/book/dafenqi/</loc>
-    <lastmod>2020-09-03T09:29:40.211Z</lastmod>
-    <data>
-        <display>
-        <title>《列奥纳多·达·芬奇传》</title>
-        <pubTime>2019-10-24T16:00:00.000Z</pubTime>
         
         <tag>LC</tag>
          
@@ -102,28 +172,6 @@
         <tag>LC</tag>
          
         <tag>心学</tag>
-         
-         
-           
-             
-              <breadCrumb title="book" url="https://lchml.com/categories/book/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://lchml.com/book/beiou/</loc>
-    <lastmod>2020-09-03T09:08:49.376Z</lastmod>
-    <data>
-        <display>
-        <title>《北欧，冰与火之地的寻真之旅》</title>
-        <pubTime>2019-02-14T16:00:00.000Z</pubTime>
-        
-        <tag>LC</tag>
-         
-        <tag>文化</tag>
          
          
            
@@ -310,6 +358,7 @@
 
     
     
+    
   <url>
     <loc>https://lchml.com/life/newzealand/</loc>
     <lastmod>2020-07-21T02:35:01.738Z</lastmod>
@@ -428,9 +477,9 @@
         
         <tag>LC</tag>
          
-        <tag>面试</tag>
-         
         <tag>Java</tag>
+         
+        <tag>面试</tag>
          
         <tag>架构</tag>
          
@@ -1806,32 +1855,6 @@
 
     
   <url>
-    <loc>https://lchml.com/life/bali/</loc>
-    <lastmod>2018-07-19T10:53:36.000Z</lastmod>
-    <data>
-        <display>
-        <title>巴厘——香港</title>
-        <pubTime>2015-11-29T16:00:00.000Z</pubTime>
-        
-        <tag>游记</tag>
-         
-        <tag>HML</tag>
-         
-        <tag>巴厘岛</tag>
-         
-        <tag>香港</tag>
-         
-         
-           
-             
-              <breadCrumb title="life" url="https://lchml.com/categories/life/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>https://lchml.com/life/aboutmovie/</loc>
     <lastmod>2018-07-19T10:53:34.000Z</lastmod>
     <data>
@@ -1872,7 +1895,6 @@
     </data>
     </url>
 
-    
     
     
     
