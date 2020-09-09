@@ -91,7 +91,7 @@
 <meta property="og:image" content="https://lchml.com/technology/pyqt/2020-09-09-10-33-27.png">
 <meta property="og:image" content="https://lchml.com/technology/pyqt/2020-09-09-11-10-35.png">
 <meta property="og:image" content="https://lchml.com/technology/pyqt/2020-09-09-11-03-54.png">
-<meta property="og:updated_time" content="2020-09-09T03:10:53.652Z">
+<meta property="og:updated_time" content="2020-09-09T03:11:05.507Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网易互客Mac版">
 <meta name="twitter:description" content="网易互客Mac版：下载地址  现在越来越多的服务都只在web端提供，很少有人去开发原生的桌面应用。但桌面应用依然有它的便捷性，有什么办法把web服务封装成桌面应用呢？ 以网易互客的SaaS服务为例，在浏览器中使用，通常会被其他tab干扰，或者容易误关。如果可以把它变成一个桌面应用就会方便许多。Python的UI框架有很多，Tkinter是最轻量级的，但它不支持WebEngine，所以我们选择Py">
@@ -358,7 +358,7 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/technology/pyqt/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count gitment-comments-count" data-xid="/technology/pyqt/" itemprop="commentsCount"></span>
+                  <span class="post-comments-count valine-comment-count" data-xid="/technology/pyqt/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -515,11 +515,7 @@
 
   
     <div class="comments" id="comments">
-      
-        <div id="gitment-container"></div>
-      
     </div>
-
   
 
 
@@ -835,45 +831,30 @@
 
 
 
-<!-- LOCAL: You can save these files to your site and update links -->
-    
-        
-        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
-        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
-    
-<!-- END LOCAL -->
-
-    
-
-    
-      <script type="text/javascript">
-      function renderGitment(){
-        var gitment = new Gitmint({
-            id: window.location.pathname, 
-            owner: 'licheng-xd',
-            repo: 'blog-comment',
-            
-            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
-            
-            oauth: {
-            
-            
-                client_secret: 'e66400d0dd1a8a7ea34db3e2ba22f071f3b93b83',
-            
-                client_id: 'a442d470922bbc39e7a0'
-            }});
-        gitment.render('gitment-container');
-      }
-
-      
-      renderGitment();
-      
-      </script>
-    
 
 
 
-
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'MabW4tTRa4YhUWvISCsRLuzd-gzGzoHsz',
+        appKey: 'X8ewKXvEvIbA6C6S61dHMX5J',
+        placeholder: '人过留名，雁过留声',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

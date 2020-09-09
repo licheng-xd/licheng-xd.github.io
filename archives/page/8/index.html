@@ -303,9 +303,9 @@
 
       <h3 class="post-title">
         
-            <a class="post-title-link" href="/life/about-life/" itemprop="url">
+            <a class="post-title-link" href="/technology/mac-eclipse-svn/" itemprop="url">
               
-                <span itemprop="name">感谢你让我上场</span>
+                <span itemprop="name">Eclipse on Mac with svn</span>
               
             </a>
         
@@ -340,9 +340,9 @@
 
       <h3 class="post-title">
         
-            <a class="post-title-link" href="/technology/mac-eclipse-svn/" itemprop="url">
+            <a class="post-title-link" href="/life/about-life/" itemprop="url">
               
-                <span itemprop="name">Eclipse on Mac with svn</span>
+                <span itemprop="name">感谢你让我上场</span>
               
             </a>
         
@@ -949,21 +949,30 @@
 
 
 
-<!-- LOCAL: You can save these files to your site and update links -->
-    
-        
-        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
-        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
-    
-<!-- END LOCAL -->
-
-    
-
-    
 
 
 
-
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'MabW4tTRa4YhUWvISCsRLuzd-gzGzoHsz',
+        appKey: 'X8ewKXvEvIbA6C6S61dHMX5J',
+        placeholder: '人过留名，雁过留声',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

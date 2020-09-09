@@ -354,7 +354,7 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/technology/mac-eclipse-svn/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count gitment-comments-count" data-xid="/technology/mac-eclipse-svn/" itemprop="commentsCount"></span>
+                  <span class="post-comments-count valine-comment-count" data-xid="/technology/mac-eclipse-svn/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -468,8 +468,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/technology/java-interview/" rel="next" title="学贵专·而不以泛滥为贤">
-                <i class="fa fa-chevron-left"></i> 学贵专·而不以泛滥为贤
+              <a href="/life/about-life/" rel="next" title="感谢你让我上场">
+                <i class="fa fa-chevron-left"></i> 感谢你让我上场
               </a>
             
           </div>
@@ -478,8 +478,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/life/about-life/" rel="prev" title="感谢你让我上场">
-                感谢你让我上场 <i class="fa fa-chevron-right"></i>
+              <a href="/life/mountaineering/" rel="prev" title="龙门 · 杏梅尖">
+                龙门 · 杏梅尖 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -511,11 +511,7 @@
 
   
     <div class="comments" id="comments">
-      
-        <div id="gitment-container"></div>
-      
     </div>
-
   
 
 
@@ -831,45 +827,30 @@
 
 
 
-<!-- LOCAL: You can save these files to your site and update links -->
-    
-        
-        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
-        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
-    
-<!-- END LOCAL -->
-
-    
-
-    
-      <script type="text/javascript">
-      function renderGitment(){
-        var gitment = new Gitmint({
-            id: window.location.pathname, 
-            owner: 'licheng-xd',
-            repo: 'blog-comment',
-            
-            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
-            
-            oauth: {
-            
-            
-                client_secret: 'e66400d0dd1a8a7ea34db3e2ba22f071f3b93b83',
-            
-                client_id: 'a442d470922bbc39e7a0'
-            }});
-        gitment.render('gitment-container');
-      }
-
-      
-      renderGitment();
-      
-      </script>
-    
 
 
 
-
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'MabW4tTRa4YhUWvISCsRLuzd-gzGzoHsz',
+        appKey: 'X8ewKXvEvIbA6C6S61dHMX5J',
+        placeholder: '人过留名，雁过留声',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 
