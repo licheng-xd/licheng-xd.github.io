@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="管理,绩效,沟通" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="LC's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="如果你能让一个组织中的所有成员齐心协力，你就可以在任何时候、任何市场状况下、任何行业中纵横驰骋，战胜挑战。  在《系统架构》一书中作者提出：系统的功效必须大于各自元素的功效之和。而任何一个团队都可以视为一个系统，对于大多数管理者来说，让团队相互协作发挥出一加一大于二的力量是其最重要的工作。团队协作之所以不能良好的实现，是因为总是不自觉的陷入了五个很普通但却很危险的沼泽之中。我们这里称其为团队协作">
+<meta name="keywords" content="管理,绩效,沟通">
+<meta property="og:type" content="article">
+<meta property="og:title" content="团队协作的五大障碍">
+<meta property="og:url" content="https://lchml.com/technology/team-manager/index.html">
+<meta property="og:site_name" content="LC&#39;s Blog">
+<meta property="og:description" content="如果你能让一个组织中的所有成员齐心协力，你就可以在任何时候、任何市场状况下、任何行业中纵横驰骋，战胜挑战。  在《系统架构》一书中作者提出：系统的功效必须大于各自元素的功效之和。而任何一个团队都可以视为一个系统，对于大多数管理者来说，让团队相互协作发挥出一加一大于二的力量是其最重要的工作。团队协作之所以不能良好的实现，是因为总是不自觉的陷入了五个很普通但却很危险的沼泽之中。我们这里称其为团队协作">
+<meta property="og:image" content="https://lchml.com/technology/team-manager/2020-11-12-13-42-36.png">
+<meta property="og:image" content="https://lchml.com/technology/team-manager/2020-11-12-13-42-13.png">
+<meta property="og:updated_time" content="2020-11-12T05:42:45.747Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="团队协作的五大障碍">
+<meta name="twitter:description" content="如果你能让一个组织中的所有成员齐心协力，你就可以在任何时候、任何市场状况下、任何行业中纵横驰骋，战胜挑战。  在《系统架构》一书中作者提出：系统的功效必须大于各自元素的功效之和。而任何一个团队都可以视为一个系统，对于大多数管理者来说，让团队相互协作发挥出一加一大于二的力量是其最重要的工作。团队协作之所以不能良好的实现，是因为总是不自觉的陷入了五个很普通但却很危险的沼泽之中。我们这里称其为团队协作">
+<meta name="twitter:image" content="https://lchml.com/technology/team-manager/2020-11-12-13-42-36.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lchml.com/technology/team-manager/"/>
+
+
+
+
+
+  <title>团队协作的五大障碍 | LC's Blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-71702178-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LC's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">旅行的代码</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/team-manager/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LC&HML">
+      <meta itemprop="description" content="路漫漫其修远兮，吾将上下而求索">
+      <meta itemprop="image" content="/lc-icon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LC's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">团队协作的五大障碍</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-11-12T00:00:00+08:00">
+                2020-11-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/technology/" itemprop="url" rel="index">
+                    <span itemprop="name">technology</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/technology/team-manager/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/technology/team-manager/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/technology/team-manager/" class="leancloud_visitors" data-flag-title="团队协作的五大障碍">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>如果你能让一个组织中的所有成员齐心协力，你就可以在任何时候、任何市场状况下、任何行业中纵横驰骋，战胜挑战。</p>
+</blockquote>
+<p>在《系统架构》一书中作者提出：系统的功效必须大于各自元素的功效之和。而任何一个团队都可以视为一个系统，对于大多数管理者来说，让团队相互协作发挥出一加一大于二的力量是其最重要的工作。团队协作之所以不能良好的实现，是因为总是不自觉的陷入了五个很普通但却很危险的沼泽之中。我们这里称其为团队协作的五大障碍。他们并不是相互独立，而是共同作用，互为因果的。</p>
+<p>团队协作的第一大障碍是团队成员之间<strong>缺乏信任</strong>。因为缺乏信任，团队就无法产生直接而激烈的思想交锋，不敢发表自己的意见，也就产生了第二大障碍——<strong>惧怕冲突</strong>。因为惧怕冲突，缺乏必要的争论，也就不能真正统一意见，从而导致团队成员<strong>缺乏投入。</strong>因为缺乏投入，又没有真正达成共识，当出现不好的结果时，团队成员就会<strong>逃避责任，</strong>甚至相互抱怨。最终会使团队成员把个人利益放在团队的共同利益之上，也就导致了团队<strong>无视结果</strong>。</p>
+<p><img src="2020-11-12-13-42-36.png" alt=""></p>
+<p>与此相反的，当我们从积极的角度去思考时，一个真正团结一致的团队应该是下图这样的，看起来简单，在实际中要做到却是很难的，需要高度的组织纪律性和持久性。</p>
+<p><img src="2020-11-12-13-42-13.png" alt=""></p>
+<p>那么我们该如何克服这五大障碍呢？</p>
+<h3 id="缺乏信任"><a href="#缺乏信任" class="headerlink" title="缺乏信任"></a>缺乏信任</h3><p>信任是高效、团结一致的团队的核心，没有信任，团队协作就无从谈起。在这里信任是指团队成员之间相信同事的言行是出于好意，在团队里不必过分小心或互相戒备，成员之间可以放心的接受彼此的批评。充满信任的团队成员具有以下表现：</p>
+<ul>
+<li>承认自己的弱点和错误</li>
+<li>主动寻求别人的帮助</li>
+<li>欢迎别人对自己所负责的领域提出问题和给予关注</li>
+<li>在工作可能出现问题时，相互提醒</li>
+<li>愿意给别人提出反馈意见和帮助</li>
+<li>赞赏并且学习别人的技术经验</li>
+<li>把时间和精力花在解决实际问题上，而不是流于形式</li>
+<li>必要时向别人道歉，接受别人的道歉</li>
+<li>珍惜集体会议或其他可以进行团队协作的机会</li>
+</ul>
+<p>克服缺乏信任障碍可以通过以下方法（不限于）：</p>
+<ul>
+<li>个人背景介绍，彼此了解</li>
+<li>成员工作效率讨论</li>
+<li>个性及行为特点测试</li>
+<li>360度意见反馈</li>
+<li>集体外出实践</li>
+</ul>
+<p>作为团队领导需要率先承认自己的不足，勇于在下属面前抛开面子问题。团队领导必须保证大家承认弱点后不会因此而受到不利影响。</p>
+<h3 id="惧怕冲突"><a href="#惧怕冲突" class="headerlink" title="惧怕冲突"></a>惧怕冲突</h3><p>良好而持久的合作关系，需要积极的冲突和争论来促使其前进。我们需要降积极的争论和消极的争吵或个人矛盾区分开。争论的唯一目的是在最短的时间内找到最佳的解决方案。拥抱冲突的团队具有以下特点：</p>
+<ul>
+<li>召开活跃、有趣的会议</li>
+<li>汲取所有团队成员的意见</li>
+<li>快速的解决实际问题</li>
+<li>将形式主义控制在最小限度</li>
+<li>把大家持不同意见的问题拿出来讨论</li>
+</ul>
+<p>克服惧怕冲突障碍的方法可以有：</p>
+<ul>
+<li>挖掘争论话题，有意的挖掘一些隐藏的分歧摆到桌面上</li>
+<li>实时提醒，成员相互监督，不要放弃有益的辩论话题</li>
+</ul>
+<p>团队领导在发生争论时，不应该试图去维护成员之间的平衡，怕他们受到伤害。应该冷静审视、顺其发展，即使有些混乱也不要随意打断。同时领导也要以身作则，参与争论。</p>
+<h3 id="缺乏投入"><a href="#缺乏投入" class="headerlink" title="缺乏投入"></a>缺乏投入</h3><p>优秀的团队可以在很短的时间内达成明确的共识，大家都按照最终决定进行工作，即使先前反对这项决定的人也是如此。而缺乏投入的两个重要原因通常是<strong>追求绝对一致</strong>和<strong>追求绝对把握</strong>，全力投入的团队具有以下表现：</p>
+<ul>
+<li>制定出明确的工作方向和重点</li>
+<li>公平听取全体成员的意见</li>
+<li>培养从失误中学习的能力</li>
+<li>毫不犹豫，勇往直前</li>
+<li>必要时果断调整方向</li>
+</ul>
+<p>克服缺乏投入障碍的方法有：</p>
+<ul>
+<li>统一口径</li>
+<li>设置最终期限（deadline）</li>
+<li>风险预估</li>
+<li>低风险激进法</li>
+</ul>
+<p>团队领导应该比其他成员更能接受可能做出错误决策的事实，不应该把过多注意力放在追求绝对一致和绝对把握上。</p>
+<h3 id="逃避责任"><a href="#逃避责任" class="headerlink" title="逃避责任"></a>逃避责任</h3><p>当涉及到工作质量和绩效时，逃避责任就会变得非常敏感。而当团队成员由于逃避责任而导致整体效益下降时，他们就会真的相互怪罪。要保持团队高效率地工作，最有效的方法就是同事间相互施加压力。负责任的团队会具有以下表现：</p>
+<ul>
+<li>确保让表现不尽如人意的成员感到压力，使其尽快改进工作</li>
+<li>发现潜在问题时毫无顾虑的向同事指出</li>
+<li>尊重团队中以高标准要求工作的同事</li>
+<li>免除绩效管理以及改进计划这类过度形式主义的措施</li>
+</ul>
+<p>克服这一障碍的方法有：</p>
+<ul>
+<li>公布工作目标和标准</li>
+<li>定期对成果进行简要回顾</li>
+<li>团队嘉奖</li>
+</ul>
+<p>团队领导应该避免使自己成为团队的唯一负责人，为团队建立整体的负责机制，要求大家共同承担责任。</p>
+<h3 id="无视结果"><a href="#无视结果" class="headerlink" title="无视结果"></a>无视结果</h3><p>如果团队成员倾向于关注集体工作目标以外的事情，往往会带来巨大的危害。尽管人人都有自我意识，但一直优秀的队伍，成员必须把集体利益放在个人利益之上。重视集体成绩的团队应该有以下表现：</p>
+<ul>
+<li>有得力的员工加入</li>
+<li>不提倡注重个人表现</li>
+<li>正确对待成功和失败</li>
+<li>团队成员能够为团体利益牺牲个人利益</li>
+<li>凝聚力强，不会轻易解体</li>
+</ul>
+<p>要客服这一障碍，可以通过公布工作目标和奖励团队成就的办法实现。公布自己的工作目标，向公众承诺要获取成功的团队会具有更高的工作热情，更渴望取得结果。而仅仅声称“我们会尽力而为”的团队则无意识、微妙的为自己的失败做好了准备。激励团队成员追求集体利益的另一个有效方法就是将他们的奖励，尤其是奖金，与团队的工作成绩联系在一起。而不是仅仅让员工以“努力工作”的名义取得奖励，这等于传递了一种是否取得成果也无关紧要的信息。</p>
+<p>对于这种障碍，团队领导首先要自己走出自我主义的误区，培养客观的态度，奖励那些真正为集体利益作出贡献的成员。</p>
+<p>团队是由人组成，每个人都是不完美的，最终需要团队成员克服人性的弱点，建立信任，充分表达，全力投入，重视集体，从而取得成功。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/donate-page/simple/images/wechat.jpg" alt="LC&HML 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/donate-page/simple/images/alipay.jpg" alt="LC&HML 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/LC/" rel="tag"># LC</a>
+          
+            <a href="/tags/管理/" rel="tag"># 管理</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/technology/pro-grow/" rel="next" title="绩效沟通之PRO&GROW模型实践">
+                <i class="fa fa-chevron-left"></i> 绩效沟通之PRO&GROW模型实践
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/lc-icon.jpg"
+                alt="LC&HML" />
+            
+              <p class="site-author-name" itemprop="name">LC&HML</p>
+              <p class="site-description motion-element" itemprop="description">路漫漫其修远兮，吾将上下而求索</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">81</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">97</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/licheng-xd" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:licheng_xd@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope-o"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://500px.me/lchml" target="_blank" title="500px">
+                      
+                        <i class="fa fa-fw fa-500px"></i>500px</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://jandan.net" target="_blank" title="Jandan">
+                      
+                        <i class="fa fa-fw fa-transgender-alt"></i>Jandan</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/4qg55j4w/home?wvr=5" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://moviehell.net" target="_blank" title="Movie">
+                      
+                        <i class="fa fa-fw fa-file-movie-o"></i>Movie</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.qingtian16265.com/" target="_blank" title="晴天的博客">
+                      
+                        <i class="fa fa-fw fa-leanpub"></i>晴天的博客</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#缺乏信任"><span class="nav-number">1.</span> <span class="nav-text">缺乏信任</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#惧怕冲突"><span class="nav-number">2.</span> <span class="nav-text">惧怕冲突</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺乏投入"><span class="nav-number">3.</span> <span class="nav-text">缺乏投入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#逃避责任"><span class="nav-number">4.</span> <span class="nav-text">逃避责任</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无视结果"><span class="nav-number">5.</span> <span class="nav-text">无视结果</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LC&HML</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'MabW4tTRa4YhUWvISCsRLuzd-gzGzoHsz',
+        appKey: 'X8ewKXvEvIbA6C6S61dHMX5J',
+        placeholder: '人过留名，雁过留声',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("MabW4tTRa4YhUWvISCsRLuzd-gzGzoHsz", "X8ewKXvEvIbA6C6S61dHMX5J");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

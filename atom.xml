@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://lchml.com/"/>
-  <updated>2020-09-09T03:11:05.507Z</updated>
+  <updated>2020-11-12T05:42:45.747Z</updated>
   <id>https://lchml.com/</id>
   
   <author>
@@ -14,6 +14,153 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>团队协作的五大障碍</title>
+    <link href="https://lchml.com/technology/team-manager/"/>
+    <id>https://lchml.com/technology/team-manager/</id>
+    <published>2020-11-11T16:00:00.000Z</published>
+    <updated>2020-11-12T05:42:45.747Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>如果你能让一个组织中的所有成员齐心协力，你就可以在任何时候、任何市场状况下、任何行业中纵横驰骋，战胜挑战。</p>
+</blockquote>
+<p>在《系统架构》一书中作者提出：系统的功效必须大于各自元素的功效之和。而任何一个团队都可以视为一个系统，对于大多数管理者来说，让团队相互协作发挥出一加一大于二的力量是其最重要的工作。团队协作之所以不能良好的实现，是因为总是不自觉的陷入了五个很普通但却很危险的沼泽之中。我们这里称其为团队协作的五大障碍。他们并不是相互独立，而是共同作用，互为因果的。</p>
+<p>团队协作的第一大障碍是团队成员之间<strong>缺乏信任</strong>。因为缺乏信任，团队就无法产生直接而激烈的思想交锋，不敢发表自己的意见，也就产生了第二大障碍——<strong>惧怕冲突</strong>。因为惧怕冲突，缺乏必要的争论，也就不能真正统一意见，从而导致团队成员<strong>缺乏投入。</strong>因为缺乏投入，又没有真正达成共识，当出现不好的结果时，团队成员就会<strong>逃避责任，</strong>甚至相互抱怨。最终会使团队成员把个人利益放在团队的共同利益之上，也就导致了团队<strong>无视结果</strong>。</p>
+<p><img src="2020-11-12-13-42-36.png" alt=""></p>
+<p>与此相反的，当我们从积极的角度去思考时，一个真正团结一致的团队应该是下图这样的，看起来简单，在实际中要做到却是很难的，需要高度的组织纪律性和持久性。</p>
+<p><img src="2020-11-12-13-42-13.png" alt=""></p>
+<p>那么我们该如何克服这五大障碍呢？</p>
+<h3 id="缺乏信任"><a href="#缺乏信任" class="headerlink" title="缺乏信任"></a>缺乏信任</h3><p>信任是高效、团结一致的团队的核心，没有信任，团队协作就无从谈起。在这里信任是指团队成员之间相信同事的言行是出于好意，在团队里不必过分小心或互相戒备，成员之间可以放心的接受彼此的批评。充满信任的团队成员具有以下表现：</p>
+<ul>
+<li>承认自己的弱点和错误</li>
+<li>主动寻求别人的帮助</li>
+<li>欢迎别人对自己所负责的领域提出问题和给予关注</li>
+<li>在工作可能出现问题时，相互提醒</li>
+<li>愿意给别人提出反馈意见和帮助</li>
+<li>赞赏并且学习别人的技术经验</li>
+<li>把时间和精力花在解决实际问题上，而不是流于形式</li>
+<li>必要时向别人道歉，接受别人的道歉</li>
+<li>珍惜集体会议或其他可以进行团队协作的机会</li>
+</ul>
+<p>克服缺乏信任障碍可以通过以下方法（不限于）：</p>
+<ul>
+<li>个人背景介绍，彼此了解</li>
+<li>成员工作效率讨论</li>
+<li>个性及行为特点测试</li>
+<li>360度意见反馈</li>
+<li>集体外出实践</li>
+</ul>
+<p>作为团队领导需要率先承认自己的不足，勇于在下属面前抛开面子问题。团队领导必须保证大家承认弱点后不会因此而受到不利影响。</p>
+<h3 id="惧怕冲突"><a href="#惧怕冲突" class="headerlink" title="惧怕冲突"></a>惧怕冲突</h3><p>良好而持久的合作关系，需要积极的冲突和争论来促使其前进。我们需要降积极的争论和消极的争吵或个人矛盾区分开。争论的唯一目的是在最短的时间内找到最佳的解决方案。拥抱冲突的团队具有以下特点：</p>
+<ul>
+<li>召开活跃、有趣的会议</li>
+<li>汲取所有团队成员的意见</li>
+<li>快速的解决实际问题</li>
+<li>将形式主义控制在最小限度</li>
+<li>把大家持不同意见的问题拿出来讨论</li>
+</ul>
+<p>克服惧怕冲突障碍的方法可以有：</p>
+<ul>
+<li>挖掘争论话题，有意的挖掘一些隐藏的分歧摆到桌面上</li>
+<li>实时提醒，成员相互监督，不要放弃有益的辩论话题</li>
+</ul>
+<p>团队领导在发生争论时，不应该试图去维护成员之间的平衡，怕他们受到伤害。应该冷静审视、顺其发展，即使有些混乱也不要随意打断。同时领导也要以身作则，参与争论。</p>
+<h3 id="缺乏投入"><a href="#缺乏投入" class="headerlink" title="缺乏投入"></a>缺乏投入</h3><p>优秀的团队可以在很短的时间内达成明确的共识，大家都按照最终决定进行工作，即使先前反对这项决定的人也是如此。而缺乏投入的两个重要原因通常是<strong>追求绝对一致</strong>和<strong>追求绝对把握</strong>，全力投入的团队具有以下表现：</p>
+<ul>
+<li>制定出明确的工作方向和重点</li>
+<li>公平听取全体成员的意见</li>
+<li>培养从失误中学习的能力</li>
+<li>毫不犹豫，勇往直前</li>
+<li>必要时果断调整方向</li>
+</ul>
+<p>克服缺乏投入障碍的方法有：</p>
+<ul>
+<li>统一口径</li>
+<li>设置最终期限（deadline）</li>
+<li>风险预估</li>
+<li>低风险激进法</li>
+</ul>
+<p>团队领导应该比其他成员更能接受可能做出错误决策的事实，不应该把过多注意力放在追求绝对一致和绝对把握上。</p>
+<h3 id="逃避责任"><a href="#逃避责任" class="headerlink" title="逃避责任"></a>逃避责任</h3><p>当涉及到工作质量和绩效时，逃避责任就会变得非常敏感。而当团队成员由于逃避责任而导致整体效益下降时，他们就会真的相互怪罪。要保持团队高效率地工作，最有效的方法就是同事间相互施加压力。负责任的团队会具有以下表现：</p>
+<ul>
+<li>确保让表现不尽如人意的成员感到压力，使其尽快改进工作</li>
+<li>发现潜在问题时毫无顾虑的向同事指出</li>
+<li>尊重团队中以高标准要求工作的同事</li>
+<li>免除绩效管理以及改进计划这类过度形式主义的措施</li>
+</ul>
+<p>克服这一障碍的方法有：</p>
+<ul>
+<li>公布工作目标和标准</li>
+<li>定期对成果进行简要回顾</li>
+<li>团队嘉奖</li>
+</ul>
+<p>团队领导应该避免使自己成为团队的唯一负责人，为团队建立整体的负责机制，要求大家共同承担责任。</p>
+<h3 id="无视结果"><a href="#无视结果" class="headerlink" title="无视结果"></a>无视结果</h3><p>如果团队成员倾向于关注集体工作目标以外的事情，往往会带来巨大的危害。尽管人人都有自我意识，但一直优秀的队伍，成员必须把集体利益放在个人利益之上。重视集体成绩的团队应该有以下表现：</p>
+<ul>
+<li>有得力的员工加入</li>
+<li>不提倡注重个人表现</li>
+<li>正确对待成功和失败</li>
+<li>团队成员能够为团体利益牺牲个人利益</li>
+<li>凝聚力强，不会轻易解体</li>
+</ul>
+<p>要客服这一障碍，可以通过公布工作目标和奖励团队成就的办法实现。公布自己的工作目标，向公众承诺要获取成功的团队会具有更高的工作热情，更渴望取得结果。而仅仅声称“我们会尽力而为”的团队则无意识、微妙的为自己的失败做好了准备。激励团队成员追求集体利益的另一个有效方法就是将他们的奖励，尤其是奖金，与团队的工作成绩联系在一起。而不是仅仅让员工以“努力工作”的名义取得奖励，这等于传递了一种是否取得成果也无关紧要的信息。</p>
+<p>对于这种障碍，团队领导首先要自己走出自我主义的误区，培养客观的态度，奖励那些真正为集体利益作出贡献的成员。</p>
+<p>团队是由人组成，每个人都是不完美的，最终需要团队成员克服人性的弱点，建立信任，充分表达，全力投入，重视集体，从而取得成功。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;如果你能让一个组织中的所有成员齐心协力，你就可以在任何时候、任何市场状况下、任何行业中纵横驰骋，战胜挑战。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;在《系统架构》一书中作者提出：系统的功效必须大于各自元素的功效之和。而任何一个团队都可以视为一个系
+    
+    </summary>
+    
+      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
+    
+    
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
+    
+      <category term="管理" scheme="https://lchml.com/tags/%E7%AE%A1%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>绩效沟通之PRO&amp;GROW模型实践</title>
+    <link href="https://lchml.com/technology/pro-grow/"/>
+    <id>https://lchml.com/technology/pro-grow/</id>
+    <published>2020-11-02T16:00:00.000Z</published>
+    <updated>2020-11-12T05:40:00.191Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="暖场"><a href="#暖场" class="headerlink" title="暖场"></a>暖场</h2><p>开场后，先简单聊一些非工作的内容，如最近的一些热门话题，或对方关注的话题，缓和气氛利于后续的沟通。这里不能太刻意，应尽量挑一些平时大家有聊过的话题。</p>
+<h2 id="呈现（P）"><a href="#呈现（P）" class="headerlink" title="呈现（P）"></a>呈现（P）</h2><p>暖场后可以做出一些开放性提问，如：过去一个季度觉得怎么样？自己有哪些满意或不满意的地方？引导员工去回忆思考，尝试总结过去一个季度的工作。部分员工可能会忘了过去自己做了些什么，可以适当做一些提醒，如xxx技术优化的工作就做的很不错，或xxx需求比较难，最后按时上线了。这就要求管理者沟通前需要做好充分的准备，不能自己都不知道员工做了一些什么。在这个阶段尽量先不要去讨论工作结果的好坏，更多的是引导员工主动去回忆思考。当回忆的内容差不多了，最后再告知绩效结果。</p>
+<h2 id="回应及现状（R）"><a href="#回应及现状（R）" class="headerlink" title="回应及现状（R）"></a>回应及现状（R）</h2><p>告知绩效结果后，大多数员工会有一些情绪上的沮丧甚至愤怒。这时管理者需要倾听、理解下属的情绪，对他的表达表示认同，不要让事实本身影响到相互关系。并帮助员工认识到目前绩效表现中存在的具体问题或状况。如负责的某个需求上线后，线上反馈bug超过了正常水平，或导致了系统多长时间的不可用，而正常的水平应该是怎么样的。表达你对他的期望并鼓励他去思考改进的方法的，如：我觉得你完全可以做的更好的，或上次的某个需求上线后效果就很好，你觉得这次没做好的问题是出在了哪里呢？促使员工去思考和表达，并在站在员工的角度和他一起探讨原因和改进方法，从而获得更多的信息，追求相互理解的状态。</p>
+<p>在这个阶段，员工很可能会产生各种负面情绪，如找借口、防御姿态、反击、消极怠工等等，而作为管理者最重要的是不能情绪化，可以反复的尝试沟通，或者冷静一段时间后再继续沟通，如果员工不能充分接纳问题并承担责任，那后续的阶段是走不下去的。</p>
+<h2 id="责任感（O）"><a href="#责任感（O）" class="headerlink" title="责任感（O）"></a>责任感（O）</h2><p>当管理者察觉到员工已经有了承担解决问题的责任感和意愿度时，接下来就可以进行实际的管理动作。如制定下一个季度的改进计划等。接下来就是可以进入GROW模型了。</p>
+<p>在进行PRO流程中，最重要也是最难的是处理员工的情绪并让员工有责任感。在到达O之前，可能需要反复多次的PR。要记住PRO是用来转移责任感和处理问题意愿的，而非用于解决问题。</p>
+<h2 id="设定目标（G）"><a href="#设定目标（G）" class="headerlink" title="设定目标（G）"></a>设定目标（G）</h2><p>设定目标我认为是GROW模型中非常重要的一步，因为一个合适的目标才能让后面的工作更加顺利的进行，而现实中大部分员工的目标通常是太高或者太低，过高的目标定，几乎不可能做到，这时目标就成了摆设，失去了引导力，过低的目标太容易做到，员工容易自我满足，原地踏步。在设定目标这个过程中，管理者可以参考OKR的思想，将目标设定为有挑战的且可实现的。例如服务可用性达到100%，或线上bug数小于多少等。在制定目标的过程中，管理者应该通过不停的提问去引导员工自己制定一个合适的目标，因为自己定的目标会更有完成动力。如：你希望接下里的Q4做一些什么，在过程中你希望得到怎么样的帮助，你觉得这个目标对你的难度有多大，等等。</p>
+<h2 id="分析现状（R）"><a href="#分析现状（R）" class="headerlink" title="分析现状（R）"></a>分析现状（R）</h2><p>确定目标后，接下来需要分析当前的现状或问题。当前的情况是怎么样的，如上个季度的质量情况、服务可用率、性能等指标，并分析这些情况带来了什么影响。如性能不好带来的成本和隐患是什么。接着分析现状和目标之间的差距是什么，如服务可用率当前是99.9%，下个Q要做到100%，如当前线上缺陷密度是0.5，下个Q我们需要达到0.4等。询问员工自己怎么看到这些差距，怎么理解目标的设定，怎么看目标的可行性。在这个过程中，管理者需要通过大量的开放式提问，与员工再次确认对目标的理解一致，如果发现理解有不一致的情况，可以退回到第一步，重新讨论目标。</p>
+<h2 id="选择方案（O）"><a href="#选择方案（O）" class="headerlink" title="选择方案（O）"></a>选择方案（O）</h2><p>确定了目标，分析完现状，接着就是寻找解决方案了。在这一步，管理者不应该急着过早评价判断方案的好坏，而应该尽可能找出各种可能的解决方案。同时解决方案应尽可能由员工自己提出，管理者可以设定一些条件或前提，比如在保证质量的情况下，你觉得怎么才能提高交付效率。在这个阶段，管理者很容易会反客为主，没有去探寻员工的想法观点，反而在输出自己的想法，变成了告知。并不是说主动告知就一定不好，但我们这里讨论的目标主要是绩效比较好的员工，这种员工更适合于探寻挖掘为主，可以充分调动主动性。适当的沉默也可以在这个阶段发挥作用，当员工陷入思考时，不要急于去帮助他或给出自己的方案。</p>
+<h2 id="行动意愿（W）"><a href="#行动意愿（W）" class="headerlink" title="行动意愿（W）"></a>行动意愿（W）</h2><p>最后一步，确定行动意愿，确保员工对上一个阶段的方案有初步的行动计划，并且对计划充满信心。在这一步中，管理者需要表现出对即将采取的行动表示支持并积极参与其中。</p>
+<p>实践心得：在实际的应用过程中，有很多意料之外的情况需要灵活应用grow模型，在谈话的任何一个阶段都可能会跳跃到另一个阶段，并不一定是按顺序进行的。但有一个原则是确定的，要充分的沟通，积极的倾听，适时的回应。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;暖场&quot;&gt;&lt;a href=&quot;#暖场&quot; class=&quot;headerlink&quot; title=&quot;暖场&quot;&gt;&lt;/a&gt;暖场&lt;/h2&gt;&lt;p&gt;开场后，先简单聊一些非工作的内容，如最近的一些热门话题，或对方关注的话题，缓和气氛利于后续的沟通。这里不能太刻意，应尽量挑一些平时大家有聊过
+    
+    </summary>
+    
+      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
+    
+    
+      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
+    
+      <category term="管理" scheme="https://lchml.com/tags/%E7%AE%A1%E7%90%86/"/>
+    
+  </entry>
   
   <entry>
     <title>网易互客Mac版</title>
@@ -845,90 +992,6 @@
       <category term="LC" scheme="https://lchml.com/tags/LC/"/>
     
       <category term="科幻" scheme="https://lchml.com/tags/%E7%A7%91%E5%B9%BB/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>《万历十五年》</title>
-    <link href="https://lchml.com/book/wanlishiwunian/"/>
-    <id>https://lchml.com/book/wanlishiwunian/</id>
-    <published>2018-11-24T16:00:00.000Z</published>
-    <updated>2020-09-03T08:51:15.527Z</updated>
-    
-    <content type="html"><![CDATA[<p>几千年以来，以道德代替法治，最后导致了整个社会机器的停摆，作者认为道德应该被用于大方向，是追寻的目标，而具体的实施和细节的评判应该出于法治和技术，而非道德。（作者整体思想偏西化，有一种以西方文化看中国传统的感觉）</p>
-<p><img src="wlswn.jpg" alt=""></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;几千年以来，以道德代替法治，最后导致了整个社会机器的停摆，作者认为道德应该被用于大方向，是追寻的目标，而具体的实施和细节的评判应该出于法治和技术，而非道德。（作者整体思想偏西化，有一种以西方文化看中国传统的感觉）&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;wlswn.jpg&quot; al
-    
-    </summary>
-    
-      <category term="book" scheme="https://lchml.com/categories/book/"/>
-    
-    
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
-      <category term="历史" scheme="https://lchml.com/tags/%E5%8E%86%E5%8F%B2/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Grafana+InfluxDB构建项目数据大盘</title>
-    <link href="https://lchml.com/technology/grafana-influxdb-build/"/>
-    <id>https://lchml.com/technology/grafana-influxdb-build/</id>
-    <published>2018-11-09T16:00:00.000Z</published>
-    <updated>2018-11-10T04:46:53.709Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>在任何项目中，一个可以直观表示当前系统运行状态的数据大盘对开发和运维人员都是非常有价值的。通常互联网大厂内部都会有一些提供监控运维供的公共平台。比如网易内部有哨兵、NDP等。这些平台通常能完成各种监控数据采集和展示。但也正是因为作为公共服务平台，它们无法做到为每个业务产生定制化的数据展示服务，甚至是基于数据的自动运维能力。因此，当项目达到一定量级以后，构建项目自身的数据大盘和自动运维系统就非常必要了。</p>
-<p>目前业界使用最广泛的开源监控数据展示框架应属Grafana，它提供种类丰富的仪表盘，可以满足绝大多数的数据展示需求。同时它支持各种常见的数据库作为数据源，并对HQL做了可视化配置，可以快速搭建数据大盘。在数据源方便，虽然现在Grafana已经支持了MySQL之类的传统数据库和ElasticSearch之类的搜索引擎。但通常如果是作为数据大盘使用，最适合的还是时序数据库。时序数据库的数据存储方式本身就是完美匹配了监控数据的展示方式。在时序数据库中，InfluxDB属于老牌了，应该也是业界使用最广泛的时序数据库，其它常见的有OpenTSDB、Druid、Beringei，以及近年兴起的提供整套监控能力的Prometheus。至于选型的过程及原因这里就不做说明了。</p>
-<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><h3 id="InfluxDB搭建"><a href="#InfluxDB搭建" class="headerlink" title="InfluxDB搭建"></a>InfluxDB搭建</h3><p>InfluxDB单机搭建非常简单，首先在官方下载页面找到对应版本下载地址并下载到主机上。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget https://dl.influxdata.com/influxdb/releases/influxdb-1.6.4_linux_amd64.tar.gz</div></pre></td></tr></table></figure>
-<p>解压后进入influxdb-1.6.4-1文件夹，会看到里面有三个子文件夹：etc、usr、var。其中etc/influxdb中有配置文件influxdb.conf，用于配置各种启动参数和数据库属性。usr/bin目录中是启动脚本，influx是启动客户端程序，默认连接当前主机的默认地址和端口，influxd用于启动数据库。运行./influxd help可以看各种命令参数。位置文件中的各项配置都有英文注释，根据需求配置后以后。运行<code>./influxd &amp;</code>启动，默认端口是8086。</p>
-<p>启动以后就可以通过./influx运行客户端连接到当前数据库，influxdb的命令与mysql很接近，稍微看一下就可以学会了。其中有几个主要的常用概念：</p>
-<ul>
-<li>Database，表示数据库，与mysql的database类似。</li>
-<li>Measurement，描述数据库存储结构，可以理解为mysql的table概念，只是不需要手动创建，可以再写入数据时自动创建。</li>
-<li>Tag，类似于mysql中的字段，但是他不能被修改，且默认是被索引的。因此写入数据时最好都带上tag。只能是String类型</li>
-<li>Field，类似于mysql中的字段，可以被修改。支持类型有floats，integers，strings，booleans。</li>
-<li>Timestamp，每条数据都会有一个时间戳，精确到纳秒。</li>
-<li>Series，measurement, tag set, retention policy 相同的数据集合算做一个series。理解这个概念至关重要，因为这些数据存储在内存中，如果series太多，会导致OOM。</li>
-<li>Retention Policy，保留策略，可以在创建数据库时配置也可以在写入数据时指定，默认是永久保存，副本为1.</li>
-<li>Continuous Query，CQ 是预先配置好的一些查询命令，定期自动执行这些命令并将查询结果写入指定的 measurement 中，这个功能主要用于数据聚合。具体可参考：<a href="https://docs.influxdata.com/influxdb/v1.2/query_language/continuous_queries/" target="_blank" rel="external">官方文档</a>。</li>
-<li>Shard，存储一定时间间隔的数据，每个目录对应一个shard，目录的名字就是shard id。每一个shard都有自己的cache、wal、tsm file 以及 compactor，目的就是通过时间来快速定位到要查询数据的相关资源，加速查询的过程，并且也让之后的批量删除数据的操作变得非常简单且高效。</li>
-</ul>
-<p>目前官方说明，在1.7以后的版本中，将不再开源InfluxDB的集群模式。1.7及之前版本还可以通过官方的集群模式来部署高可用的InfluxDB集群。</p>
-<h3 id="Grafana搭建"><a href="#Grafana搭建" class="headerlink" title="Grafana搭建"></a>Grafana搭建</h3><p>完成数据库搭建以后，接下来就是前端展示框架Grafana的搭建。同样在官网上找到对应的下载地址并下载到主机。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-5.3.2.linux-amd64.tar.gz</div></pre></td></tr></table></figure>
-<p>解压后进入grafana-5.3.2文件夹，其中conf/default.ini用于各种参数配置，bin/grafana-server用于启动grafana服务。我们主要需要对defalut.ini中的参数进行修改。首先[path]目录下是关于数据库存储的一些配置，可以不修改。[server]目录下是关于服务的一些参数，如果是提供https访问，就需要把protocol改为https，并设置对应的cert_file和cert_key。http_port是提供服务的端口，domain是提供服务的域名。要注意，如果配置了domain但是又不是通过domain来访问Grafana的话会导致服务器不可用，并在页面会提示你。其中有一个root_url的配置需要注意，如果需要配置公司内的Opneid登陆，那么这个root_url会作为openbid认证的跳转链接。需要配置为在openid认证注册的跳转url。</p>
-<p>接下来是Database目录，用于配置grafana自身的sqlite的配置。默认sqlite3文件在data/grafana.db，可以通过sqlite3客户端直接访问，其中存储了一些用户信息数据和监控表盘配置数据。</p>
-<p>再往下有各种认证支持的配置，如Google OAuth,Github OAuth等等，如果要接入公司内的Openid认证，那就找到Generic OAuth目录，把enable改为true，并配置上oauth相关的参数。如果没问题的话，这时候刷新页面应该就可以通过openid登录了。如果为了数据安全，不想让全公司的人都可以看，那就把其中allow_sign_up一项改为false，这样的话，用户就需要通过邀请才能登录。</p>
-<p>其它各种配置这里就不一一说明了，基本都有英文注释，很容易看懂。</p>
-<p>启动Grafana以后，首先以admin的默认账号登录，系统会引导你修改账号密码，创建dashboard等操作。如果是只允许openid用户登录，建议把普通登录框隐藏掉。disable_login_form改为false。不过这里似乎有个小bug，当隐藏了登录框以后，邀请用户的按钮会消失，不过可以直接在url上输入/org/users/invite进入邀请页面。如果想要发送邀请邮件，需要在default.ini中配置stmp相关的参数。不配置的话，也可以直接在邀请页面把邀请链接复制给对方。</p>
-<h3 id="数据采集"><a href="#数据采集" class="headerlink" title="数据采集"></a>数据采集</h3><p>数据采集工作，就根据业务的需求来定制了，可以从公共监控平台获取已经采集好的数据按时序导入到Influxdb，也可以通过kafka得到业务抄送出来的直接数据，自己做清洗分析以后导入influxdb。还可以从ElasticSearch中获取采集好的日志，分析以后导入。总之数据源可以来自各种途径。</p>
-<h3 id="表盘插件"><a href="#表盘插件" class="headerlink" title="表盘插件"></a>表盘插件</h3><p>Grafana支持插件模式，比如比较常用的Pie Chart和WorldMap，可以在官网上看到安装和实用方式。</p>
-<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><p>在搭建好基础的监控系统以后，接下来就可以根据数据分析得到的结果来进行自动运维的工作，如自动拉起进程，自动调整路由权重等等，这快内容相对就更加复杂和个性化了，在以后的文章中再另做分析。</p>
-<h2 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h2><p><img src="grafana-influxdb-build.png" alt=""></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;分析&quot;&gt;&lt;a href=&quot;#分析&quot; class=&quot;headerlink&quot; title=&quot;分析&quot;&gt;&lt;/a&gt;分析&lt;/h2&gt;&lt;p&gt;在任何项目中，一个可以直观表示当前系统运行状态的数据大盘对开发和运维人员都是非常有价值的。通常互联网大厂内部都会有一些提供监控运维供的公共平
-    
-    </summary>
-    
-      <category term="technology" scheme="https://lchml.com/categories/technology/"/>
-    
-    
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
-      <category term="Grafana" scheme="https://lchml.com/tags/Grafana/"/>
-    
-      <category term="InfluxDB" scheme="https://lchml.com/tags/InfluxDB/"/>
-    
-      <category term="数据大盘" scheme="https://lchml.com/tags/%E6%95%B0%E6%8D%AE%E5%A4%A7%E7%9B%98/"/>
     
   </entry>
   
