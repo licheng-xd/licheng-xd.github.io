@@ -1,48 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>LC&#39;s Blog</title>
+  <title>李城的博客</title>
   <subtitle>旅行的代码</subtitle>
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://lchml.com/"/>
-  <updated>2020-11-18T01:49:19.426Z</updated>
+  <updated>2021-02-07T02:37:26.344Z</updated>
   <id>https://lchml.com/</id>
   
   <author>
-    <name>LC&amp;HML</name>
+    <name>李城,何美玲</name>
     
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>团队研发效能提升实践</title>
+    <title>网易互客敏捷交付实践</title>
     <link href="https://lchml.com/technology/scrum/"/>
     <id>https://lchml.com/technology/scrum/</id>
-    <published>2020-11-17T16:00:00.000Z</published>
-    <updated>2020-11-18T01:49:19.426Z</updated>
+    <published>2021-02-06T16:00:00.000Z</published>
+    <updated>2021-02-07T02:37:26.344Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
-<p>随着业务越来越复杂，团队越来越大，需求越来越多，研发效率增长不能跟上团队人数增长。因此我在Q4开始主导互客研发团队的敏捷交付转型，以下是实践过程中的一些心得。</p>
+<p>敏捷开发的一个重要目标是建立持续价值交付的能力。这种能力最终必须服务于业务的创新，促进业务的成功。</p>
 </blockquote>
-<h2 id="研发效能"><a href="#研发效能" class="headerlink" title="研发效能"></a>研发效能</h2><p>在互联网时代，任何事情都充满了变化，要求团队通过快速的迭代交付来应对快速变化的环境。对于研发团队来说，研发效能正是衡量这一能力的指标。我们可以把研发效能理解为持续快速交付价值的能力。</p>
-<h2 id="瀑布模型"><a href="#瀑布模型" class="headerlink" title="瀑布模型"></a>瀑布模型</h2><p>产品的交付通常需要多个职能的共同协作，如产品、交互、视觉、前端、后端、测试、算法等等。在传统的研发流程中，各个职能部门通常根据瀑布模型来交付需求版本。如下图：<br><img src="2020-11-18-09-48-57.png" alt=""></p>
-<p>在瀑布模型中，版本需求、时间、资源是确定的，三个因素相互制约。业务按照固定的节奏进行迭代交付。该模型最大的优势在于可预测性，流程简单，有固定的时间点。但同时带来的问题是缺乏灵活性，进入版本后，调整需求或时间的代价会非常大，并且版本越大时带来的风险和不确定性越大。大多数研发团队采用的正是瀑布模型。</p>
-<h2 id="敏捷模型"><a href="#敏捷模型" class="headerlink" title="敏捷模型"></a>敏捷模型</h2><p>在敏捷模式中，在固定的时间内（迭代周期）将一个版本拆分为一个个可以独立交付上线的需求，优先交付高优先级（高价值）的需求。如下图：<br><img src="2020-11-18-09-49-15.png" alt=""></p>
-<p>敏捷模式最大的优势是非常灵活，可以根据实际情况随时调整需求，同时由于交付单元限定在最小范围内，使得上线发布的影响范围最小，风险可控，也可以提高交付质量。并且可以在尽可能短的时间内交付尽可能高的价值。</p>
-<h2 id="落地实践"><a href="#落地实践" class="headerlink" title="落地实践"></a>落地实践</h2><p>进行敏捷交付的转型前，要先进行足够多的调研和沟通工作，如学习公司内部外部已经做到敏捷交付的团队的经验，并邀约分享。如我就多次要求了PM研发团队的旭东向我们团队分享他们的经验。接着制定初步的方案，比如可以进行小范围的实践，完善工具和流程，并根据实践逐步调整，最后落地到整个团队。在转型的过程中，我总结出的四个最重要的要素，分别是：环境、流程、工具、人。</p>
-<p>首先想要进行敏捷交付，需要有能适应敏捷模型的研发环境，包括微服务的架构、边界清晰的业务、可以独立开发测试环境隔离能力，如果研发环境本身还是非常耦合，牵一发而动全身的情况，那就很去难实现敏捷的交付方式。</p>
-<p>其次需要制定合理的流程规范。从需求评审、拆分、分优先级到技术方案评审、时间规划、提测标准，最后代码分支管理、测试用例、自动化回归。团队中的每个人必须严格按照流程进行，因为越灵活的方案，背后意味着更多的不可控，所以严格执行流程是非常必要的。</p>
-<p>然后是工具，工具和流程是相辅相成的，没有工具，再完美的流程也难以得到良好的执行，因此敏捷的交付需要有相对应的支持工具，并需要让团队的每个成员都熟练的使用该工具。公司PM部门提供的Overmind平台就可以很好的支持敏捷交付的需求。</p>
-<p>最后是人，不管是环境、流程还是工具，最后一定都是需要人去执行的，也就是团队中的每个成员，因此团队成员的思维转变是转型中的重点，在工作进行前，首先应该在团队内进行足够的沟通，让每个人理解转型的价值和意义，让每个人都愿意为之努力。<strong>当团队达成一致的目标时，离成功就已经不远了</strong>。</p>
+<p>不知道大家最近有没有关注新闻，阿里开始拆中台了，张勇对目前阿里的中台并不满意，他直言，现在阿里的业务发展太慢，要把中台变薄，要变得敏捷和快速。很显然，敏捷对业务有着非常高的价值。</p>
+<h2 id="面临的问题"><a href="#面临的问题" class="headerlink" title="面临的问题"></a>面临的问题</h2><p>在过去的开发中，我们面临很多问题，如：</p>
+<ul>
+<li>临时调整需求，牵一发而动全身。大家应该经常碰到离版本上线没几天了，产品说有个很重要的需求必须得加急上，不上不行。这种临时的需求调整，对版本的交付影响是很大的。</li>
+<li>因为一个不重要的需求，延期整个版本的上线。上线当天，可能发现有一个不是很重要的点有问题，这个时候，整个版本都必须等这个问题解决，有时候直接回导致版本的延期，或者产生很多临时方案。</li>
+<li>整个团队上线发布到凌晨。由于一个版本交付的内容太多了，准备工作很长，影响的范围也很大，通常会安排在晚上做发布，而发布过程中只要遇到一两个问题，通常发布就会搞到凌晨甚至后半夜。</li>
+<li>有checklist依然不能避免遗漏。同样也是当版本越大，内容越多时，就越容易遗漏。</li>
+<li>不同价值的需求，相互影响。一个版本中通常会包含各种优先级的需求，而不同优先级的需求同时开发交付，就一定会存在相互影响的问题。</li>
+<li>需求相互耦合，上线交叉感染。这是指什么呢？一个版本上线出现问题时，由于上线的内容很多，定位问题就会变得更困难，不能确定是哪个需求的变更引起的问题。我们就出现过相互认为是对方的需求有问题，而浪费了很长时间。</li>
+<li>产研团队交付效率上不去。所有问题最后都导致了交付效率上不去，交付质量上不去。<br>相信大家也有碰到过和我们类似的这些问题。这其中有很多问题，都是可以通过敏捷交付来解决或减轻。<br><img src="scrum1.png" alt=""></li>
+</ul>
+<h2 id="敏捷VS瀑布"><a href="#敏捷VS瀑布" class="headerlink" title="敏捷VS瀑布"></a>敏捷VS瀑布</h2><p>那什么是敏捷呢？关于敏捷模式和瀑布模式的理论知识，相信大家都已经有些了解，这里就不细说其中的理论知识了。我们把敏捷和瀑布的区别简单理解为，瀑布是按版本交付的，敏捷是按需求交付的。<br>瀑布模式中版本的需求、时间、资源是确定的，三个因素相互制约。最大的优势在于可预测性，流程简单，有固定的时间点。但同时带来的问题是缺乏灵活性，进入版本后，调整需求或时间的代价会非常大，并且版本越大时带来的风险和不确定性越大。大多数研发团队采用的都是瀑布模型。敏捷模式中需求变成了变量，在固定时间和资源的情况下，灵活调整需求，从而获得最大交付加值。<br>如图所示，瀑布模式中整个团队按步骤一步步执行，最终全量交付。而在敏捷模式中，在固定的时间内（迭代周期）将一个版本拆分为一个个可以独立交付上线的需求，优先交付高优先级（高价值）的需求，并由一个个独立的小团队负责交付。最大的优势是非常灵活，可以根据实际情况随时调整需求，同时由于交付单元限定在最小范围内，使得上线发布的影响范围最小，风险可控，也可以提高交付质量。目标是在尽可能短的时间内交付尽可能高的价值。<br><img src="scrum2.png" alt=""></p>
+<h2 id="先试点再推广"><a href="#先试点再推广" class="headerlink" title="先试点再推广"></a>先试点再推广</h2><p>进行敏捷交付的转型前，我们进行了很多调研和沟通工作，学习公司内部外部已经实现敏捷交付的团队的经验。然后制定了初步的方案，并在小范围内进行试点，试点过程中不断调整方案，调试工具，当试点方案执行顺利以后再推广到整个团队。互客刚开始的时候，就是选择其中一些比较小的简单的需求来进行试点的。在转型的过程中，我们总结出四个重要的要素，分别是：环境、流程、工具、人。<br><img src="scrum3.png" alt=""></p>
+<h2 id="需要准备什么"><a href="#需要准备什么" class="headerlink" title="需要准备什么"></a>需要准备什么</h2><h3 id="系统架构"><a href="#系统架构" class="headerlink" title="系统架构"></a>系统架构</h3><p>首先想要进行敏捷交付，需要有能适应敏捷模型的研发环境，包括系统的合理拆分、边界清晰的业务、可以进行独立开发测试的环境隔离能力。要有平滑发布的能力，任何时间发布任何服务不应该因为发布动作本身引起问题。还需要有完善的监控可以实时反馈系统的异常，特别在实践初期总会有意外情况，研发应该能第一时间获知系统发生异常。如果研发环境本身还是非常耦合，牵一发而动全身的情况，需求的负责人都不知道影响范围在哪里。那就很去难实现敏捷的交付方式。如果没有准确的异常监控能力，会有很大的风险。因此合理的架构是敏捷的基础<br><img src="scrum4.png" alt=""></p>
+<h3 id="流程规范"><a href="#流程规范" class="headerlink" title="流程规范"></a>流程规范</h3><p>然后是流程规范。从需求拆分、时间规划、代码分支管理、技术方案评审、测试报告、发布审核、自动化回归。团队中的每个人必须严格按照流程进行，因为越灵活的方案，背后意味着更多的不可控。所以在转型初期，严格执行流程是非常必要的。<br>敏捷交付的前提是需求必须是合理拆分的，而我们对合理的定义就是，可以独立交付上线的称为一个需求。如果两个需求之间是相互耦合的，少了其中一个，另一个需求都不能独立交付。那么这样的需求就是不合理的，应该合并为一个需求。<br>这个是互客上一个版本的需求列表，以及分工，时间规划等等。可以看到大部分是正常需求，黄色部分是比较大的不跟版本的需求，红色和划线的是延期或取消的需求。需求的交付变成了一个灵活的过程。<br><img src="scrum5.png" alt=""></p>
+<p>这个是我们的需求分支管理，非常简单，大家都能看懂。其中比较重要的是一定要经常从master合最新代码到自己的feature分支。<br><img src="scrum6.png" alt=""></p>
+<h3 id="实施工具"><a href="#实施工具" class="headerlink" title="实施工具"></a>实施工具</h3><p>工具是流程的承载，没有合适的工具是很难把流程执行起来的。网易内部的ovemrind效能平台可以很好的支持我们的流程，配合飞书文档，TC平台和gotest平台，基本上可以比较好的支持整个流程了。下面的截图是某一天下午的发布单，可以看到一下午就有多次发布。<br><img src="scrum7.png" alt=""></p>
+<h3 id="团队组织"><a href="#团队组织" class="headerlink" title="团队组织"></a>团队组织</h3><p>最后我们需要根据敏捷交付的逻辑去适当的调整团队的组织形式，原先的团队组织形式，边界在于职能，所有的需求在不同的职能间流转，最后由版本负责人负责交付上线。这种模式下，各职能团队的人只能接触到自己工作范围内的东西，所以对需求的理解程度高低不等，当产生需求变更时，也更容易产生抵触情绪，当出现调整或返工时也会付出很大的代价。<br>右边是为了适应敏捷交付调整的组织形式，每个需求都会有一个临时的虚拟小组来负责，需求只在这个小组内部流转，最后由需求负责人交付上线。在这种模式下，团队组织的边界不再是职能，而在于需求。虚拟小组的成员需要关心一个需求的全生命周期，能更好的理解需求。当有需求变更时，影响范围也相对小得多。并且通常会在方案设计过程中研发和产品一起讨论调整需求。<br>不管是环境、流程还是工具，最后一定都是需要人去执行的，也就是团队中的每个成员。因此团队成员的思维转变是敏捷转型中的重点，在工作进行前，首先应该在团队内进行足够的沟通，让每个人理解转型的价值和意义，让每个人都愿意为之努力。当团队达成一致的目标时，离成功就已经不远了。<br><img src="scrum8.png" alt=""></p>
+<h2 id="得到了什么"><a href="#得到了什么" class="headerlink" title="得到了什么"></a>得到了什么</h2><p>这是互客过去几个版本的需求吞吐量，缺陷密度（七八月份由于需求统计问题，需要除以二），不管质量还是吞吐量都是有比较明显的提升的。<br><img src="scrum9.png" alt=""><br><img src="scrum10.png" alt=""></p>
+<p>当然，我觉得更重要的是，我们得到了持续快速的交付价值的能力，得到了沟通顺畅，相互信任的团队。另外从我个人做需求感觉来说，在敏捷模式下，我对需求的理解会更好，工作会变的更聚焦，会自然而然的关注需求从评审到上线的整个过程，会及时的关注自己的需求的情况等等。比如今天就有一单，是因为我们上了一个数据看板的需求，客户的下单直观的反馈到了这个需求的负责团队，这可以让产研统一目标，相互促进，产生良性循环。<br><img src="scrum11.png" alt=""></p>
+<h2 id="经验总结"><a href="#经验总结" class="headerlink" title="经验总结"></a>经验总结</h2><p>在网易互客实践敏捷交付的过程中我们踩了许多坑，这里列举一些比较典型的例子，希望可以帮助大家少走一点点弯路。</p>
+<ul>
+<li>不要过分追求模式，我们的目标是质量和效率，而不是模式</li>
+<li>沟通，充分的沟通，要达成理解一致</li>
+<li>转型初期流程要严格执行</li>
+<li>需求一定要有负责人</li>
+<li>需求交付尽量不要搭车，容易搭到黑车</li>
+<li>对质量负责的不是QA，是每个需求的小组</li>
+<li>系统实时反馈很重要<br>最后期望所有的研发团队都能让有限的资源产生最大的价值。</li>
+</ul>
+<h2 id="未来规划"><a href="#未来规划" class="headerlink" title="未来规划"></a>未来规划</h2><p><img src="scrum12.png" alt=""></p>
 ]]></content>
     
     <summary type="html">
     
       &lt;blockquote&gt;
-&lt;p&gt;随着业务越来越复杂，团队越来越大，需求越来越多，研发效率增长不能跟上团队人数增长。因此我在Q4开始主导互客研发团队的敏捷交付转型，以下是实践过程中的一些心得。&lt;/p&gt;
+&lt;p&gt;敏捷开发的一个重要目标是建立持续价值交付的能力。这种能力最终必须服务于业务的创新，促进业务的成功。&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;h2 id=&quot;研发效能&quot;&gt;&lt;a href=&quot;#研发
+&lt;p&gt;不知道大家最近有没有关注新闻，阿里开始拆中台了，张勇对目前阿里的中台并不满意，他直言，现在阿里的业务发展太
     
     </summary>
     
@@ -60,7 +81,7 @@
     <link href="https://lchml.com/technology/team-manager/"/>
     <id>https://lchml.com/technology/team-manager/</id>
     <published>2020-11-11T16:00:00.000Z</published>
-    <updated>2020-11-12T05:42:45.747Z</updated>
+    <updated>2021-02-07T02:47:59.738Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>如果你能让一个组织中的所有成员齐心协力，你就可以在任何时候、任何市场状况下、任何行业中纵横驰骋，战胜挑战。</p>
@@ -161,9 +182,9 @@
       <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
       <category term="管理" scheme="https://lchml.com/tags/%E7%AE%A1%E7%90%86/"/>
+    
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
     
   </entry>
   
@@ -172,7 +193,7 @@
     <link href="https://lchml.com/technology/pro-grow/"/>
     <id>https://lchml.com/technology/pro-grow/</id>
     <published>2020-11-02T16:00:00.000Z</published>
-    <updated>2020-11-12T05:40:00.191Z</updated>
+    <updated>2021-02-07T02:47:19.964Z</updated>
     
     <content type="html"><![CDATA[<h2 id="暖场"><a href="#暖场" class="headerlink" title="暖场"></a>暖场</h2><p>开场后，先简单聊一些非工作的内容，如最近的一些热门话题，或对方关注的话题，缓和气氛利于后续的沟通。这里不能太刻意，应尽量挑一些平时大家有聊过的话题。</p>
 <h2 id="呈现（P）"><a href="#呈现（P）" class="headerlink" title="呈现（P）"></a>呈现（P）</h2><p>暖场后可以做出一些开放性提问，如：过去一个季度觉得怎么样？自己有哪些满意或不满意的地方？引导员工去回忆思考，尝试总结过去一个季度的工作。部分员工可能会忘了过去自己做了些什么，可以适当做一些提醒，如xxx技术优化的工作就做的很不错，或xxx需求比较难，最后按时上线了。这就要求管理者沟通前需要做好充分的准备，不能自己都不知道员工做了一些什么。在这个阶段尽量先不要去讨论工作结果的好坏，更多的是引导员工主动去回忆思考。当回忆的内容差不多了，最后再告知绩效结果。</p>
@@ -196,9 +217,9 @@
       <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
       <category term="管理" scheme="https://lchml.com/tags/%E7%AE%A1%E7%90%86/"/>
+    
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
     
   </entry>
   
@@ -207,7 +228,7 @@
     <link href="https://lchml.com/technology/pyqt/"/>
     <id>https://lchml.com/technology/pyqt/</id>
     <published>2020-09-08T16:00:00.000Z</published>
-    <updated>2020-09-09T03:11:05.507Z</updated>
+    <updated>2021-02-07T02:47:23.533Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>网易互客Mac版：<a href="https://drive.google.com/file/d/1yzJEVV1U20pl7Zg7sZB2zK60HTy6F_S1/view?usp=sharing" target="_blank" rel="external">下载地址</a></p>
@@ -239,9 +260,9 @@
       <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
       <category term="python" scheme="https://lchml.com/tags/python/"/>
+    
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
     
   </entry>
   
@@ -250,7 +271,7 @@
     <link href="https://lchml.com/book/xiangcunjiaoshi/"/>
     <id>https://lchml.com/book/xiangcunjiaoshi/</id>
     <published>2020-08-28T16:00:00.000Z</published>
-    <updated>2020-09-03T09:37:07.345Z</updated>
+    <updated>2021-02-07T02:48:43.355Z</updated>
     
     <content type="html"><![CDATA[<p>看过大刘的三体，惊叹其想象力和宏大的世界观。这本书是一些短篇的合集，整体来说依旧是大刘风格的宇宙，一个星系乃至宇宙都是可以被轻易毁灭的世界。其中有几篇非常精彩，非常有想象力。也有几篇给人重复的感觉。总体来说依旧是很优秀的科幻作品。</p>
 <p><img src="xcjs.jpg" alt=""></p>
@@ -266,9 +287,9 @@
       <category term="book" scheme="https://lchml.com/categories/book/"/>
     
     
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
       <category term="科幻" scheme="https://lchml.com/tags/%E7%A7%91%E5%B9%BB/"/>
+    
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
     
   </entry>
   
@@ -277,7 +298,7 @@
     <link href="https://lchml.com/book/jiangjieshi/"/>
     <id>https://lchml.com/book/jiangjieshi/</id>
     <published>2020-05-03T16:00:00.000Z</published>
-    <updated>2020-09-03T08:55:23.622Z</updated>
+    <updated>2021-02-07T02:46:24.657Z</updated>
     
     <content type="html"><![CDATA[<p>作为传记，书本身写的不够精彩，中间有大篇幅的流水叙事。但作为历史，可以了解到很多你本来可能不了解的是。蒋的一生在中国近现代史，甚至整个中国历史上都是非常重要的一段。对比毛泽东传，本书少了很多主观评判，坐着尽量都以客观的态度在叙述发生过的历史事件。和毛一样，蒋也有着功过是非复杂多变的一生。（有一点记忆深刻，蒋给世人留下的映像总是儒雅温和，符合儒家文人形象。但他在年轻时，脾气极差，并且流连烟花场所，身染性病。）</p>
 <p><img src="jjs.jpg" alt=""></p>
@@ -297,9 +318,9 @@
       <category term="book" scheme="https://lchml.com/categories/book/"/>
     
     
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
       <category term="传记" scheme="https://lchml.com/tags/%E4%BC%A0%E8%AE%B0/"/>
+    
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
     
   </entry>
   
@@ -308,7 +329,7 @@
     <link href="https://lchml.com/technology/two-bugs/"/>
     <id>https://lchml.com/technology/two-bugs/</id>
     <published>2020-05-02T16:00:00.000Z</published>
-    <updated>2020-05-04T06:43:01.529Z</updated>
+    <updated>2021-02-07T02:48:30.060Z</updated>
     
     <content type="html"><![CDATA[<p>好久没有写东西了，下个月要给智慧企业技术公众号写一篇文章，得抓紧时间找找感觉了，就记录一下最近业务上遇到的两个小问题吧。</p>
 <h2 id="httpclient请求偶现异常"><a href="#httpclient请求偶现异常" class="headerlink" title="httpclient请求偶现异常"></a>httpclient请求偶现异常</h2><p>业务上请求第三方http服务时，偶尔会出现<code>org.apache.http.NoHttpResponseException: The target server failed to respond</code>异常报警。一开始以为是对方服务的偶尔不可能用，但后来发现对于多个第三方服务都会出现一样的情况，那基本可以断定问题是出在自己这里。（当觉得别人都有问题的时候，要想一下是不是自己有问题。）</p>
@@ -340,8 +361,6 @@
       <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
       <category term="Java" scheme="https://lchml.com/tags/Java/"/>
     
       <category term="httpclient" scheme="https://lchml.com/tags/httpclient/"/>
@@ -352,6 +371,8 @@
     
       <category term="crash" scheme="https://lchml.com/tags/crash/"/>
     
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
+    
   </entry>
   
   <entry>
@@ -359,7 +380,7 @@
     <link href="https://lchml.com/book/maozedong/"/>
     <id>https://lchml.com/book/maozedong/</id>
     <published>2020-02-23T16:00:00.000Z</published>
-    <updated>2020-09-03T08:55:18.042Z</updated>
+    <updated>2021-02-07T02:46:49.536Z</updated>
     
     <content type="html"><![CDATA[<p>与人斗其乐无穷，“斗争”从始至终贯穿了他的一生，从少年时代与父亲斗到晚年与自己的战友同事斗，他坚信斗争才能让人进步，青年时的心怀天下到晚年带有虚幻色彩的哲学思想，都展示了他注定不平凡的一生，无论是非功过，他都将影响几代人甚至几十代中国人的生活和思想。</p>
 <p><img src="mzd.jpg" alt=""></p>
@@ -382,9 +403,9 @@
       <category term="book" scheme="https://lchml.com/categories/book/"/>
     
     
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
       <category term="传记" scheme="https://lchml.com/tags/%E4%BC%A0%E8%AE%B0/"/>
+    
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
     
   </entry>
   
@@ -393,7 +414,7 @@
     <link href="https://lchml.com/book/napolun/"/>
     <id>https://lchml.com/book/napolun/</id>
     <published>2019-12-24T16:00:00.000Z</published>
-    <updated>2020-09-03T09:33:00.423Z</updated>
+    <updated>2021-02-07T02:46:59.157Z</updated>
     
     <content type="html"><![CDATA[<p>这本书写的实在有些太冗长了，以至于最后我没能读完。内容更多的集中在对拿破仑的生活和个人心理活动方面，对生平事迹的着墨偏少，看着着实有些犯困。</p>
 <p><img src="npl.jpg" alt=""></p>
@@ -410,9 +431,9 @@
       <category term="book" scheme="https://lchml.com/categories/book/"/>
     
     
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
       <category term="传记" scheme="https://lchml.com/tags/%E4%BC%A0%E8%AE%B0/"/>
+    
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
     
   </entry>
   
@@ -421,7 +442,7 @@
     <link href="https://lchml.com/technology/delayq/"/>
     <id>https://lchml.com/technology/delayq/</id>
     <published>2019-11-22T16:00:00.000Z</published>
-    <updated>2019-11-22T07:24:47.048Z</updated>
+    <updated>2021-02-07T02:45:33.351Z</updated>
     
     <content type="html"><![CDATA[<h2 id="延时-定时队列"><a href="#延时-定时队列" class="headerlink" title="延时/定时队列"></a>延时/定时队列</h2><p>延时/定时消息是指生产者(producer)发送消息到server后，server并不将消息立即发送给消费者(consumer)，而是在producer指定的时间之后送达。<br>比如在电商交易中，经常有这样的场景：下单后如果半个小时内没有支付，自动将订单取消。那么如果不使用延时/定时消息，则一般的做法是使用定时任务定期扫描订单状态表，如果半个小时后订单状态还未支付，则将订单取消。而使用延时/定时消息实现起来更高效更优雅：用户下单后，发送一个延时消息，指定半个小时后消息送达，那么消费者在半个小时后收到消息就查询消息状态，如果这个时候订单是未支付状态，则取消订单。</p>
 <p>Kafka是目前行业使用最广泛的消息队列之一，大部分业务系统中都会部署kafka作为消息队列来实现异步解耦，但是kafka本身并不支持延时投递的能力。RocketMq是阿里基于kafka的理念用java实现的一个消息队列，在开源版本中它也只支持了某几个特定时长的延时投递，满足不了大部分业务场景。因此我们基于kafka实现了自研的延时消息队列，该延时队列基于Kafka扩展，使用方只需对接kafka接口，而无需关心延时队列服务的存在，接入方便快捷。</p>
@@ -442,8 +463,6 @@
       <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
       <category term="消息队列" scheme="https://lchml.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/"/>
     
       <category term="MQ" scheme="https://lchml.com/tags/MQ/"/>
@@ -452,6 +471,8 @@
     
       <category term="延时消息" scheme="https://lchml.com/tags/%E5%BB%B6%E6%97%B6%E6%B6%88%E6%81%AF/"/>
     
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
+    
   </entry>
   
   <entry>
@@ -459,7 +480,7 @@
     <link href="https://lchml.com/book/dafenqi/"/>
     <id>https://lchml.com/book/dafenqi/</id>
     <published>2019-10-24T16:00:00.000Z</published>
-    <updated>2020-09-04T10:15:05.459Z</updated>
+    <updated>2021-02-07T02:44:08.954Z</updated>
     
     <content type="html"><![CDATA[<p>在达芬奇身上你会觉得天才有时候真的是天生的，天然的对事物充满好奇心，所有理所应当的事在达芬奇眼里都变成了问题。以私生子的身份出生，但幸运的在一个对私生子习以为常的社会中，一生最大的最求并不是绘画，而是军事工程，最后却留下了无数艺术传奇。达芬奇能一生最求艺术也有美第奇家族的功劳。</p>
 <p><img src="dfq.jpg" alt=""></p>
@@ -474,9 +495,9 @@
       <category term="book" scheme="https://lchml.com/categories/book/"/>
     
     
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
       <category term="传记" scheme="https://lchml.com/tags/%E4%BC%A0%E8%AE%B0/"/>
+    
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
     
   </entry>
   
@@ -485,7 +506,7 @@
     <link href="https://lchml.com/book/rlqxsys/"/>
     <id>https://lchml.com/book/rlqxsys/</id>
     <published>2019-07-21T16:00:00.000Z</published>
-    <updated>2020-09-03T09:20:38.904Z</updated>
+    <updated>2021-02-07T02:47:35.995Z</updated>
     
     <content type="html"><![CDATA[<p>本书名气很大，但内容其实一般，一方面可能是时代所限，一方面有太多作者作为诗人主观的浪漫主义色彩，可以当做小故事传记来看。</p>
 <p><img src="rlqxsys.jpg" alt=""></p>
@@ -502,9 +523,9 @@
       <category term="book" scheme="https://lchml.com/categories/book/"/>
     
     
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
       <category term="传记" scheme="https://lchml.com/tags/%E4%BC%A0%E8%AE%B0/"/>
+    
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
     
   </entry>
   
@@ -513,7 +534,7 @@
     <link href="https://lchml.com/technology/log/"/>
     <id>https://lchml.com/technology/log/</id>
     <published>2019-06-02T16:00:00.000Z</published>
-    <updated>2019-06-03T03:22:48.791Z</updated>
+    <updated>2021-02-07T02:46:45.386Z</updated>
     
     <content type="html"><![CDATA[<p>日志对于一个软件系统的重要程度是不言而喻的，线上问题定位、运营数据统计、用户画像分析、系统状态监控等都离不开日志。然而，由于日志通常与业务系统的核心能力没有直接关联，所以经常会被开发人员忽视。对于一些简单的小规模应用程序，也许不需要在日志上花费大量精力。但是对于高复杂度的大型系统来说，日志是保证系统可靠运行必不可少的一环。</p>
 <h2 id="日志需要包含什么内容"><a href="#日志需要包含什么内容" class="headerlink" title="日志需要包含什么内容"></a>日志需要包含什么内容</h2><blockquote>
@@ -563,11 +584,11 @@
       <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
       <category term="Java" scheme="https://lchml.com/tags/Java/"/>
     
       <category term="日志" scheme="https://lchml.com/tags/%E6%97%A5%E5%BF%97/"/>
+    
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
     
   </entry>
   
@@ -576,7 +597,7 @@
     <link href="https://lchml.com/book/yangmingxueshuyao/"/>
     <id>https://lchml.com/book/yangmingxueshuyao/</id>
     <published>2019-05-31T16:00:00.000Z</published>
-    <updated>2020-09-03T09:16:08.351Z</updated>
+    <updated>2021-02-07T02:48:45.467Z</updated>
     
     <content type="html"><![CDATA[<p>知行合一，未有知而不行者，知而不行只是未知。无善无恶心之体，有善有恶意之动，知善知恶是良知，存善去恶是格物。圣人只在成色上争，不在分量上争。阳明之约多被后世所误读，偏离本意。阳明心学是中华儒家文化之瑰宝，可惜现代社会已经让大家没有时间没有精力去悟。</p>
 <p><img src="ymxsy.jpg" alt=""></p>
@@ -592,9 +613,9 @@
       <category term="book" scheme="https://lchml.com/categories/book/"/>
     
     
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
       <category term="心学" scheme="https://lchml.com/tags/%E5%BF%83%E5%AD%A6/"/>
+    
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
     
   </entry>
   
@@ -603,7 +624,7 @@
     <link href="https://lchml.com/book/zengguofan/"/>
     <id>https://lchml.com/book/zengguofan/</id>
     <published>2019-05-24T16:00:00.000Z</published>
-    <updated>2020-09-03T08:08:37.766Z</updated>
+    <updated>2021-02-07T02:48:57.307Z</updated>
     
     <content type="html"><![CDATA[<p>最近花了一个星期时间读完了张宏杰写的《曾国藩传》，从小就听说过各种人对曾国藩的崇拜和敬仰。这次终于系统的了解曾国藩的一生。作为中国传统文化的最后一个精神偶像，曾国藩用一生的努力实践了儒家立行、立言、立德。成为晚清第一重臣，挽狂澜于既倒，扶大厦之将倾，镇压太平天国运动，维护中华儒家文化，发起洋务运动，以开放的心态带领中国走出了现代化的第一步，以一人之力为腐朽的清帝国又续命了几十年。然而朝代的更替和历史的进程已经超出了个人能力的范围，最后清政府依然在1912年终于倒下，中国人民，中华文化在一片混乱，外强环绕之中步履蹒跚的走向下一个时代。</p>
 <p><img src="zengguofan.png" alt="zengguofan"></p>
@@ -620,6 +641,8 @@
     
       <category term="传记" scheme="https://lchml.com/tags/%E4%BC%A0%E8%AE%B0/"/>
     
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
+    
   </entry>
   
   <entry>
@@ -627,7 +650,7 @@
     <link href="https://lchml.com/life/newzealand/"/>
     <id>https://lchml.com/life/newzealand/</id>
     <published>2019-05-14T16:00:00.000Z</published>
-    <updated>2020-07-21T02:35:01.738Z</updated>
+    <updated>2021-02-07T02:47:12.635Z</updated>
     
     <content type="html"><![CDATA[<p>这张做封面吧<br><img src="DSC02261.jpg" alt=""></p>
 <p>自驾路线，13天，4人<br><img src="newzealand-map.png" alt=""><br>基督城去霍基蒂卡的路上，73号公路<br><img src="DSC00999.jpg" alt=""><br><img src="DSC01001.jpg" alt=""><br><img src="DSC01016.jpg" alt=""><br><img src="DSC01058.jpg" alt=""><br>霍基蒂卡住的大别墅<br><img src="DSC01079.jpg" alt=""><br><img src="IMG_4526.JPG" alt=""><br>霍基蒂卡海滩<br><img src="DSC01106.jpg" alt=""><br><img src="DSC01125.jpg" alt=""><br>Paparoa国家公园<br><img src="DSC01208.jpg" alt=""><br><img src="DSC01220.jpg" alt=""><br><img src="DSC01229.jpg" alt=""><br>去福克斯冰川路边的呆牛<br><img src="DSC01241.jpg" alt=""><br>福克斯冰川<br><img src="DSC01279.jpg" alt=""><br>镜湖<br><img src="DSC01368.jpg" alt=""><br><img src="DSC01383.jpg" alt=""><br><img src="DSC01397.jpg" alt=""><br><img src="DSC01406.jpg" alt=""><br><img src="DSC01409.jpg" alt=""><br>入夜<br><img src="DSC01410.jpg" alt=""><br>去瓦纳卡路上的Bruce Bay<br><img src="DSC01419.jpg" alt=""><br><img src="DSC01429.jpg" alt=""><br><img src="DSC01438.jpg" alt=""><br>中途休息<br><img src="DSC01448.jpg" alt=""><br><img src="DSC01457.jpg" alt=""><br><img src="DSC01461.jpg" alt=""><br>瓦纳卡湖<br><img src="DSC01468.jpg" alt=""><br><img src="DSC01504.jpg" alt=""><br><img src="DSC01509.jpg" alt=""><br>瓦纳卡去皇后镇路上的Cardrona Bra Fence<br><img src="DSC01523.jpg" alt=""><br>远处那个湖就是皇后镇了<br><img src="DSC01524.jpg" alt=""><br><img src="DSC01580.jpg" alt=""><br>彩虹<br><img src="DSC01653.jpg" alt=""><br>跳伞<br><img src="airdive.png" alt=""><br>箭镇，刚好碰上他们节日，好多车主出来展览他们的老爷车<br><img src="DSC01671.jpg" alt=""><br><img src="DSC01692.jpg" alt=""><br>去蒂阿瑙的路上又见彩虹<br><img src="DSC01714.jpg" alt=""><br>米尔福德峡湾<br><img src="DSC01754.jpg" alt=""><br>因弗卡吉尔<br><img src="IMG_4700.jpg" alt=""><br>新西兰最南端，布拉夫（布拉夫生蚝不错）<br><img src="DSC01821.jpg" alt=""><br>旦尼丁火车站<br><img src="DSC01844.jpg" alt=""><br>第一教堂<br><img src="DSC01905.jpg" alt=""><br>去费尔利的路上<br><img src="DSC01922.jpg" alt=""><br><img src="DSC01976.jpg" alt=""><br>房东的农场有绵羊<br><img src="DSC01985.jpg" alt=""><br>晚上出来找吃的，只有一家中餐厅还开着<br><img src="DSC01991.jpg" alt=""><br>为了拍这张，冻的瑟瑟发抖<br><img src="DSC02005.jpg" alt=""><br>去库克山的路上<br><img src="DSC02047.jpg" alt=""><br>著名的好牧羊人教堂<br><img src="DSC02085.jpg" alt=""><br>路上<br><img src="DSC02100.jpg" alt=""><br><img src="DSC02146.jpg" alt=""><br><img src="DSC02171.jpg" alt=""><br>开始徒步<br><img src="DSC02190.jpg" alt=""><br><img src="DSC02200.jpg" alt=""><br><img src="DSC02210.jpg" alt=""><br><img src="DSC02211.jpg" alt=""><br><img src="DSC02262.jpg" alt=""><br><img src="DSC02310.jpg" alt=""></p>
@@ -643,13 +666,13 @@
       <category term="life" scheme="https://lchml.com/categories/life/"/>
     
     
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
       <category term="游记" scheme="https://lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
     
       <category term="新西兰" scheme="https://lchml.com/tags/%E6%96%B0%E8%A5%BF%E5%85%B0/"/>
     
       <category term="自驾" scheme="https://lchml.com/tags/%E8%87%AA%E9%A9%BE/"/>
+    
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
     
   </entry>
   
@@ -658,7 +681,7 @@
     <link href="https://lchml.com/technology/java-engineer/"/>
     <id>https://lchml.com/technology/java-engineer/</id>
     <published>2019-05-09T16:00:00.000Z</published>
-    <updated>2019-05-10T09:07:47.745Z</updated>
+    <updated>2021-02-07T02:46:10.593Z</updated>
     
     <content type="html"><![CDATA[<p>由于公司业务调整的原因，之前一个多月没有太多工作，所以抽时间出去看看外面的行业动向（面试）。经过一多月的时间，最终拿到了两个offer，一个是字节跳动（头条）杭州的服务端开发，一个是蚂蚁金服保险中台的P7服务端开发。两个offer的待遇总包差不多，头条的现金大于蚂蚁，期权少于蚂蚁。你猜我会选择哪一个呢？</p>
 <p>我都拒了，继续留在大网易搬砖吧，哈哈哈。虽然都拒了，但是过程还是有挺多收获的，所以专门在这里总结一下吧。</p>
@@ -677,8 +700,6 @@
       <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
       <category term="Java" scheme="https://lchml.com/tags/Java/"/>
     
       <category term="架构" scheme="https://lchml.com/tags/%E6%9E%B6%E6%9E%84/"/>
@@ -687,6 +708,8 @@
     
       <category term="面试" scheme="https://lchml.com/tags/%E9%9D%A2%E8%AF%95/"/>
     
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
+    
   </entry>
   
   <entry>
@@ -694,7 +717,7 @@
     <link href="https://lchml.com/book/beiou/"/>
     <id>https://lchml.com/book/beiou/</id>
     <published>2019-02-14T16:00:00.000Z</published>
-    <updated>2020-09-06T06:13:44.380Z</updated>
+    <updated>2021-02-07T02:43:55.436Z</updated>
     
     <content type="html"><![CDATA[<p>不要被书名误导以为是旅游类的书，作者以英国人和丹麦女婿的角度深入分析了北欧生活和文化，诙谐有趣又不失深度思考。看完以后一定会让想去一趟北欧感受他们的文化和习俗。</p>
 <p><img src="bo.png" alt=""></p>
@@ -711,9 +734,9 @@
       <category term="book" scheme="https://lchml.com/categories/book/"/>
     
     
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
       <category term="文化" scheme="https://lchml.com/tags/%E6%96%87%E5%8C%96/"/>
+    
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
     
   </entry>
   
@@ -722,7 +745,7 @@
     <link href="https://lchml.com/book/qiaobusi/"/>
     <id>https://lchml.com/book/qiaobusi/</id>
     <published>2019-02-10T16:00:00.000Z</published>
-    <updated>2020-09-03T09:03:37.081Z</updated>
+    <updated>2021-02-07T02:47:27.050Z</updated>
     
     <content type="html"><![CDATA[<p>六天时间，一口气看完了这本比砖还厚的书。跌宕起伏又魅力无穷的人生传奇。让人觉得自己很重要，觉得自己被期待，是很重要的说服别人的方法。没有人会臣服一个平庸的人，没有人会喜欢一个无聊的人。</p>
 <p><img src="qbs.jpg" alt=""></p>
@@ -739,9 +762,9 @@
       <category term="book" scheme="https://lchml.com/categories/book/"/>
     
     
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
       <category term="传记" scheme="https://lchml.com/tags/%E4%BC%A0%E8%AE%B0/"/>
+    
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
     
   </entry>
   
@@ -750,7 +773,7 @@
     <link href="https://lchml.com/technology/bimaconf/"/>
     <id>https://lchml.com/technology/bimaconf/</id>
     <published>2019-01-24T16:00:00.000Z</published>
-    <updated>2019-01-25T05:33:16.345Z</updated>
+    <updated>2021-02-07T02:43:59.768Z</updated>
     
     <content type="html"><![CDATA[<h1 id="项目介绍"><a href="#项目介绍" class="headerlink" title="项目介绍"></a>项目介绍</h1><p>圈圈配置中心是为了服务网易圈圈开发的通用配置中心服务。相比社区已有的开源配置中心，有更多的高级功能和更简洁的接入方式，如</p>
 <ul>
@@ -999,11 +1022,11 @@
       <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="LC" scheme="https://lchml.com/tags/LC/"/>
-    
       <category term="bimaconf" scheme="https://lchml.com/tags/bimaconf/"/>
     
       <category term="配置中心" scheme="https://lchml.com/tags/%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/"/>
+    
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
     
   </entry>
   
