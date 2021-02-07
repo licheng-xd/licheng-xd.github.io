@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://lchml.com/technology/jvm3/</loc>
+    <lastmod>2021-02-07</lastmod>
+  </url>
+  <url>
+    <loc>https://lchml.com/technology/jvm1/</loc>
+    <lastmod>2021-02-07</lastmod>
+  </url>
+  <url>
     <loc>https://lchml.com/technology/zipkin/</loc>
     <lastmod>2021-02-07</lastmod>
   </url>
@@ -311,14 +319,6 @@
   <url>
     <loc>https://lchml.com/technology/scrum/</loc>
     <lastmod>2021-02-07</lastmod>
-  </url>
-  <url>
-    <loc>https://lchml.com/technology/jvm3/</loc>
-    <lastmod>2018-07-19</lastmod>
-  </url>
-  <url>
-    <loc>https://lchml.com/technology/jvm1/</loc>
-    <lastmod>2018-07-19</lastmod>
   </url>
   <url>
     <loc>https://lchml.com/life/aboutmovie/</loc>

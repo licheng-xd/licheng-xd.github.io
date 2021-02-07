@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://lchml.com/technology/jvm3/</loc>
+    
+    <lastmod>2021-02-07T07:18:39.316Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://lchml.com/technology/jvm1/</loc>
+    
+    <lastmod>2021-02-07T07:18:39.316Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://lchml.com/technology/zipkin/</loc>
     
     <lastmod>2021-02-07T02:49:42.915Z</lastmod>
@@ -558,20 +572,6 @@
     <loc>https://lchml.com/resume/index.html</loc>
     
     <lastmod>2020-07-21T02:43:09.768Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://lchml.com/technology/jvm3/</loc>
-    
-    <lastmod>2018-07-19T10:54:24.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://lchml.com/technology/jvm1/</loc>
-    
-    <lastmod>2018-07-19T10:54:18.000Z</lastmod>
     
   </url>
   
