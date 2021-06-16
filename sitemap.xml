@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://lchml.com/resume/index.html</loc>
+    
+    <lastmod>2021-06-16T08:51:40.235Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://lchml.com/technology/jvm3/</loc>
     
     <lastmod>2021-02-07T07:18:39.316Z</lastmod>
@@ -565,13 +572,6 @@
     <loc>https://lchml.com/about/index.html</loc>
     
     <lastmod>2020-07-21T02:43:44.307Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://lchml.com/resume/index.html</loc>
-    
-    <lastmod>2020-07-21T02:43:09.768Z</lastmod>
     
   </url>
   
