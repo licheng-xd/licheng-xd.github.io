@@ -182,9 +182,9 @@
       <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="管理" scheme="https://lchml.com/tags/%E7%AE%A1%E7%90%86/"/>
-    
       <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
+    
+      <category term="管理" scheme="https://lchml.com/tags/%E7%AE%A1%E7%90%86/"/>
     
   </entry>
   
@@ -217,9 +217,9 @@
       <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="管理" scheme="https://lchml.com/tags/%E7%AE%A1%E7%90%86/"/>
-    
       <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
+    
+      <category term="管理" scheme="https://lchml.com/tags/%E7%AE%A1%E7%90%86/"/>
     
   </entry>
   
@@ -260,9 +260,9 @@
       <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
-      <category term="python" scheme="https://lchml.com/tags/python/"/>
-    
       <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
+    
+      <category term="python" scheme="https://lchml.com/tags/python/"/>
     
   </entry>
   
@@ -287,9 +287,9 @@
       <category term="book" scheme="https://lchml.com/categories/book/"/>
     
     
-      <category term="科幻" scheme="https://lchml.com/tags/%E7%A7%91%E5%B9%BB/"/>
-    
       <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
+    
+      <category term="科幻" scheme="https://lchml.com/tags/%E7%A7%91%E5%B9%BB/"/>
     
   </entry>
   
@@ -318,9 +318,9 @@
       <category term="book" scheme="https://lchml.com/categories/book/"/>
     
     
-      <category term="传记" scheme="https://lchml.com/tags/%E4%BC%A0%E8%AE%B0/"/>
-    
       <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
+    
+      <category term="传记" scheme="https://lchml.com/tags/%E4%BC%A0%E8%AE%B0/"/>
     
   </entry>
   
@@ -361,6 +361,8 @@
       <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
+    
       <category term="Java" scheme="https://lchml.com/tags/Java/"/>
     
       <category term="httpclient" scheme="https://lchml.com/tags/httpclient/"/>
@@ -370,8 +372,6 @@
       <category term="coredump" scheme="https://lchml.com/tags/coredump/"/>
     
       <category term="crash" scheme="https://lchml.com/tags/crash/"/>
-    
-      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
     
   </entry>
   
@@ -403,9 +403,9 @@
       <category term="book" scheme="https://lchml.com/categories/book/"/>
     
     
-      <category term="传记" scheme="https://lchml.com/tags/%E4%BC%A0%E8%AE%B0/"/>
-    
       <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
+    
+      <category term="传记" scheme="https://lchml.com/tags/%E4%BC%A0%E8%AE%B0/"/>
     
   </entry>
   
@@ -431,9 +431,9 @@
       <category term="book" scheme="https://lchml.com/categories/book/"/>
     
     
-      <category term="传记" scheme="https://lchml.com/tags/%E4%BC%A0%E8%AE%B0/"/>
-    
       <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
+    
+      <category term="传记" scheme="https://lchml.com/tags/%E4%BC%A0%E8%AE%B0/"/>
     
   </entry>
   
@@ -463,6 +463,8 @@
       <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
+    
       <category term="消息队列" scheme="https://lchml.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/"/>
     
       <category term="MQ" scheme="https://lchml.com/tags/MQ/"/>
@@ -470,8 +472,6 @@
       <category term="Kafka" scheme="https://lchml.com/tags/Kafka/"/>
     
       <category term="延时消息" scheme="https://lchml.com/tags/%E5%BB%B6%E6%97%B6%E6%B6%88%E6%81%AF/"/>
-    
-      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
     
   </entry>
   
@@ -495,9 +495,9 @@
       <category term="book" scheme="https://lchml.com/categories/book/"/>
     
     
-      <category term="传记" scheme="https://lchml.com/tags/%E4%BC%A0%E8%AE%B0/"/>
-    
       <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
+    
+      <category term="传记" scheme="https://lchml.com/tags/%E4%BC%A0%E8%AE%B0/"/>
     
   </entry>
   
@@ -523,9 +523,9 @@
       <category term="book" scheme="https://lchml.com/categories/book/"/>
     
     
-      <category term="传记" scheme="https://lchml.com/tags/%E4%BC%A0%E8%AE%B0/"/>
-    
       <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
+    
+      <category term="传记" scheme="https://lchml.com/tags/%E4%BC%A0%E8%AE%B0/"/>
     
   </entry>
   
@@ -584,11 +584,11 @@
       <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
+    
       <category term="Java" scheme="https://lchml.com/tags/Java/"/>
     
       <category term="日志" scheme="https://lchml.com/tags/%E6%97%A5%E5%BF%97/"/>
-    
-      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
     
   </entry>
   
@@ -613,9 +613,9 @@
       <category term="book" scheme="https://lchml.com/categories/book/"/>
     
     
-      <category term="心学" scheme="https://lchml.com/tags/%E5%BF%83%E5%AD%A6/"/>
-    
       <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
+    
+      <category term="心学" scheme="https://lchml.com/tags/%E5%BF%83%E5%AD%A6/"/>
     
   </entry>
   
@@ -639,9 +639,9 @@
       <category term="book" scheme="https://lchml.com/categories/book/"/>
     
     
-      <category term="传记" scheme="https://lchml.com/tags/%E4%BC%A0%E8%AE%B0/"/>
-    
       <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
+    
+      <category term="传记" scheme="https://lchml.com/tags/%E4%BC%A0%E8%AE%B0/"/>
     
   </entry>
   
@@ -668,11 +668,11 @@
     
       <category term="游记" scheme="https://lchml.com/tags/%E6%B8%B8%E8%AE%B0/"/>
     
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
+    
       <category term="新西兰" scheme="https://lchml.com/tags/%E6%96%B0%E8%A5%BF%E5%85%B0/"/>
     
       <category term="自驾" scheme="https://lchml.com/tags/%E8%87%AA%E9%A9%BE/"/>
-    
-      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
     
   </entry>
   
@@ -700,15 +700,15 @@
       <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
+    
       <category term="Java" scheme="https://lchml.com/tags/Java/"/>
+    
+      <category term="面试" scheme="https://lchml.com/tags/%E9%9D%A2%E8%AF%95/"/>
     
       <category term="架构" scheme="https://lchml.com/tags/%E6%9E%B6%E6%9E%84/"/>
     
       <category term="Java基础" scheme="https://lchml.com/tags/Java%E5%9F%BA%E7%A1%80/"/>
-    
-      <category term="面试" scheme="https://lchml.com/tags/%E9%9D%A2%E8%AF%95/"/>
-    
-      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
     
   </entry>
   
@@ -762,9 +762,9 @@
       <category term="book" scheme="https://lchml.com/categories/book/"/>
     
     
-      <category term="传记" scheme="https://lchml.com/tags/%E4%BC%A0%E8%AE%B0/"/>
-    
       <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
+    
+      <category term="传记" scheme="https://lchml.com/tags/%E4%BC%A0%E8%AE%B0/"/>
     
   </entry>
   
@@ -1022,11 +1022,11 @@
       <category term="technology" scheme="https://lchml.com/categories/technology/"/>
     
     
+      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
+    
       <category term="bimaconf" scheme="https://lchml.com/tags/bimaconf/"/>
     
       <category term="配置中心" scheme="https://lchml.com/tags/%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/"/>
-    
-      <category term="李城" scheme="https://lchml.com/tags/%E6%9D%8E%E5%9F%8E/"/>
     
   </entry>
   
