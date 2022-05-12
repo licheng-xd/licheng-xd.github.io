@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lchml.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="好久没有写东西了，下个月要给智慧企业技术公众号写一篇文章，得抓紧时间找找感觉了，就记录一下最近业务上遇到的两个小问题吧。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="两个小问题">
+<meta property="og:url" content="https://lchml.com/technology/two-bugs/index.html">
+<meta property="og:site_name" content="旅行的代码">
+<meta property="og:description" content="好久没有写东西了，下个月要给智慧企业技术公众号写一篇文章，得抓紧时间找找感觉了，就记录一下最近业务上遇到的两个小问题吧。">
+<meta property="og:locale">
+<meta property="og:image" content="https://lchml.com/technology/two-bugs/backtrace.png">
+<meta property="article:published_time" content="2020-05-02T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-12T06:11:07.786Z">
+<meta property="article:author" content="李城">
+<meta property="article:tag" content="李城">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="httpclient">
+<meta property="article:tag" content="jvm">
+<meta property="article:tag" content="coredump">
+<meta property="article:tag" content="crash">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lchml.com/technology/two-bugs/backtrace.png">
+
+
+<link rel="canonical" href="https://lchml.com/technology/two-bugs/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lchml.com/technology/two-bugs/","path":"technology/two-bugs/","title":"两个小问题"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>两个小问题 | 旅行的代码</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71702178-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-71702178-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">旅行的代码</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">李城的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#httpclient%E8%AF%B7%E6%B1%82%E5%81%B6%E7%8E%B0%E5%BC%82%E5%B8%B8"><span class="nav-number">1.</span> <span class="nav-text">httpclient请求偶现异常</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jvm%E8%BF%9B%E7%A8%8B%E5%BC%82%E5%B8%B8%E5%B4%A9%E6%BA%83"><span class="nav-number">2.</span> <span class="nav-text">jvm进程异常崩溃</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李城"
+      src="/lc-icon.jpg">
+  <p class="site-author-name" itemprop="name">李城</p>
+  <div class="site-description" itemprop="description">知行合一</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">111</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/licheng-xd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;licheng-xd" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:licheng_xd@163.com" title="E-Mail → mailto:licheng_xd@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.me/lchml" title="500px → https:&#x2F;&#x2F;500px.me&#x2F;lchml" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i>500px</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://jandan.net/" title="Jandan → https:&#x2F;&#x2F;jandan.net" rel="noopener" target="_blank"><i class="fa fa-transgender-alt fa-fw"></i>Jandan</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/4qg55j4w/home?wvr=5" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;4qg55j4w&#x2F;home?wvr&#x3D;5" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.qingtian16265.com/" title="晴天博客 → https:&#x2F;&#x2F;blog.qingtian16265.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-leanpub fa-fw"></i>晴天博客</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/two-bugs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/lc-icon.jpg">
+      <meta itemprop="name" content="李城">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="旅行的代码">
+      <meta itemprop="description" content="知行合一">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="两个小问题 | 旅行的代码">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          两个小问题
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-05-03 00:00:00" itemprop="dateCreated datePublished" datetime="2020-05-03T00:00:00+08:00">2020-05-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/technology/two-bugs/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="technology/two-bugs/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>好久没有写东西了，下个月要给智慧企业技术公众号写一篇文章，得抓紧时间找找感觉了，就记录一下最近业务上遇到的两个小问题吧。</p>
+<span id="more"></span>
+
+<h2 id="httpclient请求偶现异常"><a href="#httpclient请求偶现异常" class="headerlink" title="httpclient请求偶现异常"></a>httpclient请求偶现异常</h2><p>业务上请求第三方http服务时，偶尔会出现<code>org.apache.http.NoHttpResponseException: The target server failed to respond</code>异常报警。一开始以为是对方服务的偶尔不可能用，但后来发现对于多个第三方服务都会出现一样的情况，那基本可以断定问题是出在自己这里。（当觉得别人都有问题的时候，要想一下是不是自己有问题。）</p>
+<p>首先通过异常堆栈我们可以判断，请求是通过apache的httpclient发起的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Caused by: org.apache.http.NoHttpResponseException: *********** failed to respond</span><br><span class="line">    at org.apache.http.impl.conn.DefaultHttpResponseParser.parseHead(DefaultHttpResponseParser.java:143)</span><br><span class="line">    at org.apache.http.impl.conn.DefaultHttpResponseParser.parseHead(DefaultHttpResponseParser.java:57)</span><br></pre></td></tr></table></figure>
+<p>可以从网上查到相关的错误原因：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">org.apache.commons.httpclient.NoHttpResponseException java.io.IOException </span><br><span class="line">+- org.apache.commons.httpclient.NoHttpResponseException</span><br><span class="line">In some circumstances, usually when under heavy load, the web server may be able to receive requests but unable to process them. </span><br><span class="line">A lack of sufficient resources like worker threads is a good example. </span><br><span class="line">This may cause the server to drop the connection to the client without giving any response. </span><br><span class="line">HttpClient throws NoHttpResponseException when it encounters such a condition. </span><br><span class="line">In most cases it is safe to retry a method that failed with NoHttpResponseException.</span><br></pre></td></tr></table></figure>
+<p>可以看到产生错误的原因是，服务关闭连接时没有通知客户端，当客户端再次使用该连接时会产生这个错误。打开httpclient的debug日志，我们可以看到，出现错误时最后的日志是<code>end of steam</code>，我们知道一般产生end of stream的原因是TCP连接的服务端主动关闭连接造成。查看http服务端的nginx配置，发现设置了keepAlive 32s，也就是说当连接空闲超过32s时，服务端就会主动发起FIN请求，进入tcp关闭的四次挥手流程。由于httpclient没有主动关闭连接，导致连接处于半关闭状态，而连接还存在于连接池中，所以当下次再被取出来用时就会收到服务端的RST。</p>
+<p>apache httpclient提供了两个办法来解决这个问题，具体源码实现可以在<code>AbstractConnPool.java</code>中看到，这里就不贴了。</p>
+<ul>
+<li>1、通过<code>PoolingHttpClientConnectionManager.setValidateAfterInactivity(evictIdle);</code>设置连接空闲多久以后需要进行validate检查</li>
+<li>2、通过<code>HttpClientBuilder.evictIdleConnections(evictIdle, TimeUnit.MILLISECONDS)</code>设置连接空闲多久后将被清理出连接池。<br>因此只要我们配置上这两个参数，保证它小于服务端保持连接的时间就可以了。</li>
+</ul>
+<h2 id="jvm进程异常崩溃"><a href="#jvm进程异常崩溃" class="headerlink" title="jvm进程异常崩溃"></a>jvm进程异常崩溃</h2><p>最近线上某个服务的进程相继发生崩溃，jvm进程直接崩溃了。通过服务监控平台可以看到，在崩溃的时间点，cpu、内存、磁盘等资源都没有出现异常，只有load彪到了100。找SA排查了宿主机steal等因素，都没有发现可疑的情况。怀疑load飙升不是引起进程崩溃的原因，而是进程崩溃系统生成coredump才引起load飙升。而该服务之前半年都没有发生过崩溃，上个版本的最大的改动是引入了系统ffmpeg的调用。因此首先怀疑是ffmpeg调用引起的，接下来找到系统的崩溃日志hs_err_pid103051.log，该日志的最上方有一个总结性的描述：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># JRE version: Java(TM) SE Runtime Environment (8.0_101-b13) (build 1.8.0_101-b13)</span><br><span class="line"># Java VM: Java HotSpot(TM) 64-Bit Server VM (25.101-b13 mixed mode linux-amd64 compressed oops)</span><br><span class="line"># Problematic frame:</span><br><span class="line"># J 11860 C2 com.google.gson.internal.bind. .write(Lcom/google/gson/stream/JsonWriter;Ljava/lang/Object;)V (81 bytes) @ 0x00007fa06f256b66 [0x00007fa06f256ae0+0x86]</span><br><span class="line">#</span><br><span class="line"># Core dump written. Default location: /xxx/xxx/core or core.103051</span><br></pre></td></tr></table></figure>
+<p>可以看到它指出可能的问题是gson的序列化引起的，但是这个gson库已经在其他线上业务使用了几年了，从来没有发生过这样的问题，所以还是有怀疑，继续找到上面描述的core dump文件。</p>
+<blockquote>
+<p>常情况下，coredump（亦称为core文件）文件包含程序运行时的内存信息，含寄存器状态、堆栈指针、内存管理信息、操作系统flags及其他信息，可以理解为把程序工作的当前状态存储成一个文件。Coredump文件通常于程序异常终止（crashed）时自动生成，常用于辅助分析和解决bug，可通过 coredump 文件进行栈回溯和反汇编。</p>
+</blockquote>
+<p>通过gdb对core文件进行backtrace操作，可以看到如下信息：<br><img src="/technology/two-bugs/backtrace.png" alt="1"></p>
+<p>说明引起崩溃的进程并不是我们怀疑的ffmpeg进程，而是jvm本身引起的，所以看来只能继续从jvm的原因入手，网上找关于gson序列化引起崩溃的例子，很少有提到类似的情况，我们找到上面错误日志里说的导致崩溃的方法源码，从方法中并没有看出有什么会引起jvm崩溃的地方。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">write</span><span class="params">(JsonWriter out, T value)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">  <span class="comment">// Order of preference for choosing type adapters</span></span><br><span class="line">  <span class="comment">// First preference: a type adapter registered for the runtime type</span></span><br><span class="line">  <span class="comment">// Second preference: a type adapter registered for the declared type</span></span><br><span class="line">  <span class="comment">// Third preference: reflective type adapter for the runtime type (if it is a sub class of the declared type)</span></span><br><span class="line">  <span class="comment">// Fourth preference: reflective type adapter for the declared type</span></span><br><span class="line"></span><br><span class="line">  <span class="type">TypeAdapter</span> <span class="variable">chosen</span> <span class="operator">=</span> delegate;</span><br><span class="line">  <span class="type">Type</span> <span class="variable">runtimeType</span> <span class="operator">=</span> getRuntimeTypeIfMoreSpecific(type, value);</span><br><span class="line">  <span class="keyword">if</span> (runtimeType != type) &#123;</span><br><span class="line">    <span class="type">TypeAdapter</span> <span class="variable">runtimeTypeAdapter</span> <span class="operator">=</span> context.getAdapter(TypeToken.get(runtimeType));</span><br><span class="line">    <span class="keyword">if</span> (!(runtimeTypeAdapter <span class="keyword">instanceof</span> ReflectiveTypeAdapterFactory.Adapter)) &#123;</span><br><span class="line">      <span class="comment">// The user registered a type adapter for the runtime type, so we will use that</span></span><br><span class="line">      chosen = runtimeTypeAdapter;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!(delegate <span class="keyword">instanceof</span> ReflectiveTypeAdapterFactory.Adapter)) &#123;</span><br><span class="line">      <span class="comment">// The user registered a type adapter for Base class, so we prefer it over the</span></span><br><span class="line">      <span class="comment">// reflective type adapter for the runtime type</span></span><br><span class="line">      chosen = delegate;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// Use the type adapter for runtime type</span></span><br><span class="line">      chosen = runtimeTypeAdapter;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  chosen.write(out, value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后我们给所有进程都加上了<code>-XX:+HeapDumpOnOutOfMemoryError</code>参数，等再次发生进程崩溃时，我们可以拿到对应的堆栈信息，更精确的定位问题。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/donate-page/simple/images/wechat.jpg" alt="李城 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/donate-page/simple/images/alipay.jpg" alt="李城 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%9D%8E%E5%9F%8E/" rel="tag"><i class="fa fa-tag"></i> 李城</a>
+              <a href="/tags/Java/" rel="tag"><i class="fa fa-tag"></i> Java</a>
+              <a href="/tags/httpclient/" rel="tag"><i class="fa fa-tag"></i> httpclient</a>
+              <a href="/tags/jvm/" rel="tag"><i class="fa fa-tag"></i> jvm</a>
+              <a href="/tags/coredump/" rel="tag"><i class="fa fa-tag"></i> coredump</a>
+              <a href="/tags/crash/" rel="tag"><i class="fa fa-tag"></i> crash</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/technology/delayq/" rel="prev" title="延时消息队列">
+                  <i class="fa fa-chevron-left"></i> 延时消息队列
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/technology/pyqt/" rel="next" title="网易互客Mac版">
+                  网易互客Mac版 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa-solid fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李城</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"cdn":"//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML","tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"lchml","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

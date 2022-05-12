@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lchml.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="自从换了mac，IDE也同时换成了idea，一直没有去用过eclipse。前两天心血来潮(zuo)，想着怀旧一下，打开eclipse搞一搞。结果悲剧发生了，mac下的eclipse用svn居然如此艰难，以至于花了好多时间才搞定它（其实我也用不着，只是有搞不出来不爽的强迫症。。。）。下面总结一下这个悲剧。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Eclipse on Mac with svn">
+<meta property="og:url" content="https://lchml.com/technology/mac-eclipse-svn/index.html">
+<meta property="og:site_name" content="旅行的代码">
+<meta property="og:description" content="自从换了mac，IDE也同时换成了idea，一直没有去用过eclipse。前两天心血来潮(zuo)，想着怀旧一下，打开eclipse搞一搞。结果悲剧发生了，mac下的eclipse用svn居然如此艰难，以至于花了好多时间才搞定它（其实我也用不着，只是有搞不出来不爽的强迫症。。。）。下面总结一下这个悲剧。">
+<meta property="og:locale">
+<meta property="article:published_time" content="2014-12-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-12T05:59:42.714Z">
+<meta property="article:author" content="李城">
+<meta property="article:tag" content="李城">
+<meta property="article:tag" content="svn">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://lchml.com/technology/mac-eclipse-svn/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lchml.com/technology/mac-eclipse-svn/","path":"technology/mac-eclipse-svn/","title":"Eclipse on Mac with svn"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Eclipse on Mac with svn | 旅行的代码</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71702178-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-71702178-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">旅行的代码</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">李城的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李城"
+      src="/lc-icon.jpg">
+  <p class="site-author-name" itemprop="name">李城</p>
+  <div class="site-description" itemprop="description">知行合一</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">111</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/licheng-xd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;licheng-xd" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:licheng_xd@163.com" title="E-Mail → mailto:licheng_xd@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.me/lchml" title="500px → https:&#x2F;&#x2F;500px.me&#x2F;lchml" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i>500px</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://jandan.net/" title="Jandan → https:&#x2F;&#x2F;jandan.net" rel="noopener" target="_blank"><i class="fa fa-transgender-alt fa-fw"></i>Jandan</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/4qg55j4w/home?wvr=5" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;4qg55j4w&#x2F;home?wvr&#x3D;5" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.qingtian16265.com/" title="晴天博客 → https:&#x2F;&#x2F;blog.qingtian16265.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-leanpub fa-fw"></i>晴天博客</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/mac-eclipse-svn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/lc-icon.jpg">
+      <meta itemprop="name" content="李城">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="旅行的代码">
+      <meta itemprop="description" content="知行合一">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Eclipse on Mac with svn | 旅行的代码">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Eclipse on Mac with svn
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2014-12-26 00:00:00" itemprop="dateCreated datePublished" datetime="2014-12-26T00:00:00+08:00">2014-12-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/technology/mac-eclipse-svn/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="technology/mac-eclipse-svn/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>自从换了mac，IDE也同时换成了idea，一直没有去用过eclipse。前两天心血来潮(zuo)，想着怀旧一下，打开eclipse搞一搞。<br>结果悲剧发生了，mac下的eclipse用svn居然如此艰难，以至于花了好多时间才搞定它（其实我也用不着，只是有搞不出来不爽的强迫症。。。）。下面总结一下这个悲剧。</p>
+<span id="more"></span>
+
+<p>下载完<a target="_blank" rel="noopener" href="http://www.eclipse.org/downloads/">eclipse</a>解压打开，然后安装<a target="_blank" rel="noopener" href="http://www.oschina.net/p/subclipse">Subclipse</a>。然后到eclipse设置里看下subversion，悲剧了，弹出提示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Failed to load JavaHL Library.</span><br><span class="line"></span><br><span class="line">These are the errors that were encountered:</span><br><span class="line">no libsvnjavahl-1 in java.library.path</span><br><span class="line">no svnjavahl-1 in java.library.path</span><br><span class="line">no svnjavahl in java.library.path</span><br><span class="line">java.library.path = /usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/i386/client:/usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/i386:/usr/lib/xulrunner-addons:/usr/lib/xulrunner-addons:/usr/java/packages/lib/i386:/lib:/usr/lib</span><br></pre></td></tr></table></figure>
+
+<p>按照常用套路，google之（悄悄告诉你，最好别用度娘），发现原来由于mac osx这个二货中自带的Subversion居然是个阉割货（不明白为什么要阉割掉），里面没有JavaHL相关的库，这个库的作用简单地说，就是提供接口给第三方比如subclipse这种来调用本地的svn用的，所以当subclipse发现没有这个库的时候，就没办法了。（这里其实还有个选择，就是安装subclipse的时候勾上SVNKit，这样的话它就会自带一个svn客户端，不需要通过JavaHL调用本地svn，不过不推荐这么搞，一个环境下，最好用同样的svn）</p>
+<p>所以解决问题的关键是要给svn安装一个JavaHL库，google了好久，被坑了好多回，发现JavaHL这个库没法独立给svn补回去（或者是我没找到对的方法），于是只有换掉整个svn这个思路，先记得<code>svn --version</code>看看已经有的svn版本，免得换了以后发现版本不一样又发生悲剧（比如我）。</p>
+<p>在mac上安装svn，首先需要安装brew，当然也可以用macport，反正一个意思。安装brew非常简单，一个ruby脚本就搞定了(mac是自带ruby环境的)：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ruby -e &quot;$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)&quot;</span><br></pre></td></tr></table></figure>
+
+<p>然后就可以使用brew命令了，类似于debain下面的apt-get。安装完整的svn，命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$brew install --universal --java subversion</span><br></pre></td></tr></table></figure>
+
+<p>如果你恰好用的是跟它一样的最新版本，那没关系，如果你用的是1.6或1.7的版本，那就需要对应的把<code>subversion</code>换成<code>subversion16</code>或<code>subversion17</code>。安装过程中需要make，可能花费一点时间，这要看你的机器了。</p>
+<p>完成后，你可以看到安装过程中要求你执行以下命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$sudo mkdir -p /Library/Java/Extensions </span><br><span class="line">$sudo ln -s /usr/local/lib/libsvnjavahl-1.dylib /Library/Java/Extensions/libsvnjavahl-1.dylib</span><br></pre></td></tr></table></figure>
+
+<p>不过执行第一个命令前记得先看下这个目录是不是已经存在，已经存在就不用mkdir了。执行第二个命令，把包链接过去就完事了。</p>
+<p>最后重启eclipse，再去subversion那个选项看看，是不是已经找到JavaHL库了呢？</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/donate-page/simple/images/wechat.jpg" alt="李城 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/donate-page/simple/images/alipay.jpg" alt="李城 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%9D%8E%E5%9F%8E/" rel="tag"><i class="fa fa-tag"></i> 李城</a>
+              <a href="/tags/svn/" rel="tag"><i class="fa fa-tag"></i> svn</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/technology/java-interview/" rel="prev" title="学贵专·而不以泛滥为贤">
+                  <i class="fa fa-chevron-left"></i> 学贵专·而不以泛滥为贤
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/life/mountaineering/" rel="next" title="龙门 · 杏梅尖">
+                  龙门 · 杏梅尖 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa-solid fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李城</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"cdn":"//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML","tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"lchml","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

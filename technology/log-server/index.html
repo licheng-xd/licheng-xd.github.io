@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lchml.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="log-server是为服务器提供监控报警等功能的一个服务，由于上线前后有很多其他任务要完成，所以只能抽零碎时间先写了一个能跑起来的用着。一直想找个机会重构一下（程序员的洁癖），前段时间空了一些，所以专门抽时间重新写了一下。在过程中遇到不少问题，有些花了不少时间google，所以觉得有必要记录一下。备忘同时也算是分享吧。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小问题也是大问题">
+<meta property="og:url" content="https://lchml.com/technology/log-server/index.html">
+<meta property="og:site_name" content="旅行的代码">
+<meta property="og:description" content="log-server是为服务器提供监控报警等功能的一个服务，由于上线前后有很多其他任务要完成，所以只能抽零碎时间先写了一个能跑起来的用着。一直想找个机会重构一下（程序员的洁癖），前段时间空了一些，所以专门抽时间重新写了一下。在过程中遇到不少问题，有些花了不少时间google，所以觉得有必要记录一下。备忘同时也算是分享吧。">
+<meta property="og:locale">
+<meta property="og:image" content="https://lchml.com/technology/log-server/log-server.jpg">
+<meta property="article:published_time" content="2014-12-13T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-12T05:59:49.322Z">
+<meta property="article:author" content="李城">
+<meta property="article:tag" content="李城">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lchml.com/technology/log-server/log-server.jpg">
+
+
+<link rel="canonical" href="https://lchml.com/technology/log-server/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lchml.com/technology/log-server/","path":"technology/log-server/","title":"小问题也是大问题"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>小问题也是大问题 | 旅行的代码</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71702178-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-71702178-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">旅行的代码</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">李城的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#SpringMVC%E5%AE%B9%E5%99%A8%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">SpringMVC容器问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A0%E6%95%88%E7%9A%84%E6%B3%A8%E5%85%A5"><span class="nav-number">1.1.</span> <span class="nav-text">无效的注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ContextLoaderListener"><span class="nav-number">1.2.</span> <span class="nav-text">ContextLoaderListener</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-aop%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">Spring-aop问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fastjson%E7%9A%84toJSONString%E9%97%AE%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text">Fastjson的toJSONString问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98"><span class="nav-number">4.</span> <span class="nav-text">文件读取乱码问题</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李城"
+      src="/lc-icon.jpg">
+  <p class="site-author-name" itemprop="name">李城</p>
+  <div class="site-description" itemprop="description">知行合一</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">111</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/licheng-xd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;licheng-xd" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:licheng_xd@163.com" title="E-Mail → mailto:licheng_xd@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.me/lchml" title="500px → https:&#x2F;&#x2F;500px.me&#x2F;lchml" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i>500px</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://jandan.net/" title="Jandan → https:&#x2F;&#x2F;jandan.net" rel="noopener" target="_blank"><i class="fa fa-transgender-alt fa-fw"></i>Jandan</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/4qg55j4w/home?wvr=5" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;4qg55j4w&#x2F;home?wvr&#x3D;5" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.qingtian16265.com/" title="晴天博客 → https:&#x2F;&#x2F;blog.qingtian16265.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-leanpub fa-fw"></i>晴天博客</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/log-server/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/lc-icon.jpg">
+      <meta itemprop="name" content="李城">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="旅行的代码">
+      <meta itemprop="description" content="知行合一">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="小问题也是大问题 | 旅行的代码">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          小问题也是大问题
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2014-12-14 00:00:00" itemprop="dateCreated datePublished" datetime="2014-12-14T00:00:00+08:00">2014-12-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/technology/log-server/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="technology/log-server/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>log-server是为服务器提供监控报警等功能的一个服务，由于上线前后有很多其他任务要完成，所以只能抽零碎时间先写了一个能跑起来的用着。一直想找个机会重构一下（程序员的洁癖），前段时间空了一些，所以专门抽时间重新写了一下。在过程中遇到不少问题，有些花了不少时间google，所以觉得有必要记录一下。备忘同时也算是分享吧。</p>
+<span id="more"></span>
+
+<h3 id="SpringMVC容器问题"><a href="#SpringMVC容器问题" class="headerlink" title="SpringMVC容器问题"></a>SpringMVC容器问题</h3><p>一个基于SpringMVC的web应用，结构如下图所示。<br><img src="/technology/log-server/log-server.jpg"></p>
+<p>启动时，需要将Mongodb中的配置信息加载到cache中，进行初始化。通常我们会实现ServletContextListener来做初始化的工作。由于初始化配置的逻辑是通过一个service来做的，所以在Listener中通过<code>@Resource</code>注入对应的Service。在web.xml中加入<code>listener</code>的配置，然后运行，会出现异常<code>javax.naming.NameNotFoundException</code>（如果通过<code>@Autowired</code>注入，则是<code>java.lang.NullPointerException</code>）。原因是一样的：<strong>listener中的Service注入失败了</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">InitListener</span> <span class="keyword">implements</span> <span class="title class_">ServletContextListener</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> InitService initService;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// contextInitialized and contextDestroyed ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="无效的注入"><a href="#无效的注入" class="headerlink" title="无效的注入"></a>无效的注入</h4><p>为什么会注入失败呢？原因很简单，因为我们实现的Listener本身并不是IOC容器中的bean，<strong>在非容器中的bean里通过注解的方式注入容器中的bean肯定是会失败的</strong>。怎么办呢？我们可以先获取到Spring容器的实例，再从容器中取出需要的bean（InitService已经通过@Service注解或xml配置文件注入到容器中）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span> </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">contextInitialized</span><span class="params">(ServletContextEvent event)</span> &#123;</span><br><span class="line">    <span class="type">WebApplicationContext</span> <span class="variable">springContext</span> <span class="operator">=</span> WebApplicationContextUtils</span><br><span class="line">        .getRequiredWebApplicationContext(event.getServletContext());</span><br><span class="line">    <span class="type">InitService</span> <span class="variable">initService</span> <span class="operator">=</span> springContext.getBean(InitService.class);</span><br><span class="line">    initService.test();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再运行一次程序，发现。。。还是不行！异常信息：<code>java.lang.IllegalStateException: No WebApplicationContext found: no ContextLoaderListener registered?</code>。</p>
+<h4 id="ContextLoaderListener"><a href="#ContextLoaderListener" class="headerlink" title="ContextLoaderListener"></a>ContextLoaderListener</h4><p>使用SpringMVC时，我们通常会在web.xml配置DispatcherServlet初始化Spring的IOC容器，拦截*.do的请求给controller处理。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">servlet</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>logserver<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">servlet-class</span>&gt;</span>org.springframework.web.servlet.DispatcherServlet<span class="tag">&lt;/<span class="name">servlet-class</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">init-param</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>contextConfigLocation<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>/WEB-INF/logserver-servlet.xml<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">init-param</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">load-on-startup</span>&gt;</span>1<span class="tag">&lt;/<span class="name">load-on-startup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">servlet</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">servlet-mapping</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>logserver<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>*.do<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">servlet-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>为什么在Listener中找不到WebApplicationContext呢？<br>首先我们要搞清楚web程序启动时的初始化顺序：<code>Listener &gt; Filter &gt; Servlet</code>。找到Spring源码中的DispatcherServlet.java可以看到它最终是实现了HttpServlet。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DispatcherServlet</span> <span class="keyword">extends</span> <span class="title class_">FrameworkServlet</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">FrameworkServlet</span> <span class="keyword">extends</span> <span class="title class_">org</span>.springframework.web.servlet.HttpServletBean</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">HttpServletBean</span> <span class="keyword">extends</span> <span class="title class_">javax</span>.servlet.http.HttpServlet <span class="keyword">implements</span> <span class="title class_">org</span>.springframework.core.env.EnvironmentCapable, org.springframework.context.EnvironmentAware</span><br></pre></td></tr></table></figure>
+
+<p>所以答案很明显，因为DispatcherServlet在Listener之后初始化，而Spring容器是通过DispatcherServlet是产生的，Listener中当然找不到WebApplicationContext了。</p>
+<p>我们注意到异常的提示中还有一个信息：<code>no ContextLoaderListener registered?</code>，没有注册ContextLoaderListener。我们在源码中找到ContextLoaderListener.java。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Bootstrap listener to start up and shut down Spring&#x27;s root &#123;<span class="doctag">@link</span> WebApplicationContext&#125;.</span></span><br><span class="line"><span class="comment"> * Simply delegates to &#123;<span class="doctag">@link</span> ContextLoader&#125; as well as to &#123;<span class="doctag">@link</span> ContextCleanupListener&#125;.</span></span><br><span class="line"><span class="comment"> * ...</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ContextLoaderListener</span> <span class="keyword">extends</span> <span class="title class_">ContextLoader</span> <span class="keyword">implements</span> <span class="title class_">ServletContextListener</span> &#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再想一下上面说的初始化顺序，很明显，我们应该用ContextLoaderListener来初始化Spring容器。在web.xml中加入如下配置。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">context-param</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>contextConfigLocation<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>classpath:/application-context.xml<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">context-param</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">listener</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">listener-class</span>&gt;</span>org.springframework.web.context.ContextLoaderListener<span class="tag">&lt;/<span class="name">listener-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">listener</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>由于InitListener中需要用到Spring容器，所以要注意把ContextLoaderListener放在InitListener前面。再次运行程序，搞定了！<br/><br>等等，事情还没完。</p>
+<p>运行成功以后看log发现，所有Task的Scheduled方法都重复执行了，也就是说所有task都被初始化了两次，猜测应该是每个Task被实例化了两次导致。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestTask</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> LoggerFactory.getLogger(TestTask.class);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">TestTask</span><span class="params">()</span> &#123;</span><br><span class="line">        logger.info(<span class="string">&quot;TestTask create&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Scheduled(fixedRate = 10000L)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">        logger.info(<span class="string">&quot;TestTask run()&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行发现，确实TestTask create了两次。为什么呢？因为ContextLoaderListener和DispatcherServlet都会根据xml配置初始化容器。<br>而两个xml中都有下面的配置。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">context:annotation-config</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">task:annotation-driven</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">aop:aspectj-autoproxy</span> <span class="attr">proxy-target-class</span>=<span class="string">&quot;true&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">&quot;org.lic.logserver&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们把logserver-servlet.xml中的scan目录改成只扫描controller所在的包。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">&quot;org.lic.logserver.controller&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>而application-context.xml中排除controller包</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">&quot;org.lic.logserver&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">context:exclude-filter</span> <span class="attr">type</span>=<span class="string">&quot;regex&quot;</span> <span class="attr">expression</span>=<span class="string">&quot;org.lic.logserver.controller&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">context:component-scan</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>再次运行，发现Scheduled方法已经按希望的方式，每隔10s执行一次。</p>
+<h3 id="Spring-aop问题"><a href="#Spring-aop问题" class="headerlink" title="Spring-aop问题"></a>Spring-aop问题</h3><p>虽然Scheduled方法已经运行正确，但是通过log可以看到Task的构造方法确还是被执行了两次。这里应该感到很奇怪，为什么构造方法执行了两次，Scheduled方法却没有呢？</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">aop:aspectj-autoproxy</span> <span class="attr">proxy-target-class</span>=<span class="string">&quot;true&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>由于在spring的xml中配置了aop的动态代理，导致所有被织入了切面的类都会创建AOP代理。这会产生两次构造器调用，第一次是目标类的构造器调用，第二次是代理类的构造器调用。所以织入了AOP切面的目标类，不应在构造方法中做过多处理，以免因为两次调用带来其他影响。（关于AOP动态代理的问题，可以单独拿出来说一说）</p>
+<h3 id="Fastjson的toJSONString问题"><a href="#Fastjson的toJSONString问题" class="headerlink" title="Fastjson的toJSONString问题"></a>Fastjson的toJSONString问题</h3><p>四个常用的处理json的类库：Gson、Jackson、Fastjson、Json-lib。其中Fastjson由阿里巴巴公司开发，性能较为突出。<br/><br>由于在log-server中需要把收集的数据持久化到MongoDB，因此需要把JavaBean转成json存储。<br>让所有需要持久化的Bean继承AbstractBean。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">AbstractBean</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> JSON.toJSONString(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在使用过程中发现有一个Bean的其中一个属性没有被写到json中，对比了其它属性发现，只有一个不同点：这个属性没有对应的getter方法。给它加上getter方法后发现，果然可以了。问题虽然解决了，可是这只是猜想，下面我们就去求证一下。</p>
+<p>首先去github上找到<a target="_blank" rel="noopener" href="https://github.com/alibaba/fastjson.git">fastjson的源码</a>clone一份，导入以后找到<code>JSON.java</code>中的toJSONString方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String <span class="title function_">toJSONString</span><span class="params">(Object object)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> toJSONString(object, <span class="keyword">new</span> <span class="title class_">SerializerFeature</span>[<span class="number">0</span>]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String <span class="title function_">toJSONString</span><span class="params">(Object object, SerializerFeature... features)</span> &#123;</span><br><span class="line">    <span class="type">SerializeWriter</span> <span class="variable">out</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SerializeWriter</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">JSONSerializer</span> <span class="variable">serializer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JSONSerializer</span>(out);</span><br><span class="line">        <span class="keyword">for</span> (com.alibaba.fastjson.serializer.SerializerFeature feature : features) &#123;</span><br><span class="line">            serializer.config(feature, <span class="literal">true</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        serializer.write(object);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> out.toString();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        out.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中最重要的一句是<code>serializer.write(object);</code>，顺着往下找.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">write</span><span class="params">(Object object)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (object == <span class="literal">null</span>) &#123;</span><br><span class="line">        out.writeNull();</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Class&lt;?&gt; clazz = object.getClass();</span><br><span class="line">    <span class="type">ObjectSerializer</span> <span class="variable">writer</span> <span class="operator">=</span> getObjectWriter(clazz);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        writer.write(<span class="built_in">this</span>, object, <span class="literal">null</span>, <span class="literal">null</span>, <span class="number">0</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">JSONException</span>(e.getMessage(), e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里最重要的一句是<code>writer.write(this, object, null, null, 0);</code>。ObjectSerializer是一个接口，getObjectWriter(clazz)会根据不同类型的Object返回对应的子类。我们找到对应的JavaBeanSerializer，其中的write方法就是最后我们要找的地方了，这个方法比较长就不贴出来了。从方法中可以看到我们的猜测是对，私有成员属性，必须要有对应的get方法才能被写入json中。<br>总结：<strong>JaveBean中，所有getXXX方法都会被写入到json中（除了一些特殊的名字以外），所有的共有成员属性会被写到json中。私有成员属性不会，static类型属性不会。</strong></p>
+<h3 id="文件读取乱码问题"><a href="#文件读取乱码问题" class="headerlink" title="文件读取乱码问题"></a>文件读取乱码问题</h3><p>一般从文件中读取文本内容时，会用下面的方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">BufferedReader</span> <span class="variable">reader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(<span class="keyword">new</span> <span class="title class_">FileReader</span>(<span class="keyword">new</span> <span class="title class_">File</span>(path)));</span><br></pre></td></tr></table></figure>
+
+<p>但是由于文件的编码格式的原因，读取中文时可能会出现乱码问题，可以改用下面的方法指定编码格式。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">BufferedReader</span> <span class="variable">reader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(<span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(<span class="keyword">new</span> <span class="title class_">FileInputStream</span>(<span class="keyword">new</span> <span class="title class_">File</span>(path)), <span class="string">&quot;utf-8&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/donate-page/simple/images/wechat.jpg" alt="李城 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/donate-page/simple/images/alipay.jpg" alt="李城 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%9D%8E%E5%9F%8E/" rel="tag"><i class="fa fa-tag"></i> 李城</a>
+              <a href="/tags/Java/" rel="tag"><i class="fa fa-tag"></i> Java</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/life/some-advices/" rel="prev" title="点滴生活">
+                  <i class="fa fa-chevron-left"></i> 点滴生活
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/technology/java-exec-shell/" rel="next" title="Java执行外部程序的问题">
+                  Java执行外部程序的问题 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa-solid fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李城</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"cdn":"//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML","tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"lchml","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

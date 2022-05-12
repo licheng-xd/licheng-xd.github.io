@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lchml.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="日志对于一个软件系统的重要程度是不言而喻的，线上问题定位、运营数据统计、用户画像分析、系统状态监控等都离不开日志。然而，由于日志通常与业务系统的核心能力没有直接关联，所以经常会被开发人员忽视。对于一些简单的小规模应用程序，也许不需要在日志上花费大量精力。但是对于高复杂度的大型系统来说，日志是保证系统可靠运行必不可少的一环。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="最佳日志实践">
+<meta property="og:url" content="https://lchml.com/technology/log/index.html">
+<meta property="og:site_name" content="旅行的代码">
+<meta property="og:description" content="日志对于一个软件系统的重要程度是不言而喻的，线上问题定位、运营数据统计、用户画像分析、系统状态监控等都离不开日志。然而，由于日志通常与业务系统的核心能力没有直接关联，所以经常会被开发人员忽视。对于一些简单的小规模应用程序，也许不需要在日志上花费大量精力。但是对于高复杂度的大型系统来说，日志是保证系统可靠运行必不可少的一环。">
+<meta property="og:locale">
+<meta property="og:image" content="https://lchml.com/technology/log/log_framework.png">
+<meta property="og:image" content="https://lchml.com/technology/log/log_impl.jpg">
+<meta property="og:image" content="https://lchml.com/technology/log/log_policy.png">
+<meta property="article:published_time" content="2019-06-02T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-12T05:59:45.802Z">
+<meta property="article:author" content="李城">
+<meta property="article:tag" content="李城">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="日志">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lchml.com/technology/log/log_framework.png">
+
+
+<link rel="canonical" href="https://lchml.com/technology/log/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lchml.com/technology/log/","path":"technology/log/","title":"最佳日志实践"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>最佳日志实践 | 旅行的代码</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71702178-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-71702178-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">旅行的代码</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">李城的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E9%9C%80%E8%A6%81%E5%8C%85%E5%90%AB%E4%BB%80%E4%B9%88%E5%86%85%E5%AE%B9"><span class="nav-number">1.</span> <span class="nav-text">日志需要包含什么内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6"><span class="nav-number">2.</span> <span class="nav-text">常用日志框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E5%8D%95%E5%85%83%E5%92%8C%E6%97%A5%E5%BF%97%E9%93%BE%E8%B7%AF"><span class="nav-number">3.</span> <span class="nav-text">日志单元和日志链路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E5%8D%95%E5%85%83"><span class="nav-number">3.1.</span> <span class="nav-text">日志单元</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E9%93%BE%E8%B7%AF"><span class="nav-number">3.3.</span> <span class="nav-text">日志链路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E6%97%A5%E5%BF%97"><span class="nav-number">3.4.</span> <span class="nav-text">异常日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E5%AE%83%E9%97%AE%E9%A2%98"><span class="nav-number">3.5.</span> <span class="nav-text">其它问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E8%BE%93%E5%87%BA%E6%96%B9%E5%BC%8F"><span class="nav-number">4.</span> <span class="nav-text">日志输出方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E5%BC%82%E6%AD%A5"><span class="nav-number">4.1.</span> <span class="nav-text">同步异步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E5%8F%98%E6%9B%B4"><span class="nav-number">4.2.</span> <span class="nav-text">动态变更</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E6%BB%9A%E5%8A%A8"><span class="nav-number">4.3.</span> <span class="nav-text">日志滚动</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">使用</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李城"
+      src="/lc-icon.jpg">
+  <p class="site-author-name" itemprop="name">李城</p>
+  <div class="site-description" itemprop="description">知行合一</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">111</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/licheng-xd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;licheng-xd" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:licheng_xd@163.com" title="E-Mail → mailto:licheng_xd@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.me/lchml" title="500px → https:&#x2F;&#x2F;500px.me&#x2F;lchml" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i>500px</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://jandan.net/" title="Jandan → https:&#x2F;&#x2F;jandan.net" rel="noopener" target="_blank"><i class="fa fa-transgender-alt fa-fw"></i>Jandan</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/4qg55j4w/home?wvr=5" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;4qg55j4w&#x2F;home?wvr&#x3D;5" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.qingtian16265.com/" title="晴天博客 → https:&#x2F;&#x2F;blog.qingtian16265.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-leanpub fa-fw"></i>晴天博客</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/log/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/lc-icon.jpg">
+      <meta itemprop="name" content="李城">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="旅行的代码">
+      <meta itemprop="description" content="知行合一">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="最佳日志实践 | 旅行的代码">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          最佳日志实践
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-06-03 00:00:00" itemprop="dateCreated datePublished" datetime="2019-06-03T00:00:00+08:00">2019-06-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/technology/log/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="technology/log/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>日志对于一个软件系统的重要程度是不言而喻的，线上问题定位、运营数据统计、用户画像分析、系统状态监控等都离不开日志。然而，由于日志通常与业务系统的核心能力没有直接关联，所以经常会被开发人员忽视。对于一些简单的小规模应用程序，也许不需要在日志上花费大量精力。但是对于高复杂度的大型系统来说，日志是保证系统可靠运行必不可少的一环。</p>
+<span id="more"></span>
+
+<h2 id="日志需要包含什么内容"><a href="#日志需要包含什么内容" class="headerlink" title="日志需要包含什么内容"></a>日志需要包含什么内容</h2><blockquote>
+<p>良好的日志内容应该是记录的信息不多不少刚刚好的。记录信息太少的问题很明显，但是太多也同样会有问题，会导致真正有用的信息被稀释，增加整个日志系统的负担，甚至影响到核心业务的性能。</p>
+</blockquote>
+<p>通常日志中应该包含的信息包含四类：错误信息、调试信息、运行信息、状态信息。不同的应用类型有不一样的信息，以常用dubbo服务为例，日志应该包含dubbo的调用方IP、接口名、方法名、入参、结果、线程、开始时间、消耗时间、其它关键信息等等。对于webapp应用，日志应该包含调用方IP、请求path、参数、返回码、开始时间、消耗时间等等。对于某些非必须的信息，或者不确定是否需要输出的信息，可以结合配置中心做动态控制。如下所示，是一个典型的dubbo请求日志：</p>
+<p>前缀</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[INFO ]2019-03-22 16:39:19.877 [DubboServerHandler-10.122.79.159:32001-thread-242]DS | </span><br></pre></td></tr></table></figure>
+
+<p>主体</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;trace&quot;</span><span class="punctuation">:</span><span class="string">&quot;5c949f372393dfdd18b9c417fd3b7960&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;service&quot;</span><span class="punctuation">:</span><span class="string">&quot;com.netease.nbim.service.api.JackpotService&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span><span class="string">&quot;queryAwardTotal&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;spend&quot;</span><span class="punctuation">:</span><span class="number">12</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;f4f0c38d9ca14f2e9522c4f3fee3b8e8&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;props&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;ex&quot;</span><span class="punctuation">:</span><span class="number">0</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;result&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;inviteCount&quot;</span><span class="punctuation">:</span><span class="number">0</span><span class="punctuation">,</span><span class="attr">&quot;award&quot;</span><span class="punctuation">:</span><span class="number">142.81</span><span class="punctuation">,</span><span class="attr">&quot;awardWait&quot;</span><span class="punctuation">:</span><span class="number">350.40</span><span class="punctuation">,</span><span class="attr">&quot;awardUsed&quot;</span><span class="punctuation">:</span><span class="number">142.81</span><span class="punctuation">,</span><span class="attr">&quot;level&quot;</span><span class="punctuation">:</span><span class="number">1</span><span class="punctuation">,</span><span class="attr">&quot;levelTodo&quot;</span><span class="punctuation">:</span><span class="number">1</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;peer&quot;</span><span class="punctuation">:</span><span class="string">&quot;10.122.79.155&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;beginTime&quot;</span><span class="punctuation">:</span><span class="number">1553243959864</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="常用日志框架"><a href="#常用日志框架" class="headerlink" title="常用日志框架"></a>常用日志框架</h2><p>Java体系中有很多的日志框架，目前常用的包括log4j、log4j2、commons-logging、slf4j、logback、JUL。这些日志框架总体分为两类：一类是日志门面或者称为接口标准，是一种标准API的封装，例如commons-logging和slf4j，另一类是剩下的日志实现框架。</p>
+<p>在早期比较流行的日志门面是Apache的commons-logging，它通过动态查找机制，在程序运行时，使用自己的ClassLoader寻找和载入本地具体的实现。目前使用最广泛的日志门面是slf4j，slf4j在编译期间，静态绑定本地的LOG库使得通用性要比commons-logging要好，它的实现机制决定了slf4j限制较少，使用范围更广。</p>
+<p>在日志实现框架中，log4j是最老牌的，也是早期使用最多的。log4j2的log4j的升级版，但是与log4j不兼容。logback是由log4j的作者后来另外出品的（slf4j也是他写的），JUL是jdk官方推出的日志实现。</p>
+<p>在各种组合中，常用的组合有：slf4j+logback，slf4j+log4j，commons-logging+log4j。对于新项目，<code>建议使用slf4j+logback组合</code>。</p>
+<p><img src="/technology/log/log_framework.png"></p>
+<h2 id="日志单元和日志链路"><a href="#日志单元和日志链路" class="headerlink" title="日志单元和日志链路"></a>日志单元和日志链路</h2><p>在实际业务中如何有效的管理和使用日志？日志单元+日志链路</p>
+<h3 id="日志单元"><a href="#日志单元" class="headerlink" title="日志单元"></a>日志单元</h3><p>什么是日志最小单元？对于业务日志，我们可以把业务进程分为三类：webapp、RPC(dubbo)、javaapp。webapp和rpc服务都有非常明确的输入输出，可以以一个请求作为日志的最小单元，一个请求内的所有信息汇总到一条日志内。对于其他javaapp进程，也同样可以找出一个日志最小单元，例如mq消费者中的每一次消费可以做为一个最小单元。</p>
+<p>被汇总的最小单元日志相比平铺式的日志有很多好处。如在需要定位问题时，日志单元可以有足够的汇总信息，而普通的平铺式日志中，你需要去查询非常多的日志，每条日志都只包含了很小一部分的信息，甚至很多时候你都不知道哪条日志是属于哪个请求的，定位问题会非常困难。在同步输出的情况下日志单元可以减少了落盘次数，减小磁盘IO。日志单元有统一的生命周期管理，可以规范代码中的日志使用。实现方式如下：</p>
+<p><img src="/technology/log/log_impl.jpg"></p>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><p>以webapp为例，首先定义好日志单元LogBean：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WebLogBean</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> LoggerFactory.getLogger(<span class="string">&quot;static&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ThreadLocal&lt;WebLogBean&gt; LOG_BEAN_THREAD_LOCAL = ThreadLocal.withInitial(WebLogBean::<span class="keyword">new</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> <span class="variable">uid</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">path</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">ip</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="variable">code</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> <span class="variable">begintime</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> <span class="variable">spendtime</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Object headers;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Object params;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Object payload;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String traceid;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, Object&gt; props = <span class="keyword">new</span> <span class="title class_">LinkedHashMap</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Object result;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Object error;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">long</span> <span class="title function_">getUid</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> uid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setUid</span><span class="params">(<span class="type">long</span> uid)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.uid = uid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">uid</span><span class="params">(<span class="type">long</span> uid)</span> &#123;</span><br><span class="line">        get().setUid(uid);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getPath</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> path;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setPath</span><span class="params">(String path)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.path = path;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setTraceid</span><span class="params">(String traceid)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.traceid = traceid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getTraceid</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> traceid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getIp</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> ip;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setIp</span><span class="params">(String ip)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.ip = ip;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getCode</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> code;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setCode</span><span class="params">(<span class="type">int</span> code)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.code = code;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">code</span><span class="params">(<span class="type">int</span> code)</span> &#123;</span><br><span class="line">        get().setCode(code);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">long</span> <span class="title function_">getBegintime</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> begintime;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setBegintime</span><span class="params">(<span class="type">long</span> begintime)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.begintime = begintime;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">long</span> <span class="title function_">getSpendtime</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> spendtime;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setSpendtime</span><span class="params">(<span class="type">long</span> spendtime)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.spendtime = spendtime;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">getHeaders</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> headers;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setHeaders</span><span class="params">(Object headers)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.headers = headers;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">getParams</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> params;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setParams</span><span class="params">(Object params)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.params = params;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">getPayload</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> payload;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setPayload</span><span class="params">(Object payload)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.payload = payload;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Map&lt;String, Object&gt; <span class="title function_">getProps</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> props;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setProps</span><span class="params">(Map&lt;String, Object&gt; props)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.props = props;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">getResult</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setResult</span><span class="params">(Object result)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.result = result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">getError</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> error;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setError</span><span class="params">(Object error)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.error = error;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> WebLogBean <span class="title function_">addProp</span><span class="params">(String key, Object value)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.getProps() != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="built_in">this</span>.getProps().put(key, (value == <span class="literal">null</span> ? <span class="string">&quot;null&quot;</span> : value));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">prop</span><span class="params">(String key, Object value)</span> &#123;</span><br><span class="line">        get().props.put(key, value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">delProp</span><span class="params">(String key)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.getProps() != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">this</span>.getProps().remove(key);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">getProp</span><span class="params">(String key)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.getProps() != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">this</span>.getProps().get(key);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">log</span><span class="params">()</span> &#123;</span><br><span class="line">        logger.info(GsonBox.LOG.gson().toJson(<span class="built_in">this</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">print</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.print(System.currentTimeMillis());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">print</span><span class="params">(<span class="type">long</span> now)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.setSpendtime(now - <span class="built_in">this</span>.getBegintime());</span><br><span class="line">        <span class="built_in">this</span>.log();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> WebLogBean <span class="title function_">get</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> LOG_BEAN_THREAD_LOCAL.get();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">remove</span><span class="params">()</span> &#123;</span><br><span class="line">        LOG_BEAN_THREAD_LOCAL.remove();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> WebLogBean <span class="title function_">start</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">WebLogBean</span> <span class="variable">logBean</span> <span class="operator">=</span> get();</span><br><span class="line">        logBean.setBegintime(System.currentTimeMillis());</span><br><span class="line">        <span class="keyword">return</span> logBean;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">end</span><span class="params">()</span> &#123;</span><br><span class="line">        get().print();</span><br><span class="line">        remove();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后通过interceptor进行日志管理：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LogInterceptor</span> <span class="keyword">extends</span> <span class="title class_">HandlerInterceptorAdapter</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> LoggerFactory.getLogger(LogInterceptor.class);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">preHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler)</span> &#123;</span><br><span class="line">        WebLogBean.start();</span><br><span class="line">        <span class="type">WebLogBean</span> <span class="variable">logBean</span> <span class="operator">=</span> WebLogBean.get();</span><br><span class="line">        logBean.setPath(request.getRequestURI());</span><br><span class="line">        logBean.setIp(RequestUtil.getIp(request));</span><br><span class="line">        logBean.setHeaders(RequestUtil.getHeaders(request));</span><br><span class="line">        logBean.setParams(request.getParameterMap());</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterCompletion</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)</span> &#123;</span><br><span class="line">        WebLogBean.end();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由interceptor统一管理日志单元以后（dubbo可以由filter管理，其它类型可以由aop切面管理），在业务中不再需要关心请求的其它信息，只需要往日志中添加自己需要内容即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">WebLogBean.prop(<span class="string">&quot;toAccid&quot;</span>, toAccid);</span><br><span class="line">WebLogBean.prop(<span class="string">&quot;dbRet&quot;</span>, <span class="number">1</span>);</span><br><span class="line">WebLogBean.prop(<span class="string">&quot;antispamRet&quot;</span>, <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+
+<p>上面在LogBean中我们可以看到Logger的名称不是类名，而是一个字符串“static”，这是为了将统一管理的日志单元单独输出到独立的日志文件中，便于后续的日志收集。只需要在logback的配置文件中单独为static配置一个appender就可以了：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">&quot;static&quot;</span> <span class="attr">level</span>=<span class="string">&quot;INFO&quot;</span> <span class="attr">additivity</span>=<span class="string">&quot;false&quot;</span> &gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">&quot;STATS&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">logger</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="日志链路"><a href="#日志链路" class="headerlink" title="日志链路"></a>日志链路</h3><p>有了日志单元，我们可以看到一个请求内的所有信息，但是在分布式系统中，光靠一个请求的信息有时候还不能定位出问题所在，所以我们需要有日志链路。把一次调用中的所有日志按先后顺序汇总在一起组成日志链路。要完成这个任务，光靠日志框架本身是做不到的，我们需要引入链路追踪组件。如常见的zipkin、pinpoint和网易云提供的NAPM。只需要把追踪的traceid和spanid信息输出到日志单元即可。</p>
+<h3 id="异常日志"><a href="#异常日志" class="headerlink" title="异常日志"></a>异常日志</h3><p>除了正常的业务日志以外，通常进程中还会存在一些不可预见的异常日志，例如由于Exception导致的异常日志，通常会包含完整的堆栈信息，这种堆栈信息不适合直接放入日志单元，通常做法应该是把简要的异常描述放入日志单元，日志堆栈则直接通过ERROR级别日志输出。后续可以通过哨兵对ERROR日志进行监控报警。</p>
+<h3 id="其它问题"><a href="#其它问题" class="headerlink" title="其它问题"></a>其它问题</h3><p>日志单元中有可能出现异步逻辑的情况，由于LogBean是基于ThreadLocal实现的，因此在异步逻辑中需要注意不能直接使用LogBean来添加日志信息，而应该通过原子类或其它中间变量来实现，虽然InheritableThreadLocal是可以继承的，但是实际业务中的异步逻辑通常会是线程池的实现，所以依然不能直接使用。</p>
+<h2 id="日志输出方式"><a href="#日志输出方式" class="headerlink" title="日志输出方式"></a>日志输出方式</h2><h3 id="同步异步"><a href="#同步异步" class="headerlink" title="同步异步"></a>同步异步</h3><p>对于logback的日志实现，输出方式主要分为两种，同步和异步。</p>
+<p>同步方式会在每次调用logger方法时直接写入磁盘并返回，因此它是会阻塞业务线程的，如果磁盘IO跟不上，就会导致业务逻辑被卡住，影响性能。好处是日志会及时输出，不会出现丢失情况。</p>
+<p>异步方式在每次调用logger方法时不会落盘，只是把日志放到了一个内存队列中，会由另一个异步线程来负责把内存中的日志数据落盘，当队列超出限制时，会按规则丢弃低级别的日志。好处是异步的方式对业务的性能影响更小。异步配置：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">appender</span> <span class="attr">name</span> =<span class="string">&quot;ASYNC&quot;</span> <span class="attr">class</span>= <span class="string">&quot;ch.qos.logback.classic.AsyncAppender&quot;</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 默认0不丢失日志。如果队列剩余20%空闲,则会丢弃TRACT、DEBUG、INFO级别的日志 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">discardingThreshold</span> &gt;</span>20<span class="tag">&lt;/<span class="name">discardingThreshold</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 更改默认的队列的深度,该值会影响性能.默认值为256 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">queueSize</span>&gt;</span>256<span class="tag">&lt;/<span class="name">queueSize</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span> =<span class="string">&quot;FILE&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">appender</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="动态变更"><a href="#动态变更" class="headerlink" title="动态变更"></a>动态变更</h3><p>logback支持定时reload配置文件并按照新的规则进行输出，通过这种方式可以临时修改日志输出级别和内容，日志文件等等。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 默认不reload，每隔60s reload一次 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span> <span class="attr">scan</span>=<span class="string">&quot;true&quot;</span> <span class="attr">scanPeriod</span>=<span class="string">&quot;60000&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>除了logback本身的配置可以reload以外，我们还可以结合配置中心来动态修改日志输出内容，例如可以在配置中心配置是否输出result，或根据param的长度决定是否要输出所有param到日志中等等。</p>
+<h3 id="日志滚动"><a href="#日志滚动" class="headerlink" title="日志滚动"></a>日志滚动</h3><p>logback主要提供了两种日志文件的滚动方式：FixedWindowRollingPolicy和SizeAndTimeBasedRollingPolicy。<br><img src="/technology/log/log_policy.png"></p>
+<p>简单的解释，FixedWindowRollingPolicy就是按照文件名加索引的方式滚动，日志文件将会是yeaf.log、yeaf.log.1、yeaf.log.2这样的，SizeAndTimeBasedRollingPolicy是按照时间加索引进行滚动。日志文件将会是yeaf.log、yeaf.log.2019-05-15_0这样的。用哪种方式可以根据需求决定，这里推荐使用SizeAndTimeBasedRollingPolicy，<code>不管用哪种一定要注意配置日志文件的存储限制，以免把机器磁盘跑满导致异常</code>。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">appender</span> <span class="attr">name</span>=<span class="string">&quot;FILE&quot;</span> <span class="attr">class</span>=<span class="string">&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">file</span>&gt;</span>$&#123;LOG_HOME&#125;/$&#123;LOG_FILE&#125;<span class="tag">&lt;/<span class="name">file</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">rollingPolicy</span> <span class="attr">class</span>=<span class="string">&quot;ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">fileNamePattern</span>&gt;</span>$&#123;LOG_HOME&#125;/$&#123;LOG_FILE&#125;.%d&#123;yyyy-MM-dd&#125;_%i<span class="tag">&lt;/<span class="name">fileNamePattern</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maxFileSize</span>&gt;</span>512MB<span class="tag">&lt;/<span class="name">maxFileSize</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maxHistory</span>&gt;</span>10<span class="tag">&lt;/<span class="name">maxHistory</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">totalSizeCap</span>&gt;</span>5GB<span class="tag">&lt;/<span class="name">totalSizeCap</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">rollingPolicy</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">encoder</span> <span class="attr">class</span>=<span class="string">&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">pattern</span>&gt;</span>[%-5level]%d&#123;yyyy-MM-dd HH:mm:ss.SSS&#125; [%thread]%logger&#123;0&#125; | %msg%n<span class="tag">&lt;/<span class="name">pattern</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">encoder</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">appender</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>日志输出到磁盘以后，改怎么使用它们呢？在分布式系统中，日志文件分散在成千上万的主机中，我们不可能为了一条日志，去登陆所有机器一台一台的查。因此日志输出以后需要进行收集汇总。</p>
+<p>通常我们使用logstash之类的工具来做收集，用elk和HDFS来做存储。</p>
+<p>收集日志时，应该把不同类型的日志分开收集，如dubbo服务的日志收集到一起，webapp的日志收集到一起，mq消费者的日志收集到一起，这样做的好处是日志导入elk后，可以为每种类型的日志建立不同的索引，可以提高搜索效率。</p>
+<p>线上问题定位是可以通过elk快出查出调用的日志链路，也可以通过业务日志来做一些业务系统的监控，如每分钟登陆的人数，登陆用户的地理位置分布，每分钟的消息数，消息的地理位置分布，等。</p>
+<p>还可以通过对HDFS中的日志进行数据挖掘分析，得出一些有价值的结果。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/donate-page/simple/images/wechat.jpg" alt="李城 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/donate-page/simple/images/alipay.jpg" alt="李城 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%9D%8E%E5%9F%8E/" rel="tag"><i class="fa fa-tag"></i> 李城</a>
+              <a href="/tags/Java/" rel="tag"><i class="fa fa-tag"></i> Java</a>
+              <a href="/tags/%E6%97%A5%E5%BF%97/" rel="tag"><i class="fa fa-tag"></i> 日志</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/life/newzealand/" rel="prev" title="自驾新西兰">
+                  <i class="fa fa-chevron-left"></i> 自驾新西兰
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/technology/delayq/" rel="next" title="延时消息队列">
+                  延时消息队列 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa-solid fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李城</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"cdn":"//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML","tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"lchml","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

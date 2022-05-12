@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lchml.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在分布式系统中的一个dubbo服务，日志中经常出现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hikari经常出现Failed to validate connection并阻塞应用线程问题">
+<meta property="og:url" content="https://lchml.com/technology/hikari-maxlifetime/index.html">
+<meta property="og:site_name" content="旅行的代码">
+<meta property="og:description" content="在分布式系统中的一个dubbo服务，日志中经常出现">
+<meta property="og:locale">
+<meta property="article:published_time" content="2018-07-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-12T06:06:27.405Z">
+<meta property="article:author" content="李城">
+<meta property="article:tag" content="李城">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="数据库">
+<meta property="article:tag" content="Hirika">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://lchml.com/technology/hikari-maxlifetime/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lchml.com/technology/hikari-maxlifetime/","path":"technology/hikari-maxlifetime/","title":"Hikari经常出现Failed to validate connection并阻塞应用线程问题"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Hikari经常出现Failed to validate connection并阻塞应用线程问题 | 旅行的代码</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71702178-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-71702178-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">旅行的代码</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">李城的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">问题分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3"><span class="nav-number">3.</span> <span class="nav-text">问题解决</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李城"
+      src="/lc-icon.jpg">
+  <p class="site-author-name" itemprop="name">李城</p>
+  <div class="site-description" itemprop="description">知行合一</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">111</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/licheng-xd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;licheng-xd" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:licheng_xd@163.com" title="E-Mail → mailto:licheng_xd@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.me/lchml" title="500px → https:&#x2F;&#x2F;500px.me&#x2F;lchml" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i>500px</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://jandan.net/" title="Jandan → https:&#x2F;&#x2F;jandan.net" rel="noopener" target="_blank"><i class="fa fa-transgender-alt fa-fw"></i>Jandan</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/4qg55j4w/home?wvr=5" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;4qg55j4w&#x2F;home?wvr&#x3D;5" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.qingtian16265.com/" title="晴天博客 → https:&#x2F;&#x2F;blog.qingtian16265.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-leanpub fa-fw"></i>晴天博客</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/hikari-maxlifetime/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/lc-icon.jpg">
+      <meta itemprop="name" content="李城">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="旅行的代码">
+      <meta itemprop="description" content="知行合一">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Hikari经常出现Failed to validate connection并阻塞应用线程问题 | 旅行的代码">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hikari经常出现Failed to validate connection并阻塞应用线程问题
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-07-11 00:00:00" itemprop="dateCreated datePublished" datetime="2018-07-11T00:00:00+08:00">2018-07-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/technology/hikari-maxlifetime/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="technology/hikari-maxlifetime/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>在分布式系统中的一个dubbo服务，日志中经常出现</p>
+<span id="more"></span>
+
+<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>在分布式系统中的一个dubbo服务，日志中经常出现：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[WARN ]2018-07-06 19:30:49.581 [DubboServerHandler-10.206.56.200:20008-thread-195]PoolBase | HikariPool-1 - Failed to validate connection com.mysql.jdbc.JDBC4Connection@6a9ac783 (No operations allowed after connection closed.)</span><br></pre></td></tr></table></figure>
+
+<p>同时导致对应请求长时间阻塞，阻塞时间从5s~20s不等。</p>
+<h3 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h3><p>首先从Github上下载[Hikari源码][1]，在源码中直接搜索到对应的错误信息日志。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">boolean</span> <span class="title function_">isConnectionAlive</span><span class="params">(<span class="keyword">final</span> Connection connection)</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">         setNetworkTimeout(connection, validationTimeout);</span><br><span class="line"></span><br><span class="line">         <span class="keyword">final</span> <span class="type">int</span> <span class="variable">validationSeconds</span> <span class="operator">=</span> (<span class="type">int</span>) Math.max(<span class="number">1000L</span>, validationTimeout) / <span class="number">1000</span>;</span><br><span class="line"></span><br><span class="line">         <span class="keyword">if</span> (isUseJdbc4Validation) &#123;</span><br><span class="line">            <span class="keyword">return</span> connection.isValid(validationSeconds);</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line">         <span class="keyword">try</span> (<span class="type">Statement</span> <span class="variable">statement</span> <span class="operator">=</span> connection.createStatement()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (isNetworkTimeoutSupported != TRUE) &#123;</span><br><span class="line">               setQueryTimeout(statement, validationSeconds);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            statement.execute(config.getConnectionTestQuery());</span><br><span class="line">         &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">finally</span> &#123;</span><br><span class="line">         setNetworkTimeout(connection, networkTimeout);</span><br><span class="line"></span><br><span class="line">         <span class="keyword">if</span> (isIsolateInternalQueries &amp;&amp; !isAutoCommit) &#123;</span><br><span class="line">            connection.rollback();</span><br><span class="line">         &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">      lastConnectionFailure.set(e);</span><br><span class="line">      LOGGER.warn(<span class="string">&quot;&#123;&#125; - Failed to validate connection &#123;&#125; (&#123;&#125;). Possibly consider using a shorter maxLifetime value.&quot;</span>, poolName, connection, e.getMessage());</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从代码中可以看出，错误是从这个isConnectionAlive()中抛出来的，从堆栈可以看出异常是从setNetworkTimeout()方法抛出，这个方法里面逻辑很简单，就是对当前数据库连接设置一个网络超时时间，其实相当于同时检查了连接是否可用。所以这个异常的根本原因就是当前数据库连接已经不可用，但是却依旧存在于Hikari的连接池中。</p>
+<p>再来看应用层获取连接的方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Connection <span class="title function_">getConnection</span><span class="params">(<span class="keyword">final</span> <span class="type">long</span> hardTimeout)</span> <span class="keyword">throws</span> SQLException</span><br><span class="line">&#123;</span><br><span class="line">   suspendResumeLock.acquire();</span><br><span class="line">   <span class="keyword">final</span> <span class="type">long</span> <span class="variable">startTime</span> <span class="operator">=</span> currentTime();</span><br><span class="line"></span><br><span class="line">   <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="type">long</span> <span class="variable">timeout</span> <span class="operator">=</span> hardTimeout;</span><br><span class="line">      <span class="keyword">do</span> &#123;</span><br><span class="line">         <span class="type">PoolEntry</span> <span class="variable">poolEntry</span> <span class="operator">=</span> connectionBag.borrow(timeout, MILLISECONDS);</span><br><span class="line">         <span class="keyword">if</span> (poolEntry == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">break</span>; <span class="comment">// We timed out... break and throw exception</span></span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line">         <span class="keyword">final</span> <span class="type">long</span> <span class="variable">now</span> <span class="operator">=</span> currentTime();</span><br><span class="line">         <span class="keyword">if</span> (poolEntry.isMarkedEvicted() || (elapsedMillis(poolEntry.lastAccessed, now) &gt; ALIVE_BYPASS_WINDOW_MS &amp;&amp; !isConnectionAlive(poolEntry.connection))) &#123;</span><br><span class="line">            closeConnection(poolEntry, poolEntry.isMarkedEvicted() ? EVICTED_CONNECTION_MESSAGE : DEAD_CONNECTION_MESSAGE);</span><br><span class="line">            timeout = hardTimeout - elapsedMillis(startTime);</span><br><span class="line">         &#125;</span><br><span class="line">         <span class="keyword">else</span> &#123;</span><br><span class="line">            metricsTracker.recordBorrowStats(poolEntry, startTime);</span><br><span class="line">            <span class="keyword">return</span> poolEntry.createProxyConnection(leakTaskFactory.schedule(poolEntry), now);</span><br><span class="line">         &#125;</span><br><span class="line">      &#125; <span class="keyword">while</span> (timeout &gt; <span class="number">0L</span>);</span><br><span class="line"></span><br><span class="line">      metricsTracker.recordBorrowTimeoutStats(startTime);</span><br><span class="line">      <span class="keyword">throw</span> createTimeoutException(startTime);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">      Thread.currentThread().interrupt();</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">SQLException</span>(poolName + <span class="string">&quot; - Interrupted during connection acquisition&quot;</span>, e);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">finally</span> &#123;</span><br><span class="line">      suspendResumeLock.release();</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>逻辑很简答，在while循环里面会从连接池中拿到连接，并通过isConnectionAlive()方法来判断连接是否可用，其中会为连接设置忘了超时setNetworkTimeout()，因此如果连接失效，则会阻塞一个validationTImeout的时间周期并关闭连接。然后继续从连接池取一下连接，如此循环，直到拿到可用连接，或者连接池为空并抛出异常。这就解释了为什么我们在日志中看到的阻塞时间都是5s的倍数，因为这和连续几次拿到无效连接有关。</p>
+<p>那为什么连接池中会有无效的连接呢？我们来看连接创建的方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Creating new poolEntry.  If maxLifetime is configured, create a future End-of-life task with 2.5% variance from</span></span><br><span class="line"><span class="comment"> * the maxLifetime time to ensure there is no massive die-off of Connections in the pool.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> PoolEntry <span class="title function_">createPoolEntry</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">final</span> <span class="type">PoolEntry</span> <span class="variable">poolEntry</span> <span class="operator">=</span> newPoolEntry();</span><br><span class="line"></span><br><span class="line">      <span class="keyword">final</span> <span class="type">long</span> <span class="variable">maxLifetime</span> <span class="operator">=</span> config.getMaxLifetime();</span><br><span class="line">      <span class="keyword">if</span> (maxLifetime &gt; <span class="number">0</span>) &#123;</span><br><span class="line">         <span class="comment">// variance up to 2.5% of the maxlifetime</span></span><br><span class="line">         <span class="keyword">final</span> <span class="type">long</span> <span class="variable">variance</span> <span class="operator">=</span> maxLifetime &gt; <span class="number">10_000</span> ? ThreadLocalRandom.current().nextLong( maxLifetime / <span class="number">40</span> ) : <span class="number">0</span>;</span><br><span class="line">         <span class="keyword">final</span> <span class="type">long</span> <span class="variable">lifetime</span> <span class="operator">=</span> maxLifetime - variance;</span><br><span class="line">         poolEntry.setFutureEol(houseKeepingExecutorService.schedule(</span><br><span class="line">            () -&gt; &#123;</span><br><span class="line">               <span class="keyword">if</span> (softEvictConnection(poolEntry, <span class="string">&quot;(connection has passed maxLifetime)&quot;</span>, <span class="literal">false</span> <span class="comment">/* not owner */</span>)) &#123;</span><br><span class="line">                  addBagItem(connectionBag.getWaitingThreadCount());</span><br><span class="line">               &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            lifetime, MILLISECONDS));</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> poolEntry;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">      <span class="keyword">if</span> (poolState == POOL_NORMAL) &#123; <span class="comment">// we check POOL_NORMAL to avoid a flood of messages if shutdown() is running concurrently</span></span><br><span class="line">         LOGGER.debug(<span class="string">&quot;&#123;&#125; - Cannot acquire connection from data source&quot;</span>, poolName, (e <span class="keyword">instanceof</span> ConnectionSetupException ? e.getCause() : e));</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到每个连接创建时都会对应的创建一个schedule任务去调用softEvictConnection()方法将连接设置为Evicted状态，可以看到这个时间的lifetime就是根据我们设置的maxLifetime减去一个随机误差的。也就说如果在lifetime时间内，连接失效Hikari并不会把它从连接池中清理掉。Hikari的默认maxLifetime是30分钟，mysql默认的连接超时是8小时，所以一般不会碰到这个问题。但是由于我在项目中使用的是分布式数据库ddb，所以怀疑是ddb的连接超时小于30分钟导致的。去找dba询问，果然给出的时间是1000s，也就是16分钟左右。</p>
+<h3 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h3><p>把Hikari的maxlifetime（注意计算随机误差）设置成比数据库连接超时更短的时间。dbcp中也有类似的配置：minEvictableIdleTimeMillis。</p>
+<p>[1]:	<a target="_blank" rel="noopener" href="https://github.com/brettwooldridge/HikariCP">https://github.com/brettwooldridge/HikariCP</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/donate-page/simple/images/wechat.jpg" alt="李城 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/donate-page/simple/images/alipay.jpg" alt="李城 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%9D%8E%E5%9F%8E/" rel="tag"><i class="fa fa-tag"></i> 李城</a>
+              <a href="/tags/Java/" rel="tag"><i class="fa fa-tag"></i> Java</a>
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag"><i class="fa fa-tag"></i> 数据库</a>
+              <a href="/tags/Hirika/" rel="tag"><i class="fa fa-tag"></i> Hirika</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/technology/java-brief/" rel="prev" title="Java常见知识点">
+                  <i class="fa fa-chevron-left"></i> Java常见知识点
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/technology/zipkin/" rel="next" title="分布式调用追踪系统Zipkin集成">
+                  分布式调用追踪系统Zipkin集成 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa-solid fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李城</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"cdn":"//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML","tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"lchml","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

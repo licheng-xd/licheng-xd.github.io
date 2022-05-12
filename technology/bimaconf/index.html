@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lchml.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="圈圈配置中心是为了服务网易圈圈开发的通用配置中心服务。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Bimaconf —— 开源配置中心">
+<meta property="og:url" content="https://lchml.com/technology/bimaconf/index.html">
+<meta property="og:site_name" content="旅行的代码">
+<meta property="og:description" content="圈圈配置中心是为了服务网易圈圈开发的通用配置中心服务。">
+<meta property="og:locale">
+<meta property="og:image" content="https://lchml.com/technology/bimaconf/bimaconf-example.png">
+<meta property="og:image" content="http://nos.netease.com/knowledge/e5960af1-bd40-4b26-bb10-2faa2e99dc6a">
+<meta property="article:published_time" content="2019-01-24T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-12T06:04:35.582Z">
+<meta property="article:author" content="李城">
+<meta property="article:tag" content="李城">
+<meta property="article:tag" content="bimaconf">
+<meta property="article:tag" content="配置中心">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lchml.com/technology/bimaconf/bimaconf-example.png">
+
+
+<link rel="canonical" href="https://lchml.com/technology/bimaconf/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lchml.com/technology/bimaconf/","path":"technology/bimaconf/","title":"Bimaconf —— 开源配置中心"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Bimaconf —— 开源配置中心 | 旅行的代码</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71702178-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-71702178-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">旅行的代码</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">李城的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">项目介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%94%AF%E6%8C%81"><span class="nav-number">2.</span> <span class="nav-text">文件格式支持</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E5%9B%BE"><span class="nav-number">3.</span> <span class="nav-text">架构图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Springboot%E5%B7%A5%E7%A8%8B%E4%B8%89%E6%AD%A5%E5%BF%AB%E9%80%9F%E6%8E%A5%E5%85%A5"><span class="nav-number">4.</span> <span class="nav-text">Springboot工程三步快速接入</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SDK%E5%85%B7%E4%BD%93%E4%BD%BF%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">SDK具体使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Bimaconf%E9%85%8D%E7%BD%AE"><span class="nav-number">5.1.</span> <span class="nav-text">Bimaconf配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bimaconf%E6%B3%A8%E8%A7%A3"><span class="nav-number">5.2.</span> <span class="nav-text">@Bimaconf注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BimaconfCluster%E6%B3%A8%E8%A7%A3"><span class="nav-number">5.3.</span> <span class="nav-text">@BimaconfCluster注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BimaconfCallback%E6%8E%A5%E5%8F%A3"><span class="nav-number">5.4.</span> <span class="nav-text">BimaconfCallback接口</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#preCheck%E6%96%B9%E6%B3%95"><span class="nav-number">5.4.0.1.</span> <span class="nav-text">preCheck方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#update%E6%96%B9%E6%B3%95"><span class="nav-number">5.4.0.2.</span> <span class="nav-text">update方法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9A%82%E5%81%9C%E5%8A%9F%E8%83%BD"><span class="nav-number">5.5.</span> <span class="nav-text">暂停功能</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8E%E5%8F%B0%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD"><span class="nav-number">6.</span> <span class="nav-text">后台高级功能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86"><span class="nav-number">6.1.</span> <span class="nav-text">权限管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%A5%E8%AD%A6%E7%BB%84%E7%AE%A1%E7%90%86"><span class="nav-number">6.2.</span> <span class="nav-text">报警组管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E6%94%BE%E8%83%BD%E5%8A%9B"><span class="nav-number">6.3.</span> <span class="nav-text">开放能力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SDK%E9%89%B4%E6%9D%83%E5%8A%9F%E8%83%BD"><span class="nav-number">6.4.</span> <span class="nav-text">SDK鉴权功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E6%97%B6%E6%9B%B4%E6%96%B0"><span class="nav-number">6.5.</span> <span class="nav-text">定时更新</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李城"
+      src="/lc-icon.jpg">
+  <p class="site-author-name" itemprop="name">李城</p>
+  <div class="site-description" itemprop="description">知行合一</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">111</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/licheng-xd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;licheng-xd" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:licheng_xd@163.com" title="E-Mail → mailto:licheng_xd@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.me/lchml" title="500px → https:&#x2F;&#x2F;500px.me&#x2F;lchml" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i>500px</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://jandan.net/" title="Jandan → https:&#x2F;&#x2F;jandan.net" rel="noopener" target="_blank"><i class="fa fa-transgender-alt fa-fw"></i>Jandan</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/4qg55j4w/home?wvr=5" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;4qg55j4w&#x2F;home?wvr&#x3D;5" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.qingtian16265.com/" title="晴天博客 → https:&#x2F;&#x2F;blog.qingtian16265.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-leanpub fa-fw"></i>晴天博客</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/bimaconf/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/lc-icon.jpg">
+      <meta itemprop="name" content="李城">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="旅行的代码">
+      <meta itemprop="description" content="知行合一">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Bimaconf —— 开源配置中心 | 旅行的代码">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Bimaconf —— 开源配置中心
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-01-25 00:00:00" itemprop="dateCreated datePublished" datetime="2019-01-25T00:00:00+08:00">2019-01-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/technology/bimaconf/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="technology/bimaconf/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote>
+<p>圈圈配置中心是为了服务网易圈圈开发的通用配置中心服务。</p>
+</blockquote>
+<span id="more"></span>
+
+<h1 id="项目介绍"><a href="#项目介绍" class="headerlink" title="项目介绍"></a>项目介绍</h1><p>相比社区已有的开源配置中心，有更多的高级功能和更简洁的接入方式，如</p>
+<ul>
+<li>暂停功能</li>
+<li>定时更新</li>
+<li>历史版本回滚</li>
+<li>集群配置</li>
+<li>开放能力</li>
+<li>权限管理</li>
+<li>报警组管理</li>
+<li>邮件、泡泡、stone报警支持</li>
+<li>格式检查</li>
+<li>sdk载入预检查</li>
+<li>继承</li>
+</ul>
+<p>同时可以集成oauth账号鉴权，方便项目人员权限管理。目前已经在网易内部多个项目的线上环境部署使用。如有需要使用可以联系我提供任何支持。（目前项目处于公司内部开源阶段，因此还没有开放使用，计划后续会开源到社区。）</p>
+<p><img src="/technology/bimaconf/bimaconf-example.png" alt="bimaconf-example.png"></p>
+<h1 id="文件格式支持"><a href="#文件格式支持" class="headerlink" title="文件格式支持"></a>文件格式支持</h1><table>
+<thead>
+<tr>
+<th align="left">后缀</th>
+<th align="left">sdk预检查</th>
+<th align="left">格式检查</th>
+<th align="left">继承</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">properties</td>
+<td align="left">✔️</td>
+<td align="left">✔️</td>
+<td align="left">✔️</td>
+</tr>
+<tr>
+<td align="left">yml</td>
+<td align="left">✔️</td>
+<td align="left">✔️</td>
+<td align="left">✘</td>
+</tr>
+<tr>
+<td align="left">json</td>
+<td align="left">✔️</td>
+<td align="left">✔️</td>
+<td align="left">✘</td>
+</tr>
+<tr>
+<td align="left">xml</td>
+<td align="left">✔️</td>
+<td align="left">✔️</td>
+<td align="left">✘</td>
+</tr>
+<tr>
+<td align="left">txt</td>
+<td align="left">✔️</td>
+<td align="left">✘</td>
+<td align="left">✘</td>
+</tr>
+</tbody></table>
+<h1 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h1><p> <img src="http://nos.netease.com/knowledge/e5960af1-bd40-4b26-bb10-2faa2e99dc6a" alt="Alt pic"> </p>
+<h1 id="Springboot工程三步快速接入"><a href="#Springboot工程三步快速接入" class="headerlink" title="Springboot工程三步快速接入"></a>Springboot工程三步快速接入</h1><p>1、通过在Application类上注解@EnableBimaconf启动bimaconf</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@EnableBimaconf</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestClient</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">SpringApplication</span> <span class="variable">app</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SpringApplicationBuilder</span>(TestClient.class)</span><br><span class="line">                .bannerMode(Banner.Mode.OFF)</span><br><span class="line">                .web(WebApplicationType.SERVLET).build();</span><br><span class="line">        app.run(args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2、在application.yml中配置server, project</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bimaconf:</span><br><span class="line">  server: <span class="string">&#x27;http://bimaconf.domain&#x27;</span></span><br><span class="line">  project: test-project</span><br></pre></td></tr></table></figure>
+<p>3、在代码中增加对应的配置文件类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Configs</span> &#123;</span><br><span class="line">    <span class="meta">@Bimaconf(app = &quot;test-app&quot;, cluster = &quot;dev&quot;, filename = &quot;testconf.properties&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">TestXml</span> <span class="keyword">implements</span> <span class="title class_">BimaconfCallback</span> &#123;</span><br><span class="line">​</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(String filename)</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;file update: &quot;</span> + filename);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="SDK具体使用"><a href="#SDK具体使用" class="headerlink" title="SDK具体使用"></a>SDK具体使用</h1><h2 id="Bimaconf配置"><a href="#Bimaconf配置" class="headerlink" title="Bimaconf配置"></a>Bimaconf配置</h2><p>Bimaconf SDK启动时自身需要一个配置文件（普通sdk的withProperties启动模式可以不需要配置文件，但同样可以在代码中指定下面的参数），在springboot中直接在application.yml中配置，其它java进程中默认用bimaconf.properties文件，也可以自行指定。</p>
+<p>除了快速接入中说的server和project配置以外，还可以一些可选配置参数来提供更加复杂的功能。</p>
+<table>
+<thead>
+<tr>
+<th align="left">参数名</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">enable</td>
+<td align="left">默认true，如果配置了false，怎bimaconf将不会启动</td>
+</tr>
+<tr>
+<td align="left">app</td>
+<td align="left">应用名，会被@Bimaconf或@BimaconfCluster注解中的app覆盖</td>
+</tr>
+<tr>
+<td align="left">cluster</td>
+<td align="left">集群名，会被@Bimaconf或@BimaconfCluster注解中的cluster覆盖</td>
+</tr>
+<tr>
+<td align="left">scanPackages</td>
+<td align="left">用于扫描main方法所在package以外的包中的注解，多个包名用<code>,</code>隔开</td>
+</tr>
+<tr>
+<td align="left">projectToken</td>
+<td align="left">如果控制台开启了项目的sdk鉴权功能，则需要配置该token，否则不可用</td>
+</tr>
+<tr>
+<td align="left">tempDir</td>
+<td align="left">下载配置文件时的临时目录，默认<code>./bimaconf</code></td>
+</tr>
+<tr>
+<td align="left">retry</td>
+<td align="left">zookeeper连接参数，当连接断开或zk不可用时的重试次数</td>
+</tr>
+<tr>
+<td align="left">retryIntervalMills</td>
+<td align="left">zookeeper连接参数，当连接断开或zk不可用时的重试时间间隔</td>
+</tr>
+</tbody></table>
+<h2 id="Bimaconf注解"><a href="#Bimaconf注解" class="headerlink" title="@Bimaconf注解"></a>@Bimaconf注解</h2><p>当一个类被注解为@Bimaconf，就表示这个类监听了一个配置文件。@Bimaconf中的各项参数用于指定配置文件和相应的行为。</p>
+<table>
+<thead>
+<tr>
+<th align="left">参数名</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">app</td>
+<td align="left">应用名，如果设置了，会覆盖yml或properties中的配置</td>
+</tr>
+<tr>
+<td align="left">cluster</td>
+<td align="left">集群名，如果设置了，会覆盖yml或properties中的配置</td>
+</tr>
+<tr>
+<td align="left">filename</td>
+<td align="left">配置文件名</td>
+</tr>
+<tr>
+<td align="left">polling</td>
+<td align="left">默认false，表示是否定时去配置中心服务器检查配置文件正确性</td>
+</tr>
+<tr>
+<td align="left">callbackAfterInit</td>
+<td align="left">默认false，表示Bimaconf启动完成后是否调用BimaconfCallback接口</td>
+</tr>
+</tbody></table>
+<h2 id="BimaconfCluster注解"><a href="#BimaconfCluster注解" class="headerlink" title="@BimaconfCluster注解"></a>@BimaconfCluster注解</h2><p>当一个类被注解为@BimaconfCluster，就表示这个类监听了一个配置集群。@BimaconfCluster中的各项参数用于指定配置文件和相应的行为。</p>
+<p>如果监听了配置集群，则表示当该集群下有任何文件增加、文件修改（目前不支持文件删除同步）都会同步到sdk端，可以用于需要动态增加配置文件的场景。</p>
+<table>
+<thead>
+<tr>
+<th align="left">参数名</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">app</td>
+<td align="left">应用名，如果设置了，会覆盖yml或properties中的配置</td>
+</tr>
+<tr>
+<td align="left">cluster</td>
+<td align="left">集群名，如果设置了，会覆盖yml或properties中的配置</td>
+</tr>
+<tr>
+<td align="left">filePattern</td>
+<td align="left">配置文件名匹配正则，默认<code>.*</code>表示匹配任何文件，只有集群中文件名匹配的配置文件才会被下载</td>
+</tr>
+<tr>
+<td align="left">polling</td>
+<td align="left">默认false，表示是否定时去配置中心服务器检查配置文件正确性</td>
+</tr>
+<tr>
+<td align="left">callbackAfterInit</td>
+<td align="left">默认false，表示Bimaconf启动完成后是否调用BimaconfCallback接口</td>
+</tr>
+</tbody></table>
+<h2 id="BimaconfCallback接口"><a href="#BimaconfCallback接口" class="headerlink" title="BimaconfCallback接口"></a>BimaconfCallback接口</h2><p>应用程序可以通过让注解了@Bimaconf或@BimaconfCluster的类实现BimaconfCallback接口来实现对配置文件变更事件的监听。接口包含两个方法：preCheck和update。</p>
+<h4 id="preCheck方法"><a href="#preCheck方法" class="headerlink" title="preCheck方法"></a>preCheck方法</h4><p>该方法有default实现，默认返回true。</p>
+<p>当sdk监听到配置文件发生变更时，会先把新文件下载到一个临时目录中，此时会调用preCheck方法检查新文件的合法性。返回false，表示下载的配置文件不合法，在启动时会终止进程，在运行中会抛出异常并报警。返回true则会将新文件移动到classpath中，并继续后续的逻辑。</p>
+<p>方法参数：path，表示新文件的临时路径（绝对路径）</p>
+<h4 id="update方法"><a href="#update方法" class="headerlink" title="update方法"></a>update方法</h4><p>当对应的配置文件发生变更时，且通过合法性检查，成功更新以后回调用update方法，通知应用程序变更事件。</p>
+<p>方法参数：filename，表示发生变更的文件名</p>
+<h2 id="暂停功能"><a href="#暂停功能" class="headerlink" title="暂停功能"></a>暂停功能</h2><p>如果某个应用程序使用了bimaconf，但是由于某些理由，希望暂时不适用配置中心的配置，而是在本地修改配置文件做一些测试。这时就需要使用bimaconf的暂停功能，如果不暂停，就算本地修改了配置文件，也会被配置中心的文件重新覆盖。</p>
+<p><strong>暂停方法：创建配置文件对应的.pause文件。</strong></p>
+<p>例如当需要暂停conf.xml文件的监听，需要先到bimaconf控制台上找到该配置，然后到<code>使用状态</code>中找到对应的主机，再根据控制台上显示的路径地址，到对应的主机目录中创建一个conf.xml.pause文件。这时conf.xml会和配置中心断开，不再同步后续的变更。控制台上也可以看到对应的主机状态变成<code>暂停</code>。当测试完需要重新同步配置中心的文件时，只需删掉.pause文件，就会自动触发重新同步，更新到最新的配置。</p>
+<h1 id="后台高级功能"><a href="#后台高级功能" class="headerlink" title="后台高级功能"></a>后台高级功能</h1><blockquote>
+<p>控制台是图形界面，大部分功能只需自行探索就可以了，如创建应用，集群（可批量），配置文件，各种信息展示等。本节主要介绍一下几个可能会有疑惑的功能点。</p>
+</blockquote>
+<h2 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h2><blockquote>
+<p>在Bimaconf中权限的管理是项目为边界分割的，不同项目中的权限没有任何联系。</p>
+</blockquote>
+<p>进入项目后，控制台上方可以看到**<code>权限管理</code>**的按钮。进入权限管理页面后，可以添加用户。</p>
+<p>被添加用户的权限可以分为三种：</p>
+<ul>
+<li>读写权限</li>
+</ul>
+<p>读写权限用户对项目中所有的操作都有权限，除了删除项目本身只有创建者可以。和其它权限互斥，当设置了读写权限后，该用户原有的其它权限会被全部清除。</p>
+<ul>
+<li>只读权限</li>
+</ul>
+<p>只读权限用户对项目中所有非修改类的操作都有权限，包括查看使用状态，查看所有配置文件。除了查看sdk鉴权的信息以外。和其它权限互斥，当设置了读写权限后，该用户原有的其它权限会被全部清除。</p>
+<ul>
+<li>集群权限</li>
+</ul>
+<p>集群全权限用户表示，只对某个集群中的所有配置文件有读写权限。集群权限可以多个并存，但是与读写和只读互斥。</p>
+<h2 id="报警组管理"><a href="#报警组管理" class="headerlink" title="报警组管理"></a>报警组管理</h2><blockquote>
+<p>报警组用于方便统一设置报警接收人</p>
+</blockquote>
+<p>进入项目后，控制台上方可以看到**<code>报警管理</code>**的按钮。进入后有两个tab，一个是报警历史，可以用于查看历史报警信息。还有一个就是报警组管理，可以创建报警组，或修改已有的报警组。</p>
+<p><strong>注意：</strong>报警组添加成员时，需要输入成员的完整corp邮箱，或者yixin邮箱（yixin邮箱可能会收不到stone报警）。</p>
+<p>创建好报警组以后，重新回到项目页面，在每个应用名的右边有一个**<code>编辑</code>**按钮，进入应用编辑页面后可以设置报警组。报警组和报警邮箱列表可以共存，服务器会自动做去重。</p>
+<h2 id="开放能力"><a href="#开放能力" class="headerlink" title="开放能力"></a>开放能力</h2><p>在某些场景下，除了在Bimaconf控制台修改文件以外，可能会需要在某些程序中修改配置文件，如某个配置文件需要暴露给第三方程序，并允许第三方修改该配置文件。这时就需要用到Bimaconf的配置文件开放能力。</p>
+<p>在配置文件页面上方可以看到**<code>开放能力</code>**的按钮。进入以后可以选择添加key，确定以后就会生成一组key和secret。第三方可以通过这个key和secret来获取和修改对应的配置文件。</p>
+<p><strong>注意：</strong>开放能力中创建的key和secret是和创建者绑定在一起的，也就是说通过这个key操作的记录都会被记录在创建者名下。</p>
+<h2 id="SDK鉴权功能"><a href="#SDK鉴权功能" class="headerlink" title="SDK鉴权功能"></a>SDK鉴权功能</h2><blockquote>
+<p>默认情况下，项目中的所有配置文件都是可以被他人访问的。</p>
+</blockquote>
+<p>虽然bimaconf.service.163.org是一个机房内网域名，但是只要网络互通，并且知道对应的项目、应用、集群、配置文件名时，任何主机都可以访问对应的配置文件。如果想要自己的配置文件更加安全，不希望被其它人访问，可以开启SDK鉴权功能。开启以后，访问配置文件将需要鉴权。</p>
+<p>在控制台首页项目列表中，选择想要开启的项目，进入管理页面。选择开启SDK鉴权，确认以后就会生成一个SDK TOKEN。把这个token配置在sdk的projectToken中。</p>
+<p><strong>注意：</strong>如果项目有配置文件正在被使用，则切勿随意开启鉴权功能或刷新token，这样将会导致sdk不能访问配置中心。需要先确保sdk已经配置了对应的projectToken，然后再开启鉴权。</p>
+<h2 id="定时更新"><a href="#定时更新" class="headerlink" title="定时更新"></a>定时更新</h2><blockquote>
+<p>在实际使用中，通常会需要在未来某个时间点修改某项配置。如在后天早上的0点开启强制更新开关，这个时候如果没有定时更新功能，就需要开发人员在半夜起来打开电脑去完成这次修改。</p>
+</blockquote>
+<p>进入配置文件后，控制台上方可以看到**<code>定时更新</code>**的按钮。进入定时任务管理页面后，可以看到当前配置文件已执行过的和待执行的定时任务。可以有如下操作。</p>
+<ul>
+<li>新增任务</li>
+</ul>
+<p>对当前配置文件增加一个定时更新任务。点击新增任务按钮，选择计划执行时间并编辑文件内容。计划执行时间至少设置在当前时间的2分钟之后。如果还有其他未执行的任务，则任意两个任务之间的时间间隔必须大于2分钟。同一个配置文件的未执行任务不能超过5个。需要注意的是，由于定时任务会在未来执行，因此当一个配置文件设置了定时任务，在定时任务被执行或被删除之前，该配置文件将<strong>被任务创建者锁定</strong>，任何人都不能再编辑该配置文件。直到任务完成或删除，自动解除锁定。在任务锁定期间，其他人也不能再新增任务或修改任务。只有锁定人可以新增、修改、删除。</p>
+<ul>
+<li>修改任务</li>
+</ul>
+<p>只有任务的创建者可以修改任务，只有未执行的任务可以被修改。修改任务时可以重新设定文件内容和任务时间，但同样必须在当前时间的2分钟之后，以及与其他未执行任务的时间间隔大于2分钟。</p>
+<ul>
+<li>删除任务</li>
+</ul>
+<p>只有任务的创建者可以删除任务，只有未执行的任务可以被删除。</p>
+<ul>
+<li>报警通知</li>
+</ul>
+<p>以下情况：任务执行成功、执行失败、异常原因导致任务过期。都将会发送email、stone、popo消息给任务创建者。如果执行成功，并更新了配置文件依然会触发正常的文件更新通知。</p>
+<blockquote>
+<p>TIPS: 可以通过设置一个内容没有修改的定时任务来锁定一个配置文件，达到在一段时间内不被其他人修改的目的。</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/donate-page/simple/images/wechat.jpg" alt="李城 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/donate-page/simple/images/alipay.jpg" alt="李城 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%9D%8E%E5%9F%8E/" rel="tag"><i class="fa fa-tag"></i> 李城</a>
+              <a href="/tags/bimaconf/" rel="tag"><i class="fa fa-tag"></i> bimaconf</a>
+              <a href="/tags/%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/" rel="tag"><i class="fa fa-tag"></i> 配置中心</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/technology/grafana-influxdb-build/" rel="prev" title="Grafana+InfluxDB构建项目数据大盘">
+                  <i class="fa fa-chevron-left"></i> Grafana+InfluxDB构建项目数据大盘
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/technology/java-engineer/" rel="next" title="Java技能总结">
+                  Java技能总结 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa-solid fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李城</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"cdn":"//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML","tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"lchml","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

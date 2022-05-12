@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lchml.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="GRPC是Google开源的一个高性能、跨语言的RPC框架，基于HTTP2协议，基于protobuf-3.x，基于Netty-4.x。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GRPC丢包之路">
+<meta property="og:url" content="https://lchml.com/technology/grpc-trap/index.html">
+<meta property="og:site_name" content="旅行的代码">
+<meta property="og:description" content="GRPC是Google开源的一个高性能、跨语言的RPC框架，基于HTTP2协议，基于protobuf-3.x，基于Netty-4.x。">
+<meta property="og:locale">
+<meta property="article:published_time" content="2017-06-17T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-12T06:01:00.024Z">
+<meta property="article:author" content="李城">
+<meta property="article:tag" content="李城">
+<meta property="article:tag" content="GRPC">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://lchml.com/technology/grpc-trap/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lchml.com/technology/grpc-trap/","path":"technology/grpc-trap/","title":"GRPC丢包之路"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>GRPC丢包之路 | 旅行的代码</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71702178-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-71702178-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">旅行的代码</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">李城的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李城"
+      src="/lc-icon.jpg">
+  <p class="site-author-name" itemprop="name">李城</p>
+  <div class="site-description" itemprop="description">知行合一</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">111</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/licheng-xd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;licheng-xd" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:licheng_xd@163.com" title="E-Mail → mailto:licheng_xd@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.me/lchml" title="500px → https:&#x2F;&#x2F;500px.me&#x2F;lchml" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i>500px</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://jandan.net/" title="Jandan → https:&#x2F;&#x2F;jandan.net" rel="noopener" target="_blank"><i class="fa fa-transgender-alt fa-fw"></i>Jandan</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/4qg55j4w/home?wvr=5" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;4qg55j4w&#x2F;home?wvr&#x3D;5" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.qingtian16265.com/" title="晴天博客 → https:&#x2F;&#x2F;blog.qingtian16265.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-leanpub fa-fw"></i>晴天博客</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/grpc-trap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/lc-icon.jpg">
+      <meta itemprop="name" content="李城">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="旅行的代码">
+      <meta itemprop="description" content="知行合一">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="GRPC丢包之路 | 旅行的代码">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          GRPC丢包之路
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-06-18 00:00:00" itemprop="dateCreated datePublished" datetime="2017-06-18T00:00:00+08:00">2017-06-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/technology/grpc-trap/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="technology/grpc-trap/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>GRPC是Google开源的一个高性能、跨语言的RPC框架，基于HTTP2协议，基于protobuf-3.x，基于Netty-4.x。</p>
+<span id="more"></span>
+
+<p>最近开发一个公司的游戏项目，采用分布式的服务器架构，内部服务之间均采用GRPC进行通信。但是在测试过程中发现一个重大的bug，<strong>偶现丢包</strong>。</p>
+<p>前置信息：ServerA（作为grpc的client端）通过futureStub异步调用ServerB（作为server端）。</p>
+<p>查看日志发现，client中有调用发送请求的日志，但server端却没有任何收到请求的日志。于是怀疑server在接收请求的过程中吃掉了异常，对整个过程加上try-catch，然而并没有任何发现，于是怀疑根本没有收到请求。通过tcpdump抓包后发现确实是client没发包到网络层，由此确定了是client端问题。</p>
+<p>怀疑是grpc的futureStub有bug，于是在finally中加入future.get()打印出调用结果。结果一天下来一直没有发现任何丢包，”完美“。懵逼了，去掉finally中的future get以后又出现丢包。这个时候，直觉判断，由于调用futue.get()会block当前线程，所以不会出现丢包，而不block就会丢包。有种接近真相的感觉。检查代码后发现client端创建stub的时候没有指定线程池，grpc会默认使用当前线程，结合偶现的表现，觉得非常像是线程在异步发送的过程中被销毁导致。</p>
+<p>然而，指定线程池以后，依旧发现丢包。无奈之下只有开始查看grpc源码，并打印出grpc的日志。在日志中发现了如下错误：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">----------------OUTBOUND--------------------</span><br><span class="line">[id: 0x7dee8b32, L:/10.82.7.14:60365 - R:/10.82.7.14:9001] RST_STREAM: streamId=4025, errorCode=8</span><br><span class="line">------------------------------------</span><br></pre></td></tr></table></figure>
+
+<p>看到errorCode&#x3D;8，并结合grpc源码中对io.grpc.Status的定义：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Some resource has been exhausted, perhaps a per-user quota, or</span></span><br><span class="line"><span class="comment"> * perhaps the entire file system is out of space.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">RESOURCE_EXHAUSTED(<span class="number">8</span>),</span><br></pre></td></tr></table></figure>
+
+<p>推断是由于系统文件句柄资源耗尽导致，查看服务器系统文件句柄限制为65535，而进程打开的限制远不止这么多。于是找sa将文件句柄限制改为100w，然后信心满满的重启了全部服务，重新进行测试。结果很快又发现了丢包，内心崩溃！</p>
+<p>由于当future.get()方法阻塞线程时，就不会出现丢包，无法重现。于是想到把futureStub改为stub，在保持异步的同时，通过observer回调来观察调用结果,这次在回调的onError方法中发现了如下异常：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">CANCELLED,</span><br><span class="line">io.grpc.Status.asRuntimeException(Status.java:<span class="number">543</span>), </span><br><span class="line">io.grpc.stub.ClientCalls$StreamObserverToCallListenerAdapter.onClose(ClientCalls.java:<span class="number">395</span>), </span><br><span class="line">io.grpc.internal.ClientCallImpl.closeObserver(ClientCallImpl.java:<span class="number">426</span>), </span><br><span class="line">io.grpc.internal.ClientCallImpl.access$<span class="number">100</span>(ClientCallImpl.java:<span class="number">76</span>), </span><br><span class="line">io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.close(ClientCallImpl.java:<span class="number">512</span>), </span><br><span class="line">io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.access$<span class="number">700</span>(ClientCallImpl.java:<span class="number">429</span>), </span><br><span class="line">io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl$1StreamClosed.runInContext(ClientCallImpl.java:<span class="number">544</span>), </span><br><span class="line">io.grpc.internal.ContextRunnable.run(ContextRunnable.java:<span class="number">52</span>), </span><br><span class="line">io.grpc.internal.SerializingExecutor.run(SerializingExecutor.java:<span class="number">117</span>), </span><br><span class="line">java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:<span class="number">1142</span>), </span><br><span class="line">java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:<span class="number">617</span>), </span><br><span class="line">java.lang.Thread.run(Thread.java:<span class="number">745</span></span><br></pre></td></tr></table></figure>
+
+<p>终于发现原来是这个call被grpc在底层cancel掉了。查代码发现原来上面的errorCode&#x3D;8是指http2的code定义：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Mapped to call cancellation when sent by a client. </span></span><br><span class="line"><span class="comment"> * Mapped to CANCELLED when sent by a server. </span></span><br><span class="line"><span class="comment"> * Note that servers should only use this mechanism when they need to cancel a call but the payload byte sequence is incomplete.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">CANCEL(<span class="number">8</span>)</span><br></pre></td></tr></table></figure>
+
+<p>知道了是由于被cancel才导致的丢包，那么就要查找为什么会被cancel，由于grpc的stub调用是通过异步的线性执行器执行io.grpc.ClientCall。所以堆栈中无法看到整个调用过程，只能通过源码来看。不管是哪种stub的调用，最后都会走到ClientCalls.startCall()方法中，然后进ClientCallImpl.start()中，在这个方法中，可以看到与cancel有关的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (context.isCancelled()) &#123;</span><br><span class="line">  <span class="comment">// Context is already cancelled so no need to create a real stream, just notify the observer</span></span><br><span class="line">  <span class="comment">// of cancellation via callback on the executor</span></span><br><span class="line">  stream = NoopClientStream.INSTANCE;</span><br><span class="line">  <span class="keyword">class</span> <span class="title class_">ClosedByContext</span> <span class="keyword">extends</span> <span class="title class_">ContextRunnable</span> &#123;</span><br><span class="line">    ClosedByContext() &#123;</span><br><span class="line">      <span class="built_in">super</span>(context);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">runInContext</span><span class="params">()</span> &#123;</span><br><span class="line">      closeObserver(observer, statusFromCancelled(context), <span class="keyword">new</span> <span class="title class_">Metadata</span>());</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  callExecutor.execute(<span class="keyword">new</span> <span class="title class_">ClosedByContext</span>());</span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看出来cancel的原因是由于context.isCancelled()的结果为true</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isCancelled</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (parent == <span class="literal">null</span> || !cascadesCancellation) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> parent.isCancelled();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看出，如果parent&#x3D;&#x3D;null，则不可能为true，所以必然是由于parent.isCancelled()为true导致的。由此我们基本可以猜测出来，当前的ClientCall被cancel的原因是由于它的parent context canceled导致。</p>
+<p>回到ClientCallImpl中，可以看到this.context &#x3D; Context.current();表明每个ClientCall被创建的时候，context都会被赋值为Context.current()</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> Context <span class="title function_">current</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="type">Context</span> <span class="variable">current</span> <span class="operator">=</span> storage().current();</span><br><span class="line">  <span class="keyword">if</span> (current == <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> ROOT;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> current;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果当前没有context，则用ROOT作为context</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The logical root context which is the ultimate ancestor of all contexts. This context</span></span><br><span class="line"><span class="comment"> * is not cancellable and so will not cascade cancellation or retain listeners.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Never assume this is the default context for new threads, because &#123;<span class="doctag">@link</span> Storage&#125; may define</span></span><br><span class="line"><span class="comment"> * a default context that is different from ROOT.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Context</span> <span class="variable">ROOT</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Context</span>(<span class="literal">null</span>);</span><br></pre></td></tr></table></figure>
+
+<p>在注释中可以看出，ROOT是不可以被cancel的，所以可以判断，当前必然有一个grpc的context存在。</p>
+<p>最后联想到由于业务代码中，ClientCall是在ServerA处理grpc请求的过程中执行的，那么这个Context必然是由GrpcServer处理请求的时候生成的，并赋值给了ClientCall。而由于ClientCall是线性执行器中异步执行，当真正执行ContextRunnable的时候，GrpcServer的context可能已经被cancel，导致当前ClientCall被cancel。</p>
+<p>解决办法：可以对当前context进行fork，或者把每个call都封装为Runnable，通过Context提供的run静态方法执行。</p>
+<p>至此，终于弄清楚了grpc丢包的原因。虽然，这个问题通过业务层代码可以避免掉，但是我觉得grpc在底层默默的把这件事做了，并且没有往上层抛出任何信息，这对开发者是非常不友好的。同时，这个cancel逻辑的处理上，我觉得也有待商榷。毕竟在GrpcServer中异步的去执行GrpcCall是一个非常普遍合理的模型。也许以后Google会改吧。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/donate-page/simple/images/wechat.jpg" alt="李城 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/donate-page/simple/images/alipay.jpg" alt="李城 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%9D%8E%E5%9F%8E/" rel="tag"><i class="fa fa-tag"></i> 李城</a>
+              <a href="/tags/GRPC/" rel="tag"><i class="fa fa-tag"></i> GRPC</a>
+              <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/technology/jekyll-hexo/" rel="prev" title="Jekyll迁移Hexo">
+                  <i class="fa fa-chevron-left"></i> Jekyll迁移Hexo
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/technology/jvm1/" rel="next" title="java虚拟机 - 内存">
+                  java虚拟机 - 内存 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa-solid fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李城</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"cdn":"//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML","tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"lchml","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

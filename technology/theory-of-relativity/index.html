@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lchml.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="一直以来对物理学都非常感兴趣，向往时间旅行之类的事情，中学时还买了《时间简史》和《果壳中的宇宙》来看，虽然现在已经记不得其中的大部分内容，但是里面对于引力扭曲时空和时间膨胀的论述一直让我记忆深刻，可能是因为当时这个观点彻底颠覆了我对这个世界的理解吧。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="相对论">
+<meta property="og:url" content="https://lchml.com/technology/theory-of-relativity/index.html">
+<meta property="og:site_name" content="旅行的代码">
+<meta property="og:description" content="一直以来对物理学都非常感兴趣，向往时间旅行之类的事情，中学时还买了《时间简史》和《果壳中的宇宙》来看，虽然现在已经记不得其中的大部分内容，但是里面对于引力扭曲时空和时间膨胀的论述一直让我记忆深刻，可能是因为当时这个观点彻底颠覆了我对这个世界的理解吧。">
+<meta property="og:locale">
+<meta property="og:image" content="https://lchml.com/technology/theory-of-relativity/jialilue.png">
+<meta property="og:image" content="https://lchml.com/technology/theory-of-relativity/guanxing.png">
+<meta property="og:image" content="https://lchml.com/technology/theory-of-relativity/niudun.png">
+<meta property="og:image" content="https://lchml.com/technology/theory-of-relativity/chilunceliang.png">
+<meta property="og:image" content="https://lchml.com/technology/theory-of-relativity/maikesiwei.png">
+<meta property="og:image" content="https://lchml.com/technology/theory-of-relativity/aiyinsitan1.png">
+<meta property="og:image" content="https://lchml.com/technology/theory-of-relativity/aiyinsitan2.png">
+<meta property="og:image" content="https://lchml.com/technology/theory-of-relativity/train1.png">
+<meta property="og:image" content="https://lchml.com/technology/theory-of-relativity/train2.png">
+<meta property="og:image" content="https://lchml.com/technology/theory-of-relativity/spaceship1.png">
+<meta property="og:image" content="https://lchml.com/technology/theory-of-relativity/spaceship2.png">
+<meta property="og:image" content="https://lchml.com/technology/theory-of-relativity/elevt1.png">
+<meta property="og:image" content="https://lchml.com/technology/theory-of-relativity/elevt2.png">
+<meta property="og:image" content="https://lchml.com/technology/theory-of-relativity/earth.png">
+<meta property="og:image" content="https://lchml.com/technology/theory-of-relativity/xingguangshiyan1.png">
+<meta property="og:image" content="https://lchml.com/technology/theory-of-relativity/xingguangshiyan2.png">
+<meta property="og:image" content="https://lchml.com/technology/theory-of-relativity/earth2.png">
+<meta property="og:image" content="https://lchml.com/technology/theory-of-relativity/heidong1.png">
+<meta property="og:image" content="https://lchml.com/technology/theory-of-relativity/heidong2.png">
+<meta property="og:image" content="https://lchml.com/technology/theory-of-relativity/heidong3.png">
+<meta property="og:image" content="https://lchml.com/technology/theory-of-relativity/habo.png">
+<meta property="og:image" content="https://lchml.com/technology/theory-of-relativity/aiyinsitan3.png">
+<meta property="article:published_time" content="2014-12-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-12T05:57:02.931Z">
+<meta property="article:author" content="李城">
+<meta property="article:tag" content="李城">
+<meta property="article:tag" content="物理学">
+<meta property="article:tag" content="相对论">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lchml.com/technology/theory-of-relativity/jialilue.png">
+
+
+<link rel="canonical" href="https://lchml.com/technology/theory-of-relativity/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lchml.com/technology/theory-of-relativity/","path":"technology/theory-of-relativity/","title":"相对论"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>相对论 | 旅行的代码</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71702178-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-71702178-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">旅行的代码</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">李城的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E7%9F%A5%E8%AF%86"><span class="nav-number">1.</span> <span class="nav-text">准备知识</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%81%E4%BC%AA%E5%8E%9F%E5%88%99"><span class="nav-number">1.1.</span> <span class="nav-text">证伪原则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%9D%E7%BB%B4%E5%AE%9E%E9%AA%8C"><span class="nav-number">1.2.</span> <span class="nav-text">思维实验</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%8F%E5%85%B8%E7%89%A9%E7%90%86%E5%AD%A6"><span class="nav-number">2.</span> <span class="nav-text">经典物理学</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%BD%E5%88%A9%E7%95%A5%E5%AE%9A%E5%BE%8B"><span class="nav-number">2.1.</span> <span class="nav-text">伽利略定律</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%9B%E9%A1%BF%E5%88%B0%E5%BA%95%E6%9C%89%E5%A4%9A%E7%89%9B"><span class="nav-number">2.2.</span> <span class="nav-text">牛顿到底有多牛</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%89%E9%80%9F%E6%B5%8B%E9%87%8F"><span class="nav-number">3.</span> <span class="nav-text">光速测量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A5%E8%BF%91%E7%9C%9F%E7%9B%B8"><span class="nav-number">3.1.</span> <span class="nav-text">接近真相</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%83%8A%E4%BA%BA%E5%8F%91%E7%8E%B0"><span class="nav-number">3.2.</span> <span class="nav-text">惊人发现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%A9%E6%9E%81%E5%BF%85%E5%8F%8D"><span class="nav-number">3.3.</span> <span class="nav-text">物极必反</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%8F%E5%85%B8%E7%89%A9%E7%90%86%E5%AD%A6%E9%9D%A9%E5%91%BD"><span class="nav-number">4.</span> <span class="nav-text">经典物理学革命</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8B%AD%E4%B9%89%E7%9B%B8%E5%AF%B9%E8%AE%BA"><span class="nav-number">4.1.</span> <span class="nav-text">狭义相对论</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BB%E8%A7%92%E7%99%BB%E5%9C%BA-%E4%BA%BA%E7%B1%BB%E6%96%87%E6%98%8E%E7%9A%84%E5%BD%BB%E5%BA%95%E6%B4%97%E7%A4%BC"><span class="nav-number">4.1.1.</span> <span class="nav-text">主角登场-人类文明的彻底洗礼</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%9D%E5%AF%B9%E5%85%89%E9%80%9F"><span class="nav-number">4.1.2.</span> <span class="nav-text">绝对光速</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%88%B1%E5%9B%A0%E6%96%AF%E5%9D%A6%E5%AF%B9%E7%BB%8F%E5%85%B8%E7%89%A9%E7%90%86%E5%AD%A6%E7%9A%84%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%9B%B0%E6%83%91"><span class="nav-number">4.1.3.</span> <span class="nav-text">爱因斯坦对经典物理学的第一次困惑</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%AB%98%E9%80%9F%E5%88%97%E8%BD%A6%E6%9D%80%E4%BA%BA%E4%BA%8B%E4%BB%B6%EF%BC%8C%E6%91%84%E5%83%8F%E6%9C%BA%E7%9A%84%E8%AE%B0%E5%BD%95%E6%9B%B4%E8%AE%A9%E4%BA%BA%E5%9B%B0%E6%83%91%E3%80%82"><span class="nav-number">4.1.4.</span> <span class="nav-text">高速列车杀人事件，摄像机的记录更让人困惑。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BD%BB%E5%BA%95%E6%8A%9B%E5%BC%83%E7%BB%9D%E5%AF%B9%E6%97%B6%E9%97%B4%E8%A7%82%E5%BF%B5"><span class="nav-number">4.1.5.</span> <span class="nav-text">彻底抛弃绝对时间观念</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E8%86%A8%E8%83%80"><span class="nav-number">4.1.6.</span> <span class="nav-text">时间膨胀</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E6%94%B6%E7%BC%A9"><span class="nav-number">4.1.7.</span> <span class="nav-text">空间收缩</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%96%B0%E7%9A%84%E9%80%9F%E5%BA%A6%E5%90%88%E6%88%90"><span class="nav-number">4.1.8.</span> <span class="nav-text">新的速度合成</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B4%A8%E9%87%8F%E5%92%8C%E9%80%9F%E5%BA%A6%EF%BC%8C%E7%89%9B%E9%A1%BF%E7%9C%9F%E7%9A%84%E8%A6%81%E7%96%AF%E4%BA%86"><span class="nav-number">4.1.9.</span> <span class="nav-text">质量和速度，牛顿真的要疯了</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%89%E9%80%9F%E7%9A%84%E6%9E%81%E9%99%90"><span class="nav-number">4.1.10.</span> <span class="nav-text">光速的极限</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%91%97%E5%90%8D%E7%9A%84%E8%B4%A8%E8%83%BD%E6%96%B9%E7%A8%8B"><span class="nav-number">4.1.11.</span> <span class="nav-text">著名的质能方程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8F%8C%E7%94%9F%E5%AD%90%E4%BD%AF%E8%B0%AC"><span class="nav-number">4.1.12.</span> <span class="nav-text">双生子佯谬</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B9%BF%E4%B9%89%E7%9B%B8%E5%AF%B9%E8%AE%BA"><span class="nav-number">4.2.</span> <span class="nav-text">广义相对论</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AD%89%E6%95%88%E5%8E%9F%E7%90%86"><span class="nav-number">4.2.1.</span> <span class="nav-text">等效原理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BC%95%E5%8A%9B%E9%80%A0%E6%88%90%E6%97%B6%E7%A9%BA%E5%BC%AF%E6%9B%B2"><span class="nav-number">4.2.2.</span> <span class="nav-text">引力造成时空弯曲</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B6%85%E7%BA%A7%E6%97%A0%E6%95%8C%E6%98%9F%E5%85%89%E5%AE%9E%E9%AA%8C%EF%BC%8C%E4%B8%BA%E7%88%B1%E5%9B%A0%E6%96%AF%E5%9D%A6%E6%AD%A3%E5%90%8D"><span class="nav-number">4.2.3.</span> <span class="nav-text">超级无敌星光实验，为爱因斯坦正名</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BC%95%E5%8A%9B%E7%9A%84%E6%9C%AC%E8%B4%A8"><span class="nav-number">4.2.4.</span> <span class="nav-text">引力的本质</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%BB%91%E6%B4%9E"><span class="nav-number">4.3.</span> <span class="nav-text">黑洞</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%99%AB%E6%B4%9E"><span class="nav-number">4.4.</span> <span class="nav-text">虫洞</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%98%AF%E4%BB%80%E4%B9%88%E5%90%93%E5%88%B0%E4%BA%86%E7%88%B1%E5%9B%A0%E6%96%AF%E5%9D%A6"><span class="nav-number">4.5.</span> <span class="nav-text">是什么吓到了爱因斯坦</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李城"
+      src="/lc-icon.jpg">
+  <p class="site-author-name" itemprop="name">李城</p>
+  <div class="site-description" itemprop="description">知行合一</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">111</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/licheng-xd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;licheng-xd" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:licheng_xd@163.com" title="E-Mail → mailto:licheng_xd@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.me/lchml" title="500px → https:&#x2F;&#x2F;500px.me&#x2F;lchml" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i>500px</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://jandan.net/" title="Jandan → https:&#x2F;&#x2F;jandan.net" rel="noopener" target="_blank"><i class="fa fa-transgender-alt fa-fw"></i>Jandan</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/4qg55j4w/home?wvr=5" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;4qg55j4w&#x2F;home?wvr&#x3D;5" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.qingtian16265.com/" title="晴天博客 → https:&#x2F;&#x2F;blog.qingtian16265.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-leanpub fa-fw"></i>晴天博客</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/theory-of-relativity/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/lc-icon.jpg">
+      <meta itemprop="name" content="李城">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="旅行的代码">
+      <meta itemprop="description" content="知行合一">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="相对论 | 旅行的代码">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          相对论
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2014-12-09 00:00:00" itemprop="dateCreated datePublished" datetime="2014-12-09T00:00:00+08:00">2014-12-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/technology/theory-of-relativity/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="technology/theory-of-relativity/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>一直以来对物理学都非常感兴趣，向往时间旅行之类的事情，中学时还买了《时间简史》和《果壳中的宇宙》来看，虽然现在已经记不得其中的大部分内容，但是里面对于引力扭曲时空和时间膨胀的论述一直让我记忆深刻，可能是因为当时这个观点彻底颠覆了我对这个世界的理解吧。</p>
+<span id="more"></span>
+
+<h3 id="准备知识"><a href="#准备知识" class="headerlink" title="准备知识"></a>准备知识</h3><p>首先，我们需要知道几个科学名词。</p>
+<h4 id="证伪原则"><a href="#证伪原则" class="headerlink" title="证伪原则"></a>证伪原则</h4><p>科学的表述在于其是可证伪的。通俗的讲就是，<strong>所有的科学定律都是可以被证伪的，但是又尚未被证伪的</strong>。</p>
+<blockquote>
+<p>天下乌鸦都是黑色的。这是一条大家都知道的常识，但是这句话被证实了吗？显然没有，你发现了中国的乌鸦和外国的乌鸦都是黑色的，那你无法证明所有的乌鸦都是黑色的，就算你找到了全世界所有所有的乌鸦，那你还是没有证实这句话，因为你无法证明过去的乌鸦或者以后的乌鸦也会是全部黑色。“你TMD不是抬杠吗？”，我又一次被拍了。我没有抬杠，因为你确实没有拿出全部的事实去证实，咱搞科学要严谨。但是，现在可以大胆地立下一个预言：天下乌鸦就是黑色的。如果有一天你在非洲某一个角落发现了一只乌鸦，我不用看，它肯定是黑色的，屡试不爽。假如真有一天您真的发现了白色的乌鸦，好！那这条规律就被推翻了。也就是我们的科学规律，仅仅是现在正确罢了，以后谁知道（所以，怀疑精神很重要！！）</p>
+</blockquote>
+<p>回到正统的物理学，当一个小球从你的眼前飞过，如果知道当前的速度和位置，那完全可以计算出它是怎么飞过来的以及以后将如何运动，几百年过去了，这个规律没有人怀疑。到了20世纪，当我们研究放眼到高速运动的物体或者开始研究粒子的时候，牛顿定律也就不再适用了。后面会讲到。</p>
+<p>总结：科学道理不能用摆事实，讲道理去证明它。只能是针对现在的事实，总结出规律，提出一种预言，直到有一天它被推翻。所以数学和逻辑学便被划分为非科学的。原因在于它们并不需要经验去检验它们，他们被休谟称为必然真理。数学和逻辑学基于其体系起始的公理，而公理是否为真往往是不可证伪的，因而也是非科学的。同样，精神分析学说，占星说，骨相学，马克思之后的“马克思主义”也都是非科学的，因为它们都不可被证伪。</p>
+<h4 id="思维实验"><a href="#思维实验" class="headerlink" title="思维实验"></a>思维实验</h4><p>顾名思义，就是使用想像力去进行的实验。来看一个著名的思维实验：</p>
+<blockquote>
+<p>伽利略：您说重的铁球比轻的先落地？<br/><br>亚里士多德：对的！<br/><br>伽利略：如果我把一个重的一个轻的绑在一起，那是不是整体质量超过了那个重的？并且这个整体会比单独的重的铁球先落地？<br/><br>亚里士多德：对！！<br/><br>伽利略：被绑在一起的那轻的铁球会比重的铁球速度慢，也就是会阻碍重的铁球。<br/><br>亚里士多德：对的！！<br/><br>伽利略：那速度会低于单独的重铁球，但是它俩的质量比单独的铁球重，不矛盾吗？<br/><br>亚里士多德：？？？我想想！！。。。<br/><br>其实相对论完全离不开爱因斯坦超级牛叉的大脑，思维实验。</p>
+</blockquote>
+<h3 id="经典物理学"><a href="#经典物理学" class="headerlink" title="经典物理学"></a>经典物理学</h3><p>说到经典物理学，大家首先想到的肯定是牛顿。其实在牛顿之前还有一个伟大的人物，他为牛顿的成就打下了坚实的基础，他就是被誉为“现代自然科学之父”的意大利物理学家、数学家、天文学家伽利略。<img src="/technology/theory-of-relativity/jialilue.png" alt="伽利略"></p>
+<h4 id="伽利略定律"><a href="#伽利略定律" class="headerlink" title="伽利略定律"></a>伽利略定律</h4><p>回到前面说的思维实验，两个铁球同时落地，也就是说两个铁球降落的速度和他们的质量是无关的。这也就是伽利略的第一个广为人知的成就：<code>自由落体定律</code>，这个定律说的是如果不考虑空气阻力的话，那任何物体下降的速度都是一样的，且都是呈固定的加速度。</p>
+<p><img src="/technology/theory-of-relativity/guanxing.png">再来看另一个思维实验，如上图所示，一个足够光滑的U型的轨道，一个小球从左边放下去，它会滑到右边的最高处。如果把U型轨道的右边向下倾斜呢，小球还是会回到最高处。伽利略想到把右边的轨道继续往下倾斜，小球还是会继续向前滚，直到到达最高处，如果右边轨道一直向下倾斜，直到变成无限长的水平轨道，那小球就永远到不了最高点，所以小球就会一直这么滚下去。于是伽利略得出了第二个定律，也就是<code>惯性定律</code>，在一个完美光滑的表面运动的物体，会有一种保持这个运动的“惯性”，除非有外力阻止这个惯性。（这其实就是牛顿第一定律，只是伽利略的表达没有牛顿那么准确、优美，最高就把这个功劳归于了牛顿，所以说表达能力很重要啊。）</p>
+<p>伽利略的<code>相对性原理</code>：在任何惯性系中，力学规律保持不变。这句话，您唯一不认识的估计就是这个惯性系了。该如何理解呢？</p>
+<blockquote>
+<p>假如A和B，A在陆地，B在匀速行驶的船上。我们可以说A是静止的，B是运动的吗？那显然是不行的。因为判断一个物体是静止还是运动，是需要一个参照物的。严谨的说，A相对于陆地是静止的，但是A相对于船来说就是运动的。B也一样，B相对与陆地是运动的，但是相对于船来说，就是静止的。所以，参照物很重要。B在匀速运动的船上，现在把船上所有的窗户关上，那这时候B知道他相对地面是静止的还是匀速运动的吗？那显然是不知道的。我们都坐过火车（想象一个非常完美，没有颠簸的火车），除非火车速度发生变化，否则我们是无法感知我们相对于地面是在动还是静止。那能通过实验来证明B的状态吗？这时候B从手中释放了一个小球，发现小球确实是垂直落了下来，然后B又用绳子将小球挂起来，发现绳子确实与水平线垂直。力学规律丝毫没有变化，所以伽利略就<strong>将匀速运动和静止状态统称为惯性系</strong>。试想如果此时船突然加速，那绳子必然将倾斜，力学规律就发生了变化，这也就是非惯性系了。<strong>大家一定要记得这个原理，因为相对论就是要从这里颠覆经典物理学的</strong>。</p>
+</blockquote>
+<p>看到这里你肯定会想：“如此简单的规律，如果我活在那个时代多好，我肯定是个科学家”。</p>
+<h4 id="牛顿到底有多牛"><a href="#牛顿到底有多牛" class="headerlink" title="牛顿到底有多牛"></a>牛顿到底有多牛</h4><p>之前果壳网上看到过一篇著名的文章《<a target="_blank" rel="noopener" href="http://www.guokr.com/post/333034/">牛逼顿的一生</a>》。这里简述一下（再次感慨）：<br><img src="/technology/theory-of-relativity/niudun.png"></p>
+<blockquote>
+<p>牛顿是历史上最最伟大的炼金师，同时也是伟大的物理学家，天文学家，数学家，哲学家，神学家，而且对英国金本位制确实也起到了关键作用。物理方面：三大运动定律，质量守恒定律，能量守恒，动量守恒，万有引力。数学方面开创了微积分学科。天文方面反射式望远镜，光学色散和牛顿环。金融方面金本位制。哎，绝对是历史上绝无仅有的，跨越了这么多的学科，以后也不会有这样的全才，因为现在学科分的越来越细了。上述的一些概念，不再进行说明，顾名思义，也能猜出大概是什么意思，即使不懂这些，也无碍理解相对论。但是有一点是一定要说的，就是牛顿留下了震古烁今，彪炳千古的著作《自然哲学的数学原理》，牛顿的公式被后人重写过，但是这本书绝对是传世经典。讲什么的？讲的就是自然与数学之间的关系，一个小球从你眼前滑过，你可以利用数学预测出任何时间他的位置。用着《原理》可以计算日食，月食出现的时间，几乎可以做到分秒不差。还记得海王星是如何被发现的吗？在天王星被发现之后，科学家发现他的实际运行轨道和计算结果有偏离，科学家就大胆预言，在天王星的旁边应该还有一颗行星，正是这个行星影响了天王星的运动轨迹（牛顿的万有 引力定律，简单理解就是任何物体之间都存在引力）事实证明了这一点。也就是从这件事儿以后，再没有任何人怀疑牛顿，从此牛顿就是神，神就是牛顿，谁都不能怀疑！！牛顿一统江湖。现在还在感叹这本书的牛掰之处。随便总结个物理规律，写成数学公式，然后就开始折腾这些公式，咦，发现了一个新解，反过来实验，还真TMD有这种现象。所以有那句话，物理学家都是数学家。</p>
+</blockquote>
+<p>牛顿的理论体系是建立在他的绝对时间和绝对空间的假设之上的，牛顿对时间和空间有着如下的理解：</p>
+<blockquote>
+</blockquote>
+<ul>
+<li>绝对的、真正的和数学的时间自身在流逝着，而且由于其本性而在均匀地、与任何外界事物无关地流逝着。</li>
+<li>绝对空间，就其本性而言，是与外界任何事物无关而永远是相同的和不动的。<br/><br>&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;——牛顿，《自然哲学的数学原理》</li>
+</ul>
+<p>这就是牛顿的绝对时空观，不要看名字这么屌，其实这就是我们认识的理所当然的世界。但是您还是要仔细看一看，因为问题真的来了。当时牛顿已经把自己的理论推广到了整个宇宙，宇宙是稳定的。全人类，太阳，所有的恒星都在按照自己的方式和速度运动，无论无何运动，我们感受空间的方式是一样的，长宽高，而不管物体如何运动，只要测量准确，我们都可以得到相同的长宽高。同样，全宇宙都同样经历着时间的流逝，只要计算精确，我们可以计算出任何物体运动相关的时间。牛顿认为宇宙中充满了‘以太’这种物质，这种物质虽然没有对天体的运动产生阻力，但是它却是是客观存在的，我们的地球就是迎着这个‘以太’风来运动的，只需要时间来证明它就可以了。牛顿是神，我们都得信，我们后人的的任务就是想尽一切办法，来证明这个以太的存在。但是事实呢？科学家进行了无数次试验，最终都没有证明以太的存在，相反却恰恰无情地推翻了牛顿的绝对时空观，但是牛顿是神，肯定是实验的误差导致的。。。但是100多年过去了，还是毫无进展，物理学界也陷入了前所未有的恐慌当中。。。</p>
+<p>说到这里，你会觉得这个世界还是你认识的那个天经地义的世界，没什么特别的，但是接下来，将慢慢颠覆你的常识，挑战你的思维底线。</p>
+<h3 id="光速测量"><a href="#光速测量" class="headerlink" title="光速测量"></a>光速测量</h3><p>毋庸置疑，对光速的思考，是爱因斯坦提出相对论的重要根基之一。</p>
+<h4 id="接近真相"><a href="#接近真相" class="headerlink" title="接近真相"></a>接近真相</h4><p>刚开始科学家认为光速是无限大的，每天早晨我们打开窗户的一瞬间，屋子就被照亮了，我们从来没有看到过屋子的一部分先被照亮，另一部分再被照亮。对光速产生怀疑的第一人：伽利略。他用测量声速的方法来测量光速：</p>
+<blockquote>
+<p>两个人各自提一个带有遮光板的灯，站在距离1.6千米的山顶，伽利略先打开灯，同时摁下计时器，对面的人看到光的同时也打开灯，伽利略看到反回来的光之后再次摁下计时器。在这个时间差，光走了往返的距离，虽然误差比较大，但是伽利略的方法是对的，但是最终实验失败了，因为光速实在是太大的。我们现代人都知道光速是30万公里每秒，一秒绕地球7圈，一秒走的距离让最快的阿波罗飞船也要跑4天。</p>
+</blockquote>
+<p>30年后，光速的测量首先在天文学上获得了成功，丹麦天文学家罗默通过观测天体的运动，首先测量出了光速大概是22.5W公里&#x2F;秒，<a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/%E7%BE%85%E9%BB%98%E6%B8%AC%E5%AE%9A%E5%85%89%E9%80%9F">测量方法</a>。又过了170年，1849年，法国物理学家索菲，也就是物理课本上讲的旋转轮齿法。<br><img src="/technology/theory-of-relativity/chilunceliang.png"></p>
+<blockquote>
+<p>一束光穿过齿轮的缝隙，会被前面的镜子反射回来，如果现在齿轮开始缓慢旋转，由于光速极快，在缝隙中穿过去之后，依然能够从同一个缝隙反射回来。那现在开始加速齿轮旋转的速度，一直加速到反射回来的光恰好被齿轮挡住了，没有从缝隙中反射回来。这时，光走过的距离是可以测量的，并且时间可以从齿轮的旋转频率计算出来，进而可以得到光的速度，是<code>31.5万千米/秒</code>，这个离真相只有咫尺之遥了。</p>
+</blockquote>
+<h4 id="惊人发现"><a href="#惊人发现" class="headerlink" title="惊人发现"></a>惊人发现</h4><p><img src="/technology/theory-of-relativity/maikesiwei.png"><br>时间又过了30年，1873年，英国科学家麦克斯韦（有观点认为，他对物理学的发展做出的贡献仅次于艾萨克·牛顿和阿尔伯特·爱因斯坦）发表了可以和牛顿《自然哲学的数学原理》比肩的《论电和磁》，出版之后并没有得到太多的认同，因为论述的电和磁都是虚无缥缈的东西，无法像小球那样做实验验证。麦克斯韦认为电和磁是同一种物质的不同的表现形式，他们的性质和相互作用被麦克斯韦用简洁优美的方程组描述：麦克斯韦方程组。该方程组绝对是数学美的典范，无数科学家被他的美所震撼，仅从他完美的表现形式，他就不可能是错误的（历史也证明了这一点，所有经典物理学的公式都被相对论修改过，但是唯独麦克斯韦方程组，少一笔不行，多一笔又显得多余）。</p>
+<p>根据这个方程组，麦克斯韦预言了电磁波的存在，但是伟大的天才只活到了48岁，没有亲眼看到电磁波的诞生。没过几年，德国青年物理学家赫兹在实验室的发现，震惊了全世界，全世界物理学家都开始忙碌起来，最终证明麦克斯韦的电磁理论全部正确。赫兹测出了电磁波的频率和波长，相乘就是电磁波的传播速度了，计算的结果是<code>31.5万千米/秒</code>，一个惊人的速度。</p>
+<p>等等，稍等一下，这个数字怎么这么熟悉，天啊！！竟然和光速一样。这是巧合还是必然？怎么会有这么巧的事情。难道光是一种电磁波？？这个发现让全世界的科学家兴奋不已，各种实验接踵而至，实验表明光确实和电磁波表现出了相同的性质，最后一致认同，<strong>光就是一种电磁波</strong>。</p>
+<h4 id="物极必反"><a href="#物极必反" class="headerlink" title="物极必反"></a>物极必反</h4><p>波的传播速度是传播介质的波长乘以频率，也就是由介质所决定。当一个石子投进水里，在这个涟漪产生的瞬间，水波的传播也就和石子没有了任何关系，水波会相对于水（介质）传播出去，所以谈到水波的速度，隐含的参考系是水，而不是石子。再说光，光速的参考系也不是你的手电筒，在手电筒发出光线的一瞬间，光的传播已经和手电筒没有了任何关系，决定它速度的是介质。众所周知，光可以在真空中传播，遥远的星光穿过空无一物的宇宙空间，到达地球，那这个参考系、这个传播介质是什么呢？</p>
+<p>还记得前面说到的牛顿的绝对时空观吗？一个叫‘以太’的物质一直没有被证实。既然知道了光在以太中的传播速度，那光速就是成了证明‘以太’存在的最佳证人。我们的地球高速围绕太阳公转，可以设想一下：假设地球公转速度是v（忽略自转的影响），光速为c，我们迎着这个‘以太风’，发射一个光线，那我们观测到的光的传播速度应该是c-v，因为光在往前跑，我们也同样在往前跑。背着‘以太风’发射一个光线，那我们观测到的光的传播速度应该是c+v，因为我们和光的方向相背。只要证明了这一点，那‘以太’这种物质就是存在的。那经典物理学的大厦就正式宣布建造完成了。</p>
+<p>世上最最成功的失败实验，<a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/%E8%BF%88%E5%85%8B%E8%80%B3%E5%AD%99%EF%BC%8D%E8%8E%AB%E9%9B%B7%E5%AE%9E%E9%AA%8C">迈克尔逊莫雷实验</a>，这个实验确实想证明以太的存在，但是无论实验精确到什么程度，实验结果都证明’以太’是不存在的，光的速度没有受到任何影响。理论错了？不可能，科学家不愿意相信，因为牛顿的绝对时空观和以太学说看上去是那么完美。然后开始出现了各种各样的解释，一切的解释都是建立在牛顿的绝对时空观的基础之上。特别是以韦伯（爱因斯坦的物理老师）为首的科学家，他们相信，只要再多做一些实验，最终的胜利依然属于牛顿。风起云涌，这股热潮从19世纪刮到了20世纪，但是极少有人站出来质疑理论的根基是否出了问题。好，欢迎主角登场吧！！</p>
+<h3 id="经典物理学革命"><a href="#经典物理学革命" class="headerlink" title="经典物理学革命"></a>经典物理学革命</h3><blockquote>
+<p>动力学理论认为热和光都是运动的方式，现在这一理论的优美和明晰，正被两朵乌云笼罩着。<br/><br>&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;——开尔文勋爵，《在热和光动力理论上空的十九世纪乌云》</p>
+</blockquote>
+<p>开尔文所说的两朵乌云一朵是指黑体辐射理论出现的问题（量子力学），而另一个就是上面所说的迈克耳孙-莫雷实验测量的零结果。</p>
+<h4 id="狭义相对论"><a href="#狭义相对论" class="headerlink" title="狭义相对论"></a>狭义相对论</h4><h5 id="主角登场-人类文明的彻底洗礼"><a href="#主角登场-人类文明的彻底洗礼" class="headerlink" title="主角登场-人类文明的彻底洗礼"></a>主角登场-人类文明的彻底洗礼</h5><p><img src="/technology/theory-of-relativity/aiyinsitan1.png"><br><strong>爱因斯坦</strong>，22岁，瑞士人，苏黎世联邦工业大学物理系本科毕业，取得数学和物理双本科学位，不爱写作业，爱思考，没有经过亲自验证的理论不会轻易承认，敢于质疑权威，导致和老师关系都不好，毕业后想留校当助教，申请过多次，都被拒绝，甚至有些就没有回信。毕业之后8个月没有稳定工作，不顾母亲反对，和自己喜欢的女孩在一起，为解决生计，当过高中代课数学老师，1902年在瑞士的一家专利局找到一份工作，职称为“三级技术员”，无任何成就。（未婚就把女友的肚子搞大，这个算成就吗）</p>
+<p>主角终于登场，不过简历真心寒碜，在教授、博导多如牛毛的欧洲物理学界，真为他感到担忧。不过专利局的工作给了他充裕的思考时间，经常满桌子都是数学草稿，左手抱孩子，右手写字。<strong>但是这个年轻人超强的思维能力和推理能力绝对让你不寒而栗，当你理解他的时候，你会感到兴奋不已，数秒的思考之后，你会感到无比恐慌</strong>。</p>
+<h5 id="绝对光速"><a href="#绝对光速" class="headerlink" title="绝对光速"></a>绝对光速</h5><p>你以接近光速（假设）和一束光同时离开地球向宇宙进发，地球上的人看到你和光几乎齐头并进，这一点毋庸置疑。那你看到的也是相对静止，齐头并进？绝不可能，你看到的必然是这束光以光速离你而去。<br><img src="/technology/theory-of-relativity/aiyinsitan2.png"><br>光是一种电磁波，从麦克斯韦方程组可以得知，震荡的电场产生震荡的磁场，震荡的磁场再次产生震荡的电场，如此循环下去，就形成了电磁波。就像是一个队列的人报数一样，1，2，3。。。传播的速度取决于报数的频率。火车从A移动到B，是这个实体在移动，电磁波不同，波的传播依靠的是介质，而介质并没有向前移动。例如水波，肉眼看到的是水波在扩散没错，但是单独的每一滴水，它仅仅是在上下震荡，水并没有向前移动。电磁波的传播可以理解为报数的话，那电磁波的速度就取决于报数人反应速度了，真空这个介质就充当于报数人的角色。</p>
+<p>伟大的麦克斯韦方程组，已经证明了，电磁波的传播速度与波源的运动速度无关。试想我们将一个石子扔入湖中，不管我们是垂直仍还是斜着扔，水波的传播速度是不变的。</p>
+<p>思维实验： 我一个人在黑漆漆的宇宙，因为身边没有参照物，所以不管以高速飞行还是静止不动，我都是完全不知道的。假如现在我的速度提升到接近光速（我依然不知道，因为没有任何参照物），这时候如果我发出一束光，我将看到什么？一个和我保持相对静止的光？一个震荡的电磁场，却没有感应下去？这不可能，根据伟大的麦克斯韦方程组，光速和光源是没有关系的，而且介质没有变，我看到的应该还是光速（而且我真心不知道我当时的速度），我看到的应该还是交替震荡下去的电场和磁场。再次想象一下队列报数，这个报数的反应速度在地面上和在火车上不一样吗？显然很荒谬。不管在哪，这个报数的反应速度绝对不会变的。再次强调一下，物体往前走是这个实体真的移动了，但是波的介质没有移动，只是依次传递下去。<br>众所周知，我们地球人测量出了光速c，那测量的时候是在绝对静止的条件下吗？显然不是，我们的地球在不停地自转公转的呦！！<br/><br/><br>再次回到迈克尔逊莫雷实验实验，它不就是证明了光速不变吗？这个实验犯了一个致命的错误，他先假设以太是存在的，结果证明了以太确实不存在，显然很矛盾，只是当时科学家真的不敢怀疑牛顿。</p>
+<p>小爱同学在纸上写下：对于任何参考系来说，在真空中光的传播速度恒为c。</p>
+<h5 id="爱因斯坦对经典物理学的第一次困惑"><a href="#爱因斯坦对经典物理学的第一次困惑" class="headerlink" title="爱因斯坦对经典物理学的第一次困惑"></a>爱因斯坦对经典物理学的第一次困惑</h5><p>小爱已经确定，光速恒为C，假设你在空无一物的宇宙中，那你能通过测量光速来，确定自己是静止的还是匀速运动的呢？显然不会，因为光速始终不变。小爱并没有停止他的思考，小爱认为，应该是在惯性系中，一切物理规律保持不变才对。试想，如果在不同的惯性系（匀速或静止）中，物理规律发生了变化，那科学家早早地就可以在实验室测出地球的公转速度了，而且不仅力学实验不变，热学，光学，电磁学都应该不会发生变化。小爱对于现在的成就很满意，但是马上又困惑起来：“光速恒定看起来是如此地简洁，严谨，美妙。根据经典的速度合成公式，如果火车的速度是v，一个小鸟在火车中以速度w飞行，那站在地面上的人看到小鸟的速度应该是v+w，这点没错，如果火车上有一个人打出一束光，那站在地面上的人看到的光的速度应该是c+v？这又和自己的光速恒定很矛盾，经典物理学在过去的几百年中在各个领域取得了非常大的成就，但是我的推理也是分毫不差，该相信谁？难道这个世界有高速低速之分？”想着想着，小爱睡着了，做了一个非常美妙的梦。。。</p>
+<h5 id="高速列车杀人事件，摄像机的记录更让人困惑。"><a href="#高速列车杀人事件，摄像机的记录更让人困惑。" class="headerlink" title="高速列车杀人事件，摄像机的记录更让人困惑。"></a>高速列车杀人事件，摄像机的记录更让人困惑。</h5><p>背景：A和B同时爱上了一个女人，两人决定来一次公平的决战，在高速列车（0.5倍的光速）的同一个车厢，车厢中间有一盏灯，两人站在车厢的两边，灯会在1分钟之后自动打开，当两人看到灯光的时候，就向对方开枪。</p>
+<p>结果A被干掉了，B手臂受了重伤。警方（小爱）来到了现场，了解情况之后，警方说：“如果你能提供证据证明你们是公平决斗的，那你将无罪。” 就在车厢中间有一台高速摄像机，记录了整个过程（如下图），观看完录像，警方说：从录像中看到，光同时到达你们，而且你们是看到光之后才开枪的，你无罪。<br><img src="/technology/theory-of-relativity/train1.png"><br>就在警方上车，准备离开现场的时候，后面有个人追了上来，大声喊：“不是这样的，这一切都是B精心设计的阴谋。我是站台的管理员，枪击发生的时候，列车正好经过我们站，站台的摄像机也同样记录了发生的一切，警官，一块儿看一下录像吧。” 录像显示：列车在高速行驶，B面对的方向正好是列车行驶的方向，光线确实是先到达B，也就是B在遵守规则的情况下，看到光后开了枪（如下图）。<br><img src="/technology/theory-of-relativity/train2.png"><br>看到眼前的一切，小爱童鞋大脑一片空白。这关键时刻掉链子岂不是很没面子，小爱果断开启外挂模式：“两台摄像机都没有任何问题，光速与光源的运动无关，从这两个事实来看，时间是相对的，对于站台上的人和高速列车上的人来说，没有真正的同时，任何所谓同时发生的事情，都只能是对同一个惯性系中的人才成立”。</p>
+<h5 id="彻底抛弃绝对时间观念"><a href="#彻底抛弃绝对时间观念" class="headerlink" title="彻底抛弃绝对时间观念"></a>彻底抛弃绝对时间观念</h5><p>继续回到一起举过的例子，你坐在宇宙飞船中以接近光速和一束光同时向宇宙进发，地面上的人看到是你与光几乎不分前后地离他而去，光只比你快一点点。你看到的是这束光以光速C离你而去，如果你对这个依然百思不得其解的话，只能说明绝对时间观念在你脑海中根深蒂固。如果你能感受到你的时间和地面上的人的时间是不同的，你过了1秒，地球上已经过了1个小时。对你来说，1秒钟内，那束光跑的很远很远了，但是在地球上的人看到的是这束光用了1个小时才拉开与你的距离。这些解释貌似合情合理，但是却无法用实验去验证，全靠意淫是不行的，下面不得不呈现支撑这个逻辑的理论基础了—思维实验+数学。</p>
+<h5 id="时间膨胀"><a href="#时间膨胀" class="headerlink" title="时间膨胀"></a>时间膨胀</h5><p>我们该如何描绘时间变慢呢？注意，这里不是你的劳力士走得慢了，是时光的流逝，流的慢。<br><img src="/technology/theory-of-relativity/spaceship1.png"><br>我们用一个光子钟来衡量时间，因为光速太快，所以我们假设光子往返10亿次是过了1秒钟。这时候A拿着光子钟站在地面，B拿着光子钟坐在高速飞行的宇宙飞船上。从图上可以看到，B的光子钟要想滴答一次，光子走过了更多的距离。由于光速是恒定不变的，A的光子钟震荡10亿次，B的光子钟是斜着走的，没有震荡10亿次，假设是5亿次。那A过了1秒，B的时间只过了0.5秒。换个角度说，就是B的光子滴答这一下用的时间更长了。推导一下公式：根据毕达哥拉斯定理（勾股定理），可以推导出速度与时间的关系：<br><img src="/technology/theory-of-relativity/spaceship2.png"></p>
+<p>$$(ct′)^2+(vt)^2&#x3D;(ct)^2$$</p>
+<p>$$c^2t′^2+v^2t^2&#x3D;c^2t^2$$</p>
+<p>$$c^2t′^2&#x3D;c^2t^2−v^2t^2$$</p>
+<p>$$t′^2&#x3D;\frac{c^2t^2−v^2t^2}{c^2}$$</p>
+<p>$$t′^2&#x3D;(1-\frac{v^2}{v^2})t^2$$</p>
+<p>$$t′&#x3D;t\sqrt{1-\frac{v^2}{c^2}}$$</p>
+<p>这个公式推导比较简单，简要说明一下含义：c是光速，当我们的速度v很小的时候，比如火车60米&#x2F;秒，那么$$\sqrt{1-\frac{v^2}{c^2}}$$的值是0.999999983，非常接近1，等式几乎成立，你坐火车100年，下来之后之比陆地上的人年轻53.6秒，也就是坐火车和静止在地面上的人的时间快慢非常接近。我们的登月飞船的速度是10500米&#x2F;秒，已经够快了吧，那这个值仅仅是0.999387312，和陆地上的时间还是非常接近，也就是在飞船上飞100年下来，你也仅仅年轻了22天左右。如果v很大，是0.99c，那这个值就是0.004，你的一年相当于地球上的250年。速度越接近光速，这个公式体现出的时间膨胀越明显。如果超过光速呢？这个值就是虚数，没有意义（到底有没有意义？难道可以穿越时空？）</p>
+<p>畅想一下你长生不老的场景吧：假如你坐上了0.99c的宇宙飞船，一年之后飞回来，地球上已经过了250年。但是你真的是仅仅过了一年，绝不是你体验了250年的精彩生活仅老了一岁。你一天也没有多过，并且每天都是24小时。如果地球的人能时时刻刻看到你的话，地球人撒尿用2分钟，因为你的时间过的很慢，地球人看你撒一次尿用了将近一天的时间。但是，当你回到地球的时候，地球真的已经过了250年，你来到了将来。</p>
+<p>这里谈论的时间变慢了，不是你的劳力士不准确了，是时间本身变慢了，与时间有关的一切都变慢了——时间膨胀了。有个更好的理解方法：<strong>你把时间想象成一个实体，刚开始从起点到终点是100米，时间膨胀之后，同样的时间，起点到终点变成了500米。</strong></p>
+<h5 id="空间收缩"><a href="#空间收缩" class="headerlink" title="空间收缩"></a>空间收缩</h5><p>爱因斯坦没有停下他的脚步，继续推导公式(L代表长度)：</p>
+<p>$$L&#x3D;L′\sqrt{1-\frac{v^2}{c^2}}$$</p>
+<p>和没有绝对的时间是一样的，也没有绝对的空间，表现出速度越大，长度会收缩。牛顿这时候活着的话，肯定疯了。我们所说的收缩是相对与另一个空间的收缩效应，地球上的人看飞船上的人，确实变小了，但是飞船上的人拿尺子测量发现自己没有变小，那是因为尺子也变小了。跑步的人相对于静止来说也变小了，不过根据上一节的计算，缩小的量真是微乎其微。如果是高速运动的物体，那收缩的就相当明显了。</p>
+<h5 id="新的速度合成"><a href="#新的速度合成" class="headerlink" title="新的速度合成"></a>新的速度合成</h5><p>在经典物理学里面，我们学习过速度合成。火车相对地面的速度是v，如果人在火车上以v’同样向前行动，那地面上的人看到火车上的人的速度应该是v+v’，但是在爱因斯坦的相对论里面，由于火车的行驶，导致火车的时间膨胀和空间收缩。地面上的人看到的合成速度应该是什么呢？</p>
+<p>$$w&#x3D;\frac{u+v}{1+\frac{uv}{c^2}}$$</p>
+<p>可以看出，当u和v相对于光速无限小的时候，这个等式几乎和经典的速度合成公式是一样的</p>
+<p>$$w&#x3D;u+v$$</p>
+<h5 id="质量和速度，牛顿真的要疯了"><a href="#质量和速度，牛顿真的要疯了" class="headerlink" title="质量和速度，牛顿真的要疯了"></a>质量和速度，牛顿真的要疯了</h5><p>在经典物理学里面，我们研究一切运动的基础就是质量守恒。不管小球如何运动，小球的质量是不会变的。现在摆在爱因斯坦面前的是动量守恒定律：</p>
+<p>$$m_0v_0&#x3D;m_1v_1+m_2v_2$$</p>
+<p>根据洛伦兹变化是和动量守恒定律，爱因斯坦推算出了质量和速度的关系：</p>
+<p>$$m&#x3D;\frac{m_0}{\sqrt{1−\frac{v^2}{c^2}}}$$</p>
+<p>速度越大的物体，他的质量会变得越大。牛顿如果真的在天有灵的话，看到爱因斯坦这一切举动，是不是要疯掉？</p>
+<h5 id="光速的极限"><a href="#光速的极限" class="headerlink" title="光速的极限"></a>光速的极限</h5><p>爱因斯坦认为，任何信息或能量的传递都无法超越光速。思维实验：有一个力作用在小球上使它加速，根据前面的推导，速度越大小球的质量就会变得越大，这时候就需要用更大的力才能保持住一定的加速度，当加速到无限接近光速的时候，这个小球的质量也就会变得无限大，这时虽然用较小的力依然能让它加速，但是由于质量非常大了，加速度几乎可以忽略，为了让这个质量无穷大的小球继续朝光速进发，必须用无穷大的力，但是无穷大的力是不存在的。以上是在数学上展现的特性。就不列举公式了，多一个公式，少5%的读者。（在量子物理学，光速极限到底有没有被推翻呢？推荐《上帝会掷骰子吗？》曹天元，相当棒的一本关于量子的书）地球围绕太阳公转，是因为太阳和地球之间存在引力，想象一下，如果太阳突然消失，会发生什么？地球会突然被甩得很远？<strong>不，爱因斯坦认为，这个信息的传递不会超越光速，地球会在8分钟后被甩开。</strong></p>
+<h5 id="著名的质能方程"><a href="#著名的质能方程" class="headerlink" title="著名的质能方程"></a>著名的质能方程</h5><p>看到这个名词，大家肯定觉得无比亲切。这就是大部分人对相对论的初步认识。<br>质量为m小球以速度v向前运动，那他拥有的动能是</p>
+<p>$$\frac{1}{2}mv^2$$</p>
+<p>爱因斯坦结合相对论理论，对这个公式进行推导（查阅了各种资料，真心看不懂怎么推导出来的，貌似用到了“无穷级数展开”的数学知识），结果出现了如此简洁美妙的质量和能量转换的方程：</p>
+<p>$$E&#x3D;mc^2$$</p>
+<p>记得高中老师讲过：一克的木炭，质量完全转化成能量，可以让一个100瓦的灯泡亮100万年。有些人该说我脑残了，一斤的木炭燃烧完全后，连顿饭都做不熟。对，没错，您说的燃烧，是化学反应，只是碳结合氧气转化成了二氧化碳而已，整个过程质量完全没有减少，碳的质量只是转移到了二氧化碳当中。这个质能方程说明的是质量真的少了，少的质量转化成了能量。这个方程解释了放射性元素为什么会释放如此大的能量。</p>
+<h5 id="双生子佯谬"><a href="#双生子佯谬" class="headerlink" title="双生子佯谬"></a>双生子佯谬</h5><p>看了上面的内容，您也许感觉狭义相对论还是比较好理解的，没想象的那么难，看看下面的问题吧，相信你再次怀疑了自己的智商。<br>来看一个经典的思维实验<a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/%E5%8F%8C%E7%94%9F%E5%AD%90%E4%BD%AF%E8%B0%AC">双生子佯谬</a>。</p>
+<blockquote>
+<p>想象一下，你即将坐上一艘亚光速飞船告别地球上的双胞胎弟弟去太空旅行，当你弟弟看到你的飞船瞬间冲上云霄，一下子就飞得不见踪影时，他在心里想，等哥哥回来的时候，我就比他老了，哥哥会比我显得更年轻。可是，你在飞船上可不一定这么想，在你的感觉来说，你觉得是地球载着你的弟弟突然飞离你而去了，你越想越觉得有道理，不一会儿，你就感慨到：“等我再见到弟弟的时候，我就更老了。”亲爱的读者，你觉得他们见面的时候，到底是谁变得更年轻？</p>
+</blockquote>
+<p>要想知道答案，还得再坚持会儿。。。</p>
+<h4 id="广义相对论"><a href="#广义相对论" class="headerlink" title="广义相对论"></a>广义相对论</h4><p>广义相对论和狭义相对论只有一字之差，却是人类认识宇宙的一大步，意义无法估量。如果没有爱因斯坦，狭义相对论也会在5年之内由别人提出，包括庞加莱，洛伦兹，还有爱因斯坦的导师，闵科夫斯基，他们对狭义相对论已经有了初步的思考和成果，但是如果没有爱因斯坦，人类对宇宙的真正认识还不知道要推迟多少年，绝对是独门绝技。</p>
+<h5 id="等效原理"><a href="#等效原理" class="headerlink" title="等效原理"></a>等效原理</h5><p>爱因斯坦有一点很不满，那就是为什么物理规律不变的前提是惯性系呢？上帝在创造这个宇宙的时候，把惯性系摆在了如此重要的地位吗？上帝应该创造一个普世的规律才对。况且，我们所说的惯性系真的存在吗？我们经常说静止或者匀速状态为惯性系，但是我们的地球却在公转自转，绝对的惯性系是不存在的。又是爱因斯坦的思维实验：</p>
+<blockquote>
+<p>假设你在一个密闭的电梯里睡着了，当你醒来的时候，发现你漂浮在电梯当中。那你能知道你是在自由落体运动还是漂浮在太空中？显然不知道。假如你醒来之后发现你站在电梯里，电梯对你有支撑，你对电梯有压力，那你能分辨你是在地球上，还是这个电梯在太空中推着你做加速运动？显然还是不能。反过来说：你现在站在地球上，受到了地球的引力。想在太空中感受到同样的感觉该怎么做？对，只要有一个作用在你身上产生大小为g的加速度的力就可以了。爱因斯坦的结论是引力和加速度等效。</p>
+</blockquote>
+<p>万物的规律终于得到了统一，狭义相对论提到：<strong>在惯性系中，一切物理规律不变</strong>，在非惯性系当中呢？只要我们将这个变速的参考系，等效为一个引力场就可以了。非惯性系就是惯性系加一个引力场。看似不起眼的思维转变，能得出什么样的惊人推论呢？</p>
+<h5 id="引力造成时空弯曲"><a href="#引力造成时空弯曲" class="headerlink" title="引力造成时空弯曲"></a>引力造成时空弯曲</h5><p><img src="/technology/theory-of-relativity/elevt1.png"><br>试想，在自由落体的电梯当中，你向正前方抛出一个小球，那你看到的这个小球必然是直线运动，但是地面上的人看到的是这个小球做抛物线运动。<br><img src="/technology/theory-of-relativity/elevt2.png"><br>试想，你站在电梯中，向前打出一束光，这光线必然是直的，地面上的人看到的也是直的。假如电梯自由落体降落，如果你看到的光线是直的，那地面上看到的光线必然是弯曲的。当然，光速太快了，我们无法感受到光线的弯曲而已，但是我们真的可以相信光线真的弯曲了，只是弯曲的程度太小了。</p>
+<p>根据上面的两个例子，小球和光线都有向下的加速度，加速度和引力又是等效的，那我们可不可以这样理解：引力使光线弯曲了？地球的引力弯曲了光线？好大胆的想法！！<br><img src="/technology/theory-of-relativity/earth.png"><br>狭义相对论提到过，运动的物体，时间会膨胀（也就是时间会变慢）。引力可以使一个静止的小球运动起来，结论是引力会让时间膨胀，这么说会不会更深刻呢？</p>
+<p>我们把上述现象称之为“<strong>广义相对论的时空弯曲效应</strong>”。</p>
+<blockquote>
+<p>双生子佯谬的结果似乎与狭义相对论矛盾：双生兄弟中的每一个人都认为对方相对于自己运动，因此由于时间膨胀的作用，每一个人都认为对方应该比自己年轻。狭义相对论指出所有观测者都有同等意义，没有任何一个参考系（frame of reference）是会获得优待的。因此旅行者会预期回到地球后会看见比他更年轻的双生兄弟，但这就与他兄弟的想法恰好相反。<br/><br>但实际上旅行者的期望是错误的：狭义相对论并没有说所有观测者都有同等意义，而是只有在惯性系中的观测者（即没有进行加速运动的观测者）才有同等的意义。但宇宙飞船在旅途中亳无疑问是至少加速过一次的，所以旅行者并不是惯性系。反之，留在地球上的兄弟在整个航程中都是在惯性系之中（如果忽略源自地球质量及移动所带来的相对较小的加速度），所以他能够把他跟他兄弟分辨开来。<br><br>有些人在解决这吊诡时会认为狭义相对论并不能够用于加速中的物体，而只可使用广义相对论，这是不正确的。举个例说，该对双生兄弟的年龄是可以借着求时空间隔（spacetime interval）在他们任何一个惯性系中所行走的时空路径（这些路径被称为世界线）上的积分来准确地计算出来的。近似的方法可以用来计算一加速中的宇宙飞船的相对性行为。狭义相对论唯一不适用的情况是当重力的影响是不能被忽略的时候，这时就真的需要用到广义相对论。<br/><br>这个结果是由狭义相对论所推测出的（移动时钟的时间膨胀现象），而且能够透过实验来验证。</p>
+</blockquote>
+<h5 id="超级无敌星光实验，为爱因斯坦正名"><a href="#超级无敌星光实验，为爱因斯坦正名" class="headerlink" title="超级无敌星光实验，为爱因斯坦正名"></a>超级无敌星光实验，为爱因斯坦正名</h5><p>我们对爱因斯坦已经崇拜地五体投地了。但是在当时群星璀璨的欧洲物理学界，并没有得到普遍的认可，思维实验和数学推理确实无懈可击，但是这些都没有得到实验验证，特别是诺贝尔奖的评委会更是反对相对论学说。<br><img src="/technology/theory-of-relativity/xingguangshiyan1.png"><br>如何验证引力可以使光线弯曲呢？如上图，Z为恒星，在位置A能观测到恒星Z，那在位置B依然可以观测到Z出现在相同的位置，只是距离远了，但是角度不会有任何偏差。这时太阳处在位置B和恒星Z之间，如果真的如爱因斯坦所说，引力可以使光纤弯曲，那在B观测Z恒星的位置会发生变化。事实比想象中残酷，您已经看出问题来了，在位置B的时候，是白天，火红的太阳当头照，根本无法看到天上的星星。<br><img src="/technology/theory-of-relativity/xingguangshiyan2.png"><br>爱因斯坦：可以，日全食的时候！！</p>
+<blockquote>
+<p>1919年一支英国科学考察队远征西非，在日食期间观察到天空中太阳附近一颗恒星位置的微小移动。这证实了爱因斯坦的论断，恒星发出的光线经过太阳时，被引力弯曲了。爱因斯坦红遍全世界，一战成名。要知道这时候爱因斯坦依然没有获得诺贝尔物理学奖，因为评委会真的不懂相对论（那个年代懂相对论的人真的没几个），但是爱因斯坦又如此推崇备至，评委会想办法给自己一个台阶，在1921年爱因斯坦由于光电效应的研究，获得了诺贝尔物理学奖。</p>
+</blockquote>
+<h5 id="引力的本质"><a href="#引力的本质" class="headerlink" title="引力的本质"></a>引力的本质</h5><p>这才是广义相对论研究的核心问题。引力到底是什么？牛顿认为引力就是一个看不见的线。例如地球绕着太阳转，一旦太阳消失，这个线会立刻断开，地球会立刻被甩出去。狭义相对论证明，没有任何信号传递是超过光速的，地球应该在8分钟后被甩出去。引力不是看不见的线，那引力到底是什么？</p>
+<p>在前面的推理中我们知道，引力可以使时空弯曲。试想，在一个未被弯曲的时空里面，向前投出一个小球，那小球必然会匀速直线运动，运动轨迹不会有弧线。在一个被弯曲的时空里面，抛出一个小球，小球就不会匀速直线运动，而是顺应着这个弯曲的时空前进。假设一个篮球是一个被弯曲的时空，一个蚂蚁想从该时空的一个点移动到另外一个点，即使走的是最短的距离，那走的也是一个弧线。爱因斯坦认为引力并不是引起小球曲线运动的根本原因，根本原因应该是时空弯曲，弯曲的时空决定了小球的运动轨迹，引力只是一种表象。<br><img src="/technology/theory-of-relativity/earth2.png"><br>想象一下，如果一个篮球放在一个网上，靠近篮球的网就会凹陷下去，当一个小的玻璃球从小球旁边划过时，会受到凹陷部分的影响，进而改变运动的方向。把空间想象成一个个的大网，地球放在网上，一颗流星如果速度很快，就会划过天际，掠过地球而去，如果流星速度不够快，那就会陷入那个凹陷部分，降落在地球上。</p>
+<h4 id="黑洞"><a href="#黑洞" class="headerlink" title="黑洞"></a>黑洞</h4><p><img src="/technology/theory-of-relativity/heidong1.png"><br>我们已经承认了，引力可以弯曲时空，那什么产生的引力呢？是质量。质量越大，引力就会越大，造成的时空弯曲也就最厉害。把宇宙当成一个网（参考上图），上面的星球质量越大，体积越小则陷得越深，如果有一颗小行星分别从他们旁边划过，肯定最后面的那个是最难划过的。任何一个星球如果质量保持不变，体积不断缩小，那都会有这种越陷越深的趋势，所以任何星球他的质量和体积都有那样的临界值。<br><img src="/technology/theory-of-relativity/heidong2.png"><br>如果体积小到一定程度就会发生上图的这种现象。这就是黑洞了，任何行星经过它的边界，都无法穿过它，包括光，都会陷进去，也就是黑洞会将一切进入它边界的行星吸收掉。</p>
+<h4 id="虫洞"><a href="#虫洞" class="headerlink" title="虫洞"></a>虫洞</h4><p>爱因斯坦和罗森塔尔在推演广义相对论的公式过程中出现了一种解，如下图<br><img src="/technology/theory-of-relativity/heidong3.png"><br>说存在这种连接，连着着宇宙中的相隔非常非常远的两个区域。两个黑洞的连接可以组成一个虫洞了。《星际穿越》中的虫洞就是这个。这个虫洞不但可以突然让你穿越几百光年的距离出现在另一个地方，也可以让你从一个时间穿越到另一个时间。不仅是从现在到将来，还可以从现在到过去。所以虫洞也就成了现代科幻小说和科幻电影常用的一个标准。通过黑洞可以达到时间旅行的效果，那黑洞里面都有什么呢？霍金说：所谓黑洞，就是一切你无法了解的事件真相的集合。晕倒，他直接说不知道不得了。不过想想也知道，那么多的宇宙射线都被黑洞吸进去了，一旦进去，差不多也必死无疑吧。</p>
+<h4 id="是什么吓到了爱因斯坦"><a href="#是什么吓到了爱因斯坦" class="headerlink" title="是什么吓到了爱因斯坦"></a>是什么吓到了爱因斯坦</h4><p>爱因斯坦在推导他的广义相对论公式时发现了他自己都无法相信的结论：宇宙不可能是稳定的，要么膨胀要么收缩。这让爱因斯坦惶恐不安，他抬头仰望星空，在有历史记录以来，星空都是同样的景象。爱因斯坦真的无法接受这个理论，然后他就在公式中假设了一个常量，等着以后去证明这个值（物理研究的一种手法，先假设有这个值，然后根据结果返回来验证这个值），爱因斯坦常出了一口气，又一次被自己的聪明折服了，这下宇宙稳定了，洗洗睡觉。<br><img src="/technology/theory-of-relativity/habo.png" alt="哈勃"><br>真相总会呈现。哈勃发现了距离地球几十万光年的仙女星系，我们的宇宙真的比想象中大很多。更重要的是我们所看到的所有星系都在离我们远去，而且距离越远的星系，跑得越快。我们的宇宙正在膨胀，而且是加速膨胀。爱因斯坦看到哈勃的成果之后追悔莫及，当初怎能偷懒画蛇添足？但是这却反过来证明了广义相对论的伟大。不要停下来，既然宇宙是膨胀的，那是不是宇宙有一个诞生的时刻，宇宙先从一个点开始，然后突然爆炸出来呢？这就是<strong>宇宙大爆炸</strong>。</p>
+<p><a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/%E6%80%9D%E6%83%B3%E5%AF%A6%E9%A9%97">著名的思维实验</a>，有兴趣可以看看，开开脑洞。<br><img src="/technology/theory-of-relativity/aiyinsitan3.png" alt="爱因斯坦"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/donate-page/simple/images/wechat.jpg" alt="李城 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/donate-page/simple/images/alipay.jpg" alt="李城 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%9D%8E%E5%9F%8E/" rel="tag"><i class="fa fa-tag"></i> 李城</a>
+              <a href="/tags/%E7%89%A9%E7%90%86%E5%AD%A6/" rel="tag"><i class="fa fa-tag"></i> 物理学</a>
+              <a href="/tags/%E7%9B%B8%E5%AF%B9%E8%AE%BA/" rel="tag"><i class="fa fa-tag"></i> 相对论</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/technology/shell-commands/" rel="prev" title="Shell常用命令">
+                  <i class="fa fa-chevron-left"></i> Shell常用命令
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/life/some-advices/" rel="next" title="点滴生活">
+                  点滴生活 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa-solid fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李城</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"cdn":"//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML","tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"lchml","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

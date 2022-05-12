@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lchml.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="首先给出demo地址，有问题也可以直接看代码。https:&#x2F;&#x2F;github.com&#x2F;licheng-xd&#x2F;dubbo-sleuth">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式调用追踪系统Zipkin集成">
+<meta property="og:url" content="https://lchml.com/technology/zipkin/index.html">
+<meta property="og:site_name" content="旅行的代码">
+<meta property="og:description" content="首先给出demo地址，有问题也可以直接看代码。https:&#x2F;&#x2F;github.com&#x2F;licheng-xd&#x2F;dubbo-sleuth">
+<meta property="og:locale">
+<meta property="og:image" content="https://lchml.com/technology/zipkin/zipkin-1.png">
+<meta property="og:image" content="https://lchml.com/technology/zipkin/zipkin-2.png">
+<meta property="article:published_time" content="2018-07-16T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-12T05:56:13.596Z">
+<meta property="article:author" content="李城">
+<meta property="article:tag" content="李城">
+<meta property="article:tag" content="zipkin">
+<meta property="article:tag" content="sleuth">
+<meta property="article:tag" content="springboot">
+<meta property="article:tag" content="dubbo">
+<meta property="article:tag" content="elasticsearch">
+<meta property="article:tag" content="分布式追踪">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lchml.com/technology/zipkin/zipkin-1.png">
+
+
+<link rel="canonical" href="https://lchml.com/technology/zipkin/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lchml.com/technology/zipkin/","path":"technology/zipkin/","title":"分布式调用追踪系统Zipkin集成"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>分布式调用追踪系统Zipkin集成 | 旅行的代码</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71702178-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-71702178-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">旅行的代码</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">李城的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%86%E5%A4%87"><span class="nav-number">1.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8zipkinserver%EF%BC%8C%E9%87%87%E7%94%A8kafka-collector%E5%92%8Ces-storage%E3%80%82"><span class="nav-number">2.</span> <span class="nav-text">启动zipkinserver，采用kafka-collector和es-storage。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E6%B7%BB%E5%8A%A0sleuth%E4%BE%9D%E8%B5%96"><span class="nav-number">3.</span> <span class="nav-text">项目添加sleuth依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">4.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A9%E5%B1%95"><span class="nav-number">5.</span> <span class="nav-text">扩展</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C"><span class="nav-number">6.</span> <span class="nav-text">结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E5%88%86%E6%9E%90"><span class="nav-number">7.</span> <span class="nav-text">依赖分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A5%87%E6%80%AA%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98"><span class="nav-number">8.</span> <span class="nav-text">奇怪的小问题</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李城"
+      src="/lc-icon.jpg">
+  <p class="site-author-name" itemprop="name">李城</p>
+  <div class="site-description" itemprop="description">知行合一</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">111</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/licheng-xd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;licheng-xd" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:licheng_xd@163.com" title="E-Mail → mailto:licheng_xd@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.me/lchml" title="500px → https:&#x2F;&#x2F;500px.me&#x2F;lchml" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i>500px</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://jandan.net/" title="Jandan → https:&#x2F;&#x2F;jandan.net" rel="noopener" target="_blank"><i class="fa fa-transgender-alt fa-fw"></i>Jandan</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/4qg55j4w/home?wvr=5" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;4qg55j4w&#x2F;home?wvr&#x3D;5" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.qingtian16265.com/" title="晴天博客 → https:&#x2F;&#x2F;blog.qingtian16265.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-leanpub fa-fw"></i>晴天博客</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/zipkin/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/lc-icon.jpg">
+      <meta itemprop="name" content="李城">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="旅行的代码">
+      <meta itemprop="description" content="知行合一">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="分布式调用追踪系统Zipkin集成 | 旅行的代码">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          分布式调用追踪系统Zipkin集成
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-07-17 00:00:00" itemprop="dateCreated datePublished" datetime="2018-07-17T00:00:00+08:00">2018-07-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/technology/zipkin/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="technology/zipkin/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>首先给出demo地址，有问题也可以直接看代码。<a target="_blank" rel="noopener" href="https://github.com/licheng-xd/dubbo-sleuth">https://github.com/licheng-xd/dubbo-sleuth</a></p>
+<span id="more"></span>
+
+<h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><p>sleuth是springcloud对zipkin接入的封装，从2.0开始直接采用了brave提供的zipkin接入实现。</p>
+<p>由于sleuth对dubbo的支持是从2.0开始的，所以一咬牙直接把整个项目升级成了springboot2.0，springboot2.0和springboot1.x有很多不兼容的地方，这里就不一一细说了，同时springboot升级到2.0以后，dubbo也必须要从0.1.0升级到0.2.0（Apache旗下的dubbo版本），整个过踩坑踩了一个星期。</p>
+<p>因为springcloud的微服务框架是基于http构建的，所以sleuth默认是只支持http。在2.0版本中提供了对dubbo的支持，其实看一下源码就知道，就只是一个DubboFilter。后面实现自己的rpc接入sleuth就是参考了它的实现。zipkin本身支持多种collector和storage，默认采用异步http的collector，存储默认在内存中。考虑到对应用本身的性能影响，我们采用kafka来做collector，最大程度的解耦以及减少性能影响。存储选用es，用mysql的话当数据量较大时会影响zipkin-server的查询速度。</p>
+<p>本地测试环境部署：<br>本地采用vagrant管理开发环境，在debian的虚拟机中装好，zookeeper，kafka，es，其中es建议用docker镜像直接运行，不需要修改很多系统参数。</p>
+<h3 id="启动zipkinserver，采用kafka-collector和es-storage。"><a href="#启动zipkinserver，采用kafka-collector和es-storage。" class="headerlink" title="启动zipkinserver，采用kafka-collector和es-storage。"></a>启动zipkinserver，采用kafka-collector和es-storage。</h3><p>我本地的vagrant虚拟机ip是192.168.100.101，首先下载<a target="_blank" rel="noopener" href="https://github.com/openzipkin/zipkin/tree/master/zipkin-server">zipkin-server</a>，启动命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">KAFKA_BOOTSTRAP_SERVERS=192.168.100.101:9092 STORAGE_TYPE=elasticsearch ES_HOSTS=http://192.168.100.101:9200  java -jar zipkin-server-2.9.4-exec.jar</span><br></pre></td></tr></table></figure>
+
+<h3 id="项目添加sleuth依赖"><a href="#项目添加sleuth依赖" class="headerlink" title="项目添加sleuth依赖"></a>项目添加sleuth依赖</h3><p>由于采用kafka作为collector所以需要原来spring-kafka，同时添加了brave-dubbo的依赖。</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// sleuth</span></span><br><span class="line"><span class="keyword">compile</span> <span class="string">&quot;org.springframework.kafka:spring-kafka:2.1.7.RELEASE&quot;</span></span><br><span class="line"><span class="keyword">compile</span> <span class="string">&quot;org.springframework.cloud:spring-cloud-starter-sleuth:$&#123;SleuthVersion&#125;&quot;</span></span><br><span class="line"><span class="keyword">compile</span> <span class="string">&quot;org.springframework.cloud:spring-cloud-starter-zipkin:$&#123;SleuthVersion&#125;&quot;</span></span><br><span class="line"><span class="keyword">compile</span> <span class="string">&quot;org.springframework.cloud:spring-cloud-sleuth-core:$&#123;SleuthVersion&#125;&quot;</span></span><br><span class="line"><span class="keyword">compile</span> <span class="string">&quot;org.springframework.cloud:spring-cloud-sleuth-zipkin:$&#123;SleuthVersion&#125;&quot;</span></span><br><span class="line"><span class="keyword">compile</span> <span class="string">&quot;org.springframework.cloud:spring-cloud-sleuth-dependencies:$&#123;SleuthVersion&#125;&quot;</span></span><br><span class="line"><span class="keyword">compile</span> (<span class="string">&quot;io.zipkin.brave:brave-instrumentation-dubbo-rpc:5.1.0&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">exclude</span>(<span class="keyword">group</span>: <span class="string">&#x27;com.alibaba&#x27;</span>, module: <span class="string">&#x27;dubbo&#x27;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">nim-bima-service-user</span></span><br><span class="line">  <span class="attr">zipkin:</span></span><br><span class="line">    <span class="attr">sender:</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">kafka</span></span><br><span class="line">  <span class="attr">sleuth:</span></span><br><span class="line">    <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">traceId128:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">sampler:</span></span><br><span class="line">      <span class="attr">probability:</span> <span class="number">1.0</span></span><br><span class="line">  <span class="attr">kafka:</span></span><br><span class="line">    <span class="attr">bootstrap-servers:</span> <span class="string">xxx.xxx.xxx.xxx:9092,xxx.xxx.xxx.xxx:9092</span></span><br></pre></td></tr></table></figure>
+
+<p>dubbo服务和消费端都需要加上对应的tracing filter</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">dubbo:</span></span><br><span class="line">  <span class="attr">provider:</span></span><br><span class="line">    <span class="attr">filter:</span> <span class="string">&#x27;tracing&#x27;</span></span><br><span class="line">  <span class="attr">consumer:</span></span><br><span class="line">    <span class="attr">filter:</span> <span class="string">&#x27;tracing&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><p>自研RPC通过filter接入sleuth追踪。filter逻辑的核心在于filterchain的实现，而filterchain的核心逻辑其实就是一个链式的递归调用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">this</span>.currentPosition == <span class="built_in">this</span>.realFilters.size()) &#123;</span><br><span class="line">    invocation.invoke();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.currentPosition++;</span><br><span class="line">    <span class="type">NrpcFilter</span> <span class="variable">nextFilter</span> <span class="operator">=</span> <span class="built_in">this</span>.realFilters.get(<span class="built_in">this</span>.currentPosition - <span class="number">1</span>);</span><br><span class="line">    nextFilter.doFilter(invocation, <span class="built_in">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后通过实现filter来加入追踪功能</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FilterActivate</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TracingNrpcFilter</span> <span class="keyword">implements</span> <span class="title class_">NrpcFilter</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> LoggerFactory.getLogger(TracingNrpcFilter.class);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Tracer tracer;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> TraceContext.Injector&lt;Map&lt;String, String&gt;&gt; injector;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setTracing</span><span class="params">(Tracing tracing)</span> &#123;</span><br><span class="line">        tracer = tracing.tracer();</span><br><span class="line">        injector = tracing.propagation().injector(SETTER);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doFilter</span><span class="params">(TaskInvocation invocation, NrpcFilterChain filterChain)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="keyword">if</span> (tracer == <span class="literal">null</span>) &#123;</span><br><span class="line">            filterChain.doFilter(invocation, filterChain);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        logger.debug(<span class="string">&quot;NrpcTracingFilter hit ...&quot;</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">className</span> <span class="operator">=</span> invocation.getTask().getMethod().getDeclaringClass().getSimpleName();</span><br><span class="line">        <span class="type">String</span> <span class="variable">methodName</span> <span class="operator">=</span> invocation.getTask().getMethod().getName();</span><br><span class="line">        <span class="keyword">final</span> <span class="type">Span</span> <span class="variable">span</span> <span class="operator">=</span> tracer.nextSpan();</span><br><span class="line">        injector.inject(span.context(), invocation.getAttachments());</span><br><span class="line">        <span class="keyword">if</span> (!span.isNoop()) &#123;</span><br><span class="line">            span.kind(Span.Kind.SERVER).start();</span><br><span class="line">            span.name(className + <span class="string">&quot;/&quot;</span> + methodName);</span><br><span class="line">            <span class="type">InetSocketAddress</span> <span class="variable">remoteAddress</span> <span class="operator">=</span> invocation.getRemoteAddress();</span><br><span class="line">            Endpoint.<span class="type">Builder</span> <span class="variable">remoteEndpoint</span> <span class="operator">=</span> Endpoint.newBuilder().port(remoteAddress.getPort());</span><br><span class="line">            <span class="keyword">if</span> (!remoteEndpoint.parseIp(remoteAddress.getAddress())) &#123;</span><br><span class="line">                remoteEndpoint.parseIp(remoteAddress.getHostName());</span><br><span class="line">            &#125;</span><br><span class="line">            span.remoteEndpoint(remoteEndpoint.build());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">String</span> <span class="variable">traceid</span> <span class="operator">=</span> span.context().traceIdString();</span><br><span class="line">        DubboTraceFilter.initTraceid(traceid);</span><br><span class="line">        invocation.getTask().setTraceid(traceid);</span><br><span class="line">        <span class="keyword">try</span> (Tracer.<span class="type">SpanInScope</span> <span class="variable">scope</span> <span class="operator">=</span> tracer.withSpanInScope(span)) &#123;</span><br><span class="line">            filterChain.doFilter(invocation, filterChain);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Error | RuntimeException e) &#123;</span><br><span class="line">            onError(e, span);</span><br><span class="line">            <span class="keyword">throw</span> e;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            span.finish();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">onError</span><span class="params">(Throwable error, Span span)</span> &#123;</span><br><span class="line">        span.error(error);</span><br><span class="line">        <span class="keyword">if</span> (error <span class="keyword">instanceof</span> RpcException) &#123;</span><br><span class="line">            span.tag(<span class="string">&quot;nrpc.error_code&quot;</span>, Integer.toString(((RpcException) error).getCode()));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> Propagation.Setter&lt;Map&lt;String, String&gt;, String&gt; SETTER =</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">Propagation</span>.Setter&lt;Map&lt;String, String&gt;, String&gt;() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">put</span><span class="params">(Map&lt;String, String&gt; carrier, String key, String value)</span> &#123;</span><br><span class="line">                    carrier.put(key, value);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="string">&quot;Map::set&quot;</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>小技巧：通过tracer.currentSpan().context().traceIdString();把tracing中的traceid拿出来放到业务日志中，结合elk日志收集可以非常容易定位问题。</p>
+<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p>可以从zipkin的数据分析中清楚的看出来整个请求中的rpc调用链，以及每次rpc消耗的时间。<br><img src="/technology/zipkin/zipkin-1.png"></p>
+<h3 id="依赖分析"><a href="#依赖分析" class="headerlink" title="依赖分析"></a>依赖分析</h3><p>你会发现依赖分析页面没有数据。对了，只有当数据在内存中存储的时候，zipkin-server才能直接分析出调用依赖关系。当采用外部存储的时候，就需要单独的依赖分析来实现了。下载<a target="_blank" rel="noopener" href="https://github.com/openzipkin/zipkin-dependencies">zipkin-dependencies.jar</a>并在crontab中创建定时任务，定时对存储数据进行分析，这样就可以看到依赖关系了。<br><img src="/technology/zipkin/zipkin-2.png"></p>
+<h3 id="奇怪的小问题"><a href="#奇怪的小问题" class="headerlink" title="奇怪的小问题"></a>奇怪的小问题</h3><ol>
+<li><p>由于引入了springcloud-sleuth，而springcloud会在进程启动时启动一个自己的bootstrap context，作为当前应用ApplicationContext的父ApplicationContext，由于每初始化一个ApplicationContext就会加载一遍spring.factories配置文件中的ApplicationListener，所以配置在spring.factories中的listener都会被执行两次。因此dubbo的WelcomeLogoListener会被执行两次。</p>
+</li>
+<li><p>使用feign作为http客户端时，build传入的client必须是spring的bean，否则sleuth无法做拦截。</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/donate-page/simple/images/wechat.jpg" alt="李城 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/donate-page/simple/images/alipay.jpg" alt="李城 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%9D%8E%E5%9F%8E/" rel="tag"><i class="fa fa-tag"></i> 李城</a>
+              <a href="/tags/zipkin/" rel="tag"><i class="fa fa-tag"></i> zipkin</a>
+              <a href="/tags/sleuth/" rel="tag"><i class="fa fa-tag"></i> sleuth</a>
+              <a href="/tags/springboot/" rel="tag"><i class="fa fa-tag"></i> springboot</a>
+              <a href="/tags/dubbo/" rel="tag"><i class="fa fa-tag"></i> dubbo</a>
+              <a href="/tags/elasticsearch/" rel="tag"><i class="fa fa-tag"></i> elasticsearch</a>
+              <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%BF%BD%E8%B8%AA/" rel="tag"><i class="fa fa-tag"></i> 分布式追踪</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/technology/hikari-maxlifetime/" rel="prev" title="Hikari经常出现Failed to validate connection并阻塞应用线程问题">
+                  <i class="fa fa-chevron-left"></i> Hikari经常出现Failed to validate connection并阻塞应用线程问题
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/technology/druid-validation/" rel="next" title="Druid经常出现连接不可用的问题">
+                  Druid经常出现连接不可用的问题 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa-solid fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李城</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"cdn":"//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML","tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"lchml","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

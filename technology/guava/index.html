@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lchml.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Guava是Google开源出来的Java常用工具集库，包括集合，缓存，并发，字符串，I&#x2F;O操作等在Java开发过程中经常需要去实现的工具类。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Guava源码阅读">
+<meta property="og:url" content="https://lchml.com/technology/guava/index.html">
+<meta property="og:site_name" content="旅行的代码">
+<meta property="og:description" content="Guava是Google开源出来的Java常用工具集库，包括集合，缓存，并发，字符串，I&#x2F;O操作等在Java开发过程中经常需要去实现的工具类。">
+<meta property="og:locale">
+<meta property="og:image" content="https://lchml.com/technology/guava/guava-1.png">
+<meta property="og:image" content="https://lchml.com/technology/guava/guava-2.jpg">
+<meta property="article:published_time" content="2015-07-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-12T06:00:57.233Z">
+<meta property="article:author" content="李城">
+<meta property="article:tag" content="李城">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Guava">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lchml.com/technology/guava/guava-1.png">
+
+
+<link rel="canonical" href="https://lchml.com/technology/guava/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lchml.com/technology/guava/","path":"technology/guava/","title":"Guava源码阅读"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Guava源码阅读 | 旅行的代码</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71702178-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-71702178-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">旅行的代码</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">李城的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Builder%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">Builder模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E5%BC%95%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">对象引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E5%8F%AF%E8%A7%81%E6%80%A7"><span class="nav-number">4.</span> <span class="nav-text">对象可见性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8F%AF%E8%A7%81%E6%80%A7%EF%BC%9F"><span class="nav-number">4.1.</span> <span class="nav-text">什么是可见性？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%94%81%E7%BB%86%E5%8C%96"><span class="nav-number">5.</span> <span class="nav-text">锁细化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Guava-ListenableFuture%E6%8E%A5%E5%8F%A3"><span class="nav-number">6.</span> <span class="nav-text">Guava ListenableFuture接口</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李城"
+      src="/lc-icon.jpg">
+  <p class="site-author-name" itemprop="name">李城</p>
+  <div class="site-description" itemprop="description">知行合一</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">111</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/licheng-xd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;licheng-xd" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:licheng_xd@163.com" title="E-Mail → mailto:licheng_xd@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.me/lchml" title="500px → https:&#x2F;&#x2F;500px.me&#x2F;lchml" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i>500px</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://jandan.net/" title="Jandan → https:&#x2F;&#x2F;jandan.net" rel="noopener" target="_blank"><i class="fa fa-transgender-alt fa-fw"></i>Jandan</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/4qg55j4w/home?wvr=5" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;4qg55j4w&#x2F;home?wvr&#x3D;5" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.qingtian16265.com/" title="晴天博客 → https:&#x2F;&#x2F;blog.qingtian16265.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-leanpub fa-fw"></i>晴天博客</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/guava/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/lc-icon.jpg">
+      <meta itemprop="name" content="李城">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="旅行的代码">
+      <meta itemprop="description" content="知行合一">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Guava源码阅读 | 旅行的代码">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Guava源码阅读
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2015-07-11 00:00:00" itemprop="dateCreated datePublished" datetime="2015-07-11T00:00:00+08:00">2015-07-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/technology/guava/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="technology/guava/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>Guava是Google开源出来的Java常用工具集库，包括集合，缓存，并发，字符串，I&#x2F;O操作等在Java开发过程中经常需要去实现的工具类。</p>
+<span id="more"></span>
+
+<p>如<code>Joiner</code>、<code>Splitter</code>、<code>Strings</code>、<code>CharMathcer</code>等工具类，其中有许多令人眼前一亮的代码。如Strings.repeat方法里，为了尽可能提升效率采用了native方法System.arrayCopy。如Splitter中，匿名类的灵活使用。如Joiner.appendTo中优雅的解决最后一个分隔符问题。如Splitter.separatorStart中神奇的continue用法。</p>
+<p>Guava还有一个很重要的功能——<code>GuavaCache</code>，平时开发过程中，一般后台会用数据库作为数据存储。稍大的系统中，为了减少db查询耗费的时间，会在前面加一层NoSql作为缓存。但是随着系统规模的增加，缓存的查询压力会越来越大。本地缓存（或者称为热点缓存）这时候可以有效的缓解缓存的压力，特别当某些数据查询十分频繁但修改较少的时候。</p>
+<p>例如，一个官方账号的info数据，几乎每个用户都会用到，很少会有改动。如果按正常得缓存流程，那么每个用户取info时，都会触发一次缓存查询，这会产生很高的tps，如果在每个服务器拿到缓存数据后，存到本地内存中，并设定一个有效期，例如一分钟。那么在一分钟内都不会再去缓存中查询这个数据，相当于直接把tps降到了一分钟一次。当然，这回导致数据更新有一分钟得延迟，多以如果对数据实时性要求非常高的，不适合使用。</p>
+<h2 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h2><p>首先我们来看一下使用的示例代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.chinatelecom.yiliao.device.cache.hotspot.AbstractCacheLoader;</span><br><span class="line"><span class="keyword">import</span> com.google.common.cache.CacheBuilder;</span><br><span class="line"><span class="keyword">import</span> com.google.common.cache.LoadingCache;</span><br><span class="line"><span class="keyword">import</span> com.google.common.cache.RemovalListener;</span><br><span class="line"><span class="keyword">import</span> com.google.common.cache.RemovalNotification;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"><span class="keyword">import</span> java.util.Date;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by lc on 15/7/17.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GuavaCacheTest</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> LoggerFactory.getLogger(GuavaCacheTest.class);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> LoadingCache&lt;String, String&gt; localCache = CacheBuilder</span><br><span class="line">        .newBuilder()</span><br><span class="line">        .maximumSize(<span class="number">10</span>)</span><br><span class="line">        .refreshAfterWrite(<span class="number">1</span>, TimeUnit.SECONDS)</span><br><span class="line">        .recordStats()</span><br><span class="line">        .removalListener(<span class="keyword">new</span> <span class="title class_">RemovalListener</span>&lt;Object, Object&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onRemoval</span><span class="params">(</span></span><br><span class="line"><span class="params">                RemovalNotification&lt;Object, Object&gt; notification)</span> &#123;</span><br><span class="line">                logger.warn(</span><br><span class="line">                    <span class="string">&quot;Remove a map entry which key is &#123;&#125;,value is &#123;&#125;,cause is &#123;&#125;.&quot;</span>,</span><br><span class="line">                    notification.getKey(),</span><br><span class="line">                    notification.getValue(), notification.getCause().name());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        .build(<span class="keyword">new</span> <span class="title class_">AbstractCacheLoader</span>&lt;String, String&gt;() &#123;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span> <span class="keyword">public</span> String <span class="title function_">load</span><span class="params">(String key)</span></span><br><span class="line">                <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">                logger.debug(<span class="string">&quot;load local cache key: &#123;&#125;&quot;</span>, key);</span><br><span class="line">                <span class="keyword">return</span> key + <span class="keyword">new</span> <span class="title class_">Date</span>();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>; i&lt;<span class="number">5</span>; i++) &#123;</span><br><span class="line">            Thread.sleep(<span class="number">900</span>);</span><br><span class="line">            <span class="type">String</span> <span class="variable">valueLoader</span> <span class="operator">=</span> localCache.get(<span class="string">&quot;key&quot;</span>);</span><br><span class="line">            logger.info(<span class="string">&quot;Loader Cache &gt;&gt;&gt; key is &#123;&#125;, value is &#123;&#125;&quot;</span>, <span class="string">&quot;key&quot;</span>, valueLoader);</span><br><span class="line">            logger.info(<span class="string">&quot;Loader Cache &gt;&gt;&gt; stat miss:&#123;&#125;, stat hit:&#123;&#125;&quot;</span>,</span><br><span class="line">                localCache.stats().missRate(), localCache.stats().hitRate());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述代码，简单的介绍了一种GuavaCache的常用方式。在GuavaCache对外提供的方法中， recordStats和removalListener是两个很有趣的接口，可以很好的帮我们完成统计功能和Entry移除引起的监听触发功能。</p>
+<h2 id="Builder模式"><a href="#Builder模式" class="headerlink" title="Builder模式"></a>Builder模式</h2><p>设计模式中的Builder模式 在Guava中很多地方得到的使用。Builder模式是将一个复杂对象的构造与其对应配置属性表示的分离，也就是可以使用基本相同的构造过程去创建不同的具体对象。例如在web接口中的返回对象就常用这种模式。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSON;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSONObject;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by lc on 15/4/23.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ResponseEntry</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> code;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String msg;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Object obj;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Deprecated</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ResponseEntry</span><span class="params">(<span class="type">int</span> code)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.code = code;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Deprecated</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ResponseEntry</span><span class="params">(<span class="type">int</span> code, String msg)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.msg = msg;</span><br><span class="line">        <span class="built_in">this</span>.code = code;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">ResponseEntry</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getCode</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> code;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> ResponseEntry <span class="title function_">setCode</span><span class="params">(<span class="type">int</span> code)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.code = code;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getMsg</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> msg;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> ResponseEntry <span class="title function_">setMsg</span><span class="params">(String msg)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.msg = msg;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">getObj</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> obj;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> ResponseEntry <span class="title function_">setObj</span><span class="params">(Object obj)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.obj = obj;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> ResponseEntry <span class="title function_">buildler</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ResponseEntry</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> ResponseEntry <span class="title function_">buildler</span><span class="params">(<span class="type">int</span> code)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ResponseEntry</span>(code);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span> <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> JSON.toJSONString(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Tips：在Effective Java第二版中，Josh Bloch在第二章中就提到使用Builder模式处理需要很多参数的构造函数。他不仅展示了Builder的使用，也描述了相这种方法相对使用带很多参数的构造函数带来的好处。</p>
+<h2 id="对象引用"><a href="#对象引用" class="headerlink" title="对象引用"></a>对象引用</h2><p>在说GuavaCache之前，首先需要了解一下java中的引用。java在1.2版本之前对象只有两种引用方式：被引用和没有被引用。但是这种方式对GC来说效果并不好，因此在1.2之后的版本中，java对引用的概念进行了扩展，一共有四种引用方式：</p>
+<ul>
+<li><strong>强引用（Strong Reference）</strong>：强引用在程序代码中随处可见，十分普遍。比如：<code>Object object = new Object()</code>，这类引用只要还存在，垃圾收集器就永远不会回收掉这类引用的对象。</li>
+<li><strong>软引用（Soft Reference）</strong>：软引用用来描述一些虽然有用但是并不是必须的对象。对于软引用关联的对象，在系统将可能发生内存溢出异常之前，垃圾收集器将会把这些引用的对象进行第二次回收。只有这次垃圾回收还没有足够的内存的时候，才会抛出内存溢出异常。</li>
+<li><strong>弱引用（Weak Reference）</strong>：弱引用是一种比软引用强度还要弱的引用，因此这些引用的对象也是非必须的。但是，对于弱引用的对象只能生存到下一次垃圾回收发生之前。当垃圾收集工作开始后，无论当前的内存是否够用，都会把这些弱引用的对象回收掉。</li>
+<li><strong>虚引用（Phantom Reference）</strong>：虚引用是最弱的一种引用。一个对象是否被虚引用关联，完全不会对其生存时间构成影响，也无法通过虚引用获得一个对象实例。为一个对象设置虚引用关联的唯一目的就是能在这个对象被收集器回收时收到一个系统通知。</li>
+</ul>
+<h2 id="对象可见性"><a href="#对象可见性" class="headerlink" title="对象可见性"></a>对象可见性</h2><h3 id="什么是可见性？"><a href="#什么是可见性？" class="headerlink" title="什么是可见性？"></a>什么是可见性？</h3><p>可见性就是，当程序中一个线程修改了某个全局共享变量的值之后，其他使用该值的线程都可以获知，在随后他们读该共享变量的时候，查询的都是最新的改改修改的值。<br>与CPU的多级缓存结构类似，Java虚拟机中内存分为两类：</p>
+<ul>
+<li>主内存（Main Memory）：所有线程共享的内存区域，虚拟机内存的一部分。</li>
+<li>工作内存（Work Memory）：线程自己操作的内存区域，线程直接无法访问对方的工作内存区域。</li>
+</ul>
+<p>之所以分为两部分内存区域，原因和CPU很类似。为了线程可以快速访问操作变量，当线程全部直接操作共享内存，则会导致大量线程之间竞争等问题出现，影响效率。<br>关于Java中工作内存和主内存之间的交互关系如下图：<br><img src="/technology/guava/guava-1.png"><br>为了保证共享变量可见性，除了volatile之外，还有synchronized和final关键字。</p>
+<p><strong>synchronized</strong>：执行synchronized代码块时，在对变量执行unlock操作之前，一定会把此变量写入到主内存中。<strong>final</strong>：该关键字修饰的变量在构造函数中初始化完成之后（不考虑指针逃逸，变量初始化一半的问题），其他线程就可以看到这个final变量的值，并且由于变量不能修改，所以能确保可见性。</p>
+<h2 id="锁细化"><a href="#锁细化" class="headerlink" title="锁细化"></a>锁细化</h2><p>在Java语言中，最经典的锁细化提高多线程并发性能的案例，就是ConcurrentHashMap，其采用多个segment，每个segment对应一个锁，来分散全局锁带来的性能损失。从而，当我们put某一个entry的时候，在实现的时候，一般只需要拥有某一个segment锁就可以完成。</p>
+<p>关于普通的HashTable结构和ConcurrentHashMap结构，从下图可以很显而易见的看出两者的区别。所以，就锁这个层面上，concurrentHashMap就会比HashTable性能好。<br><img src="/technology/guava/guava-2.jpg"></p>
+<h2 id="Guava-ListenableFuture接口"><a href="#Guava-ListenableFuture接口" class="headerlink" title="Guava ListenableFuture接口"></a>Guava ListenableFuture接口</h2><p>未完</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/donate-page/simple/images/wechat.jpg" alt="李城 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/donate-page/simple/images/alipay.jpg" alt="李城 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%9D%8E%E5%9F%8E/" rel="tag"><i class="fa fa-tag"></i> 李城</a>
+              <a href="/tags/Java/" rel="tag"><i class="fa fa-tag"></i> Java</a>
+              <a href="/tags/Guava/" rel="tag"><i class="fa fa-tag"></i> Guava</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/life/rest/" rel="prev" title="这才叫休息">
+                  <i class="fa fa-chevron-left"></i> 这才叫休息
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/life/bashu/" rel="next" title="巴蜀五日，风光旖旎">
+                  巴蜀五日，风光旖旎 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa-solid fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李城</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"cdn":"//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML","tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"lchml","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

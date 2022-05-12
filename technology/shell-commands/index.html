@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lchml.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Shell是Unix操作系统下传统的用户和计算机的交互界面，也是控制系统的脚本语言。对于程序员来说，熟悉shell的使用是一门基本功，但有时又像一门暗器（快狠准），在这里记录一些平时工作生活中用到过的命令，温故知新，就算忘了也有个地方可以快速查询。如果没有，没关系，几乎所有命令都可以通过command --help来查看用法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shell常用命令">
+<meta property="og:url" content="https://lchml.com/technology/shell-commands/index.html">
+<meta property="og:site_name" content="旅行的代码">
+<meta property="og:description" content="Shell是Unix操作系统下传统的用户和计算机的交互界面，也是控制系统的脚本语言。对于程序员来说，熟悉shell的使用是一门基本功，但有时又像一门暗器（快狠准），在这里记录一些平时工作生活中用到过的命令，温故知新，就算忘了也有个地方可以快速查询。如果没有，没关系，几乎所有命令都可以通过command --help来查看用法。">
+<meta property="og:locale">
+<meta property="article:published_time" content="2014-12-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-12T05:57:59.739Z">
+<meta property="article:author" content="李城">
+<meta property="article:tag" content="李城">
+<meta property="article:tag" content="Shell">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://lchml.com/technology/shell-commands/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lchml.com/technology/shell-commands/","path":"technology/shell-commands/","title":"Shell常用命令"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Shell常用命令 | 旅行的代码</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71702178-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-71702178-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">旅行的代码</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">李城的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#lsof"><span class="nav-number">1.</span> <span class="nav-text">lsof</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#vi-s"><span class="nav-number">2.</span> <span class="nav-text">vi:%s</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#awk"><span class="nav-number">3.</span> <span class="nav-text">awk</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#split"><span class="nav-number">4.</span> <span class="nav-text">split</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#du-x2F-df"><span class="nav-number">5.</span> <span class="nav-text">du &#x2F; df</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#scp"><span class="nav-number">6.</span> <span class="nav-text">scp</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#grep"><span class="nav-number">7.</span> <span class="nav-text">grep</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#comm"><span class="nav-number">8.</span> <span class="nav-text">comm</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sort"><span class="nav-number">9.</span> <span class="nav-text">sort</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cut"><span class="nav-number">10.</span> <span class="nav-text">cut</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sed"><span class="nav-number">11.</span> <span class="nav-text">sed</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#paste"><span class="nav-number">12.</span> <span class="nav-text">paste</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E2%80%A6"><span class="nav-number">13.</span> <span class="nav-text">持续更新…</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李城"
+      src="/lc-icon.jpg">
+  <p class="site-author-name" itemprop="name">李城</p>
+  <div class="site-description" itemprop="description">知行合一</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">111</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/licheng-xd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;licheng-xd" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:licheng_xd@163.com" title="E-Mail → mailto:licheng_xd@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.me/lchml" title="500px → https:&#x2F;&#x2F;500px.me&#x2F;lchml" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i>500px</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://jandan.net/" title="Jandan → https:&#x2F;&#x2F;jandan.net" rel="noopener" target="_blank"><i class="fa fa-transgender-alt fa-fw"></i>Jandan</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/4qg55j4w/home?wvr=5" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;4qg55j4w&#x2F;home?wvr&#x3D;5" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.qingtian16265.com/" title="晴天博客 → https:&#x2F;&#x2F;blog.qingtian16265.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-leanpub fa-fw"></i>晴天博客</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/shell-commands/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/lc-icon.jpg">
+      <meta itemprop="name" content="李城">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="旅行的代码">
+      <meta itemprop="description" content="知行合一">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Shell常用命令 | 旅行的代码">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Shell常用命令
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2014-12-05 00:00:00" itemprop="dateCreated datePublished" datetime="2014-12-05T00:00:00+08:00">2014-12-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/technology/shell-commands/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="technology/shell-commands/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p><a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Unix_shell">Shell</a>是Unix操作系统下传统的用户和计算机的交互界面，也是控制系统的脚本语言。对于程序员来说，熟悉shell的使用是一门基本功，但有时又像一门暗器（快狠准），在这里记录一些平时工作生活中用到过的命令，温故知新，就算忘了也有个地方可以快速查询。如果没有，没关系，几乎所有命令都可以通过<code>command --help</code>来查看用法。</p>
+<span id="more"></span>
+
+<h4 id="lsof"><a href="#lsof" class="headerlink" title="lsof"></a>lsof</h4><p>查看8080端口被哪个进程占用 <code>lsof -i:8080</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ lsof -i:8080</span><br><span class="line">COMMAND   PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME</span><br><span class="line">java    30712   lc   31u  IPv6 999925      0t0  TCP *:http-alt (LISTEN)</span><br></pre></td></tr></table></figure>
+
+<h4 id="vi-s"><a href="#vi-s" class="headerlink" title="vi:%s"></a>vi:%s</h4><p>将文件中所有的字符串aaaa替换成bbbb，vi命令：<code>:%s/aaaa/bbbb/g</code></p>
+<h4 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h4><p>awk在对数据分析并生成报告时尤为强大。简单来说awk就是把文件逐行的读入，以空格为默认分隔符将每行切片，切开的部分再进行各种分析处理。<br>基本语法 <code>awk &#39;&#123;pattern + action&#125;&#39; &#123;filenames&#125;</code> 尽管操作可能会很复杂，但语法总是这样。几种常用示例：</p>
+<p>以;为分隔符，输出第4列大于0的行。$n表示第n列，n&#x3D;0表示一整行。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ awk -F &#x27;;&#x27; &#x27;$4&gt;0&#x27; test.dat</span><br></pre></td></tr></table></figure>
+
+<p>以;为分隔符，所有第4列大于0的值的和。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cat test.dat|awk -F &#x27;;&#x27; &#x27;&#123;if($4&lt;0)sum+=$4&#125; END &#123;print sum&#125;&#x27; </span><br></pre></td></tr></table></figure>
+
+<h4 id="split"><a href="#split" class="headerlink" title="split"></a>split</h4><p>用于把文件分割成多份，使用起来很简单：<code>split [-bl] file [prefix]</code>。</p>
+<ul>
+<li><code>-b</code> 表示对文件按大小进行切分。</li>
+<li><code>-c</code> 表示对文件按行数进行切分。</li>
+<li><code>prefix</code> 用于指定切分后的文件名前缀，可以不写，默认为xaa、xab、xac …</li>
+</ul>
+<p>如原文件all.dat的大小为1.2M，共12801行。用<code>-b</code>进行切分：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$split -b 600k all.dat</span><br><span class="line">$ls -lh</span><br><span class="line">1.2M    all.dat</span><br><span class="line">600k    xaa</span><br><span class="line">554k    xab</span><br></pre></td></tr></table></figure>
+
+<p>用<code>-l</code>进行切分：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$split -l 5000 all.dat</span><br><span class="line">$wc -l *</span><br><span class="line">12801 all.dat</span><br><span class="line">5000 xaa</span><br><span class="line">5000 xab</span><br><span class="line">2081 xac</span><br><span class="line">25802 total</span><br></pre></td></tr></table></figure>
+
+<p>应用场景：有一个每天定时处理数据的任务，某一天突然发现数据量特别大，处理时间太长，这时可以把原数据分成多份，然后用多个线程同时处理数据，确保不会超出时间。</p>
+<h4 id="du-x2F-df"><a href="#du-x2F-df" class="headerlink" title="du &#x2F; df"></a>du &#x2F; df</h4><p>两个命令都可以用于查看文件空间的占用情况，df一般用于查看磁盘的使用情况，du一般用于查看文件夹的大小。</p>
+<p><code>df -h</code> 查看磁盘的使用情况，可以看到的信息如下。-h参数用于显示大小时把byte换算成K&#x2F;M&#x2F;G等可读单位。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ df -h</span><br><span class="line">Filesystem            Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/sda1             7.9G  954M  6.6G  13% /</span><br><span class="line">tmpfs                  16G     0   16G   0% /lib/init/rw</span><br><span class="line">udev                   16G  120K   16G   1% /dev</span><br><span class="line">tmpfs                  16G  4.0K   16G   1% /dev/shm</span><br><span class="line">/dev/sda8             1.8T   32G  1.7T   2% /home</span><br><span class="line">/dev/sda7             7.9G  147M  7.8G   2% /tmp</span><br><span class="line">/dev/sda6             7.9G  563M  7.0G   8% /var</span><br></pre></td></tr></table></figure>
+
+<p><code>du -sh</code>查看当前目录的大小，<code>du -sh *</code>查看每个子目录的大小，-s参数表示显示总和，如果不带-s会显示所有子文件和文件夹的大小。</p>
+<h4 id="scp"><a href="#scp" class="headerlink" title="scp"></a>scp</h4><p>远程文件传输，secure copy。与ssh命令使用相同的验证方法并且提供相同的安全性。scp实质相当于利用SSH协议来传输数据的cp命令。</p>
+<p>常见的两种用法：</p>
+<ul>
+<li>本地文件拷贝到远程主机，<code>scp /local/path user@remotehost:/home/path</code></li>
+<li>远程主机文件拷贝到本地，<code>scp user@remotehost:/home/path /local/path</code></li>
+</ul>
+<p>当需要指定ssh的端口时，用<code>-P port</code>注意P需要大写，因为<code>-p</code>已经被rcp命令使用。如果需要拷贝文件夹，带上<code>-r</code>参数。<br><code>-v</code>和大多数其他命令一样，用来显示执行过程的详细信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ scp -P 1046 star-test.dat lc@10.120.104.56:/home/lc/</span><br><span class="line">star-test.dat                           100% 2250     2.2KB/s   00:00</span><br></pre></td></tr></table></figure>
+
+<h4 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h4><p>强大的文本搜索工具，它能使用正则表达式搜索文本，并把匹 配的行打印出来。grep全称是Global Regular Expression Print。</p>
+<p>常用参数：</p>
+<ul>
+<li><code>-c</code> 只输出匹配的行数。</li>
+<li><code>-v</code> 排除[options]匹配的结果</li>
+<li><code>-i</code> 不区分大小写。</li>
+<li><code>-l -L</code> 只列出匹配&#x2F;不匹配的文件名。</li>
+<li><code>-w</code> 只匹配整个单词，而不是字符串的一部分（如匹配”magic”，而不匹配”magical”）。</li>
+<li><code>-n</code> 结果中显示行号。</li>
+</ul>
+<p>grep命令可以通过管道符号叠加使用，如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ cat a.txt</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">12</span><br><span class="line">3</span><br><span class="line">$ cat a.txt|grep -n [0-9]|grep -v 1</span><br><span class="line">2:2</span><br><span class="line">4:3</span><br></pre></td></tr></table></figure>
+
+<h4 id="comm"><a href="#comm" class="headerlink" title="comm"></a>comm</h4><p>用于对两个有序的文件进行比较。</p>
+<p>这个命令的使用有个前提，就是比较的两个文件必须是<strong>有序</strong>的<br>不带参数时，的效果如下（cat用来显示文件内容）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ cat a.txt</span><br><span class="line">0</span><br><span class="line">1</span><br><span class="line">12</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">$ cat b.txt</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">20</span><br><span class="line">$ comm a.txt b.txt</span><br><span class="line">0</span><br><span class="line">1</span><br><span class="line">        12</span><br><span class="line">    13</span><br><span class="line">2</span><br><span class="line">    20</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+
+<p>输出结果有三列：第一列只在a中出现，第二列只在b中出现，第三列在a，b中都出现。因此comm有三个对应的可选参数：</p>
+<ul>
+<li><code>-1</code> 不显示只在第一个文件中出现过的列，也就是不显示第一列。</li>
+<li><code>-2</code> 不显示只在第二个文件中出现过的列，也就是不显示第二列。</li>
+<li><code>-3</code> 不显示两个文件中都出现过的列，也就是不显示第三列。</li>
+</ul>
+<p><strong>应用场景：</strong>每天通过数据挖掘得到一批符合条件的用户，需要对他们进行某个操作，并且每个用户只能被操作一次，<br>而每天提供的用户没有经过去重，那么每天操作前需要对之前已经操作过的用户进行去重。<br>也就是例如文件<code>done.txt</code>是已经操作过的用户，<code>new.txt</code>是新拿到的用户，那么通过<code>comm -13 done.txt new.txt &gt; todo.txt</code>就可以得到我们想要的结果。</p>
+<h4 id="sort"><a href="#sort" class="headerlink" title="sort"></a>sort</h4><p>将文件中的每一个行作为一个单元进行比较。</p>
+<p>默认不带参数的比较原则是从首字符向后，依次按字符的ASCII码进行比较，结果按升序输出。效果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ cat a.txt</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">2</span><br><span class="line">12</span><br><span class="line">$ sort a.txt</span><br><span class="line">1</span><br><span class="line">12</span><br><span class="line">2</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+
+<p>常用的参数：</p>
+<ul>
+<li><code>-u</code> 对结果进行去重。</li>
+<li><code>-r</code> 按降序输出结果。</li>
+<li><code>-o</code> 将结果存入指定的文件，由于sort默认把结果输出到标准输出，所以通常需要用<code>&gt;</code>符号来把结果重定向输出到文件中。但是当你想把结果放到被比较的原文件中时，用重定向会把原文件清空。这是就需要通过<code>-o</code>来指定输出结果到原文件。</li>
+<li><code>-n</code> 按照数值进行排序。</li>
+<li><code>-t -k</code> 这两个一般同时使用，-t用来指定分隔符，-k表示分割后用来进行比较的列。</li>
+<li><code>-d</code> 只处理英文字母、数字、空格字符，忽略其他字符。</li>
+<li><code>-f</code> 忽略大小写。</li>
+<li><code>-m</code> 将几个排序好的文件进行合并。</li>
+</ul>
+<p><strong>应用场景：</strong>上面comm命令的场景中，新得到的文件应该先进行排序<code>sort -u new.txt -o new.txt</code>，<br>操作完后应该把新操作的用户合并到已操作的用户中<code>sort -m -u done.txt new.txt -o done.txt</code>。</p>
+<h4 id="cut"><a href="#cut" class="headerlink" title="cut"></a>cut</h4><p>切割字符串，用于文件时，以每一行为单元处理。</p>
+<p>cut的使用比较简单，常用的只有两个参数：</p>
+<ul>
+<li><code>-d</code> 指定分隔符，不指定时默认以制表符<code>\t</code>作为分隔符，通常与<code>-f</code>一起使用。</li>
+<li><code>-f</code> 目标被分隔成几段以后，用<code>-f</code>表示取出其中的某几段。</li>
+<li><code>-c -b</code> 分别表示已字符&#x2F;字节为单位，取出指定的区间。</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ echo &quot;1,2,3,4,5&quot;|cut -d , -f 2-4</span><br><span class="line">2,3,4</span><br><span class="line">$ echo &quot;1,2,3,4,5&quot;|cut -c 2-4</span><br><span class="line">,2,</span><br></pre></td></tr></table></figure>
+
+<h4 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h4><p>非交互式的编辑器，不会修改文件，把结果输出的屏幕。</p>
+<p>sed的用法比较多，也比较复杂，下面只列举一下常用的用法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ cat a.txt</span><br><span class="line">0</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td></tr></table></figure>
+<p>1.删除文件中的2~4行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sed &#x27;2,4d&#x27; a.txt</span><br><span class="line">0</span><br><span class="line">4</span><br></pre></td></tr></table></figure>
+<p>2.取出文件中的1~3行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ sed -n &#x27;1,3p&#x27; a.txt</span><br><span class="line">0</span><br><span class="line">1</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+<p>3.删除从包含1的行到第一个包含3的行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sed &#x27;/1/,/3/d&#x27; a.txt</span><br><span class="line">0</span><br><span class="line">4</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong>sed本身不会改变文件</p>
+<h4 id="paste"><a href="#paste" class="headerlink" title="paste"></a>paste</h4><p>把文件以列的方式，进行合并。</p>
+<p>两个常用参数：</p>
+<ul>
+<li><code>-d</code> 指定合并时的间隔符，不指定则默认为制表符<code>\t</code>。</li>
+<li><code>-s</code> 将文件的列转换为行。</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ cat a.txt</span><br><span class="line">1</span><br><span class="line"></span><br><span class="line">2</span><br><span class="line">$ cat b.txt</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">$ paste -d &#x27;,&#x27; a.txt b.txt</span><br><span class="line">1,3</span><br><span class="line">,4</span><br><span class="line">2,</span><br><span class="line">$ paste -s b.txt</span><br><span class="line">3    4</span><br><span class="line">$ paste -s -d &#x27;,&#x27; b.txt</span><br><span class="line">3,4</span><br></pre></td></tr></table></figure>
+
+<h4 id="持续更新…"><a href="#持续更新…" class="headerlink" title="持续更新…"></a>持续更新…</h4>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/donate-page/simple/images/wechat.jpg" alt="李城 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/donate-page/simple/images/alipay.jpg" alt="李城 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%9D%8E%E5%9F%8E/" rel="tag"><i class="fa fa-tag"></i> 李城</a>
+              <a href="/tags/Shell/" rel="tag"><i class="fa fa-tag"></i> Shell</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/life/aboutmovie/" rel="prev" title="打开脑洞">
+                  <i class="fa fa-chevron-left"></i> 打开脑洞
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/technology/theory-of-relativity/" rel="next" title="相对论">
+                  相对论 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa-solid fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李城</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"cdn":"//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML","tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"lchml","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

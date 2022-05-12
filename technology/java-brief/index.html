@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lchml.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Java是解释执行还是编译运行？其实这个问题本身就是一个错误的问题，以现在jvm的发展来说，jvm在执行字节码时，本身就融合了解释和编译两种方式，部分代码由jvm解释执行，部分代码会由JIT一次性编译成机器指令直接运行。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java常见知识点">
+<meta property="og:url" content="https://lchml.com/technology/java-brief/index.html">
+<meta property="og:site_name" content="旅行的代码">
+<meta property="og:description" content="Java是解释执行还是编译运行？其实这个问题本身就是一个错误的问题，以现在jvm的发展来说，jvm在执行字节码时，本身就融合了解释和编译两种方式，部分代码由jvm解释执行，部分代码会由JIT一次性编译成机器指令直接运行。">
+<meta property="og:locale">
+<meta property="og:image" content="https://lchml.com/technology/java-brief/tcp.png">
+<meta property="article:published_time" content="2018-07-05T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-12T06:00:35.184Z">
+<meta property="article:author" content="李城">
+<meta property="article:tag" content="李城">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lchml.com/technology/java-brief/tcp.png">
+
+
+<link rel="canonical" href="https://lchml.com/technology/java-brief/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lchml.com/technology/java-brief/","path":"technology/java-brief/","title":"Java常见知识点"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Java常见知识点 | 旅行的代码</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71702178-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-71702178-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">旅行的代码</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">李城的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%9B%E5%9E%8B%E3%80%81%E5%8F%8D%E5%B0%84%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">泛型、反射原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java-IO"><span class="nav-number">2.</span> <span class="nav-text">Java IO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JVM%EF%BC%9A%E5%86%85%E5%AD%98%E3%80%81GC%E3%80%81%E5%8A%A8%E6%80%81%E7%BC%96%E8%AF%91%E3%80%81%E7%B1%BB%E5%8A%A0%E8%BD%BD%E3%80%81%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4%E3%80%81%E5%B7%A5%E5%85%B7"><span class="nav-number">3.</span> <span class="nav-text">JVM：内存、GC、动态编译、类加载、字节码指令、工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%93%AA%E4%BA%9B%E6%83%85%E5%86%B5%E4%BC%9A%E5%BC%95%E8%B5%B7OutOfMemoryError"><span class="nav-number">4.</span> <span class="nav-text">哪些情况会引起OutOfMemoryError</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wait%EF%BC%8Csleep%E5%8C%BA%E5%88%AB"><span class="nav-number">5.</span> <span class="nav-text">wait，sleep区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Synchronized%E5%92%8CReentrantLock%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%8C%E4%BB%80%E4%B9%88%E6%98%AF%E5%81%8F%E5%90%91%E9%94%81%E3%80%81%E8%87%AA%E6%97%8B%E9%94%81%EF%BC%8C%E4%BB%80%E4%B9%88%E6%98%AF%E9%94%81%E5%8D%87%E7%BA%A7%EF%BC%8C%E8%86%A8%E8%83%80%EF%BC%8CJUC%E4%B8%AD%E9%99%A4%E4%BA%86ReentrantLock%E5%A4%96%E8%BF%98%E6%9C%89%E5%93%AA%E4%BA%9B%E9%94%81%EF%BC%9F"><span class="nav-number">6.</span> <span class="nav-text">Synchronized和ReentrantLock有什么区别，什么是偏向锁、自旋锁，什么是锁升级，膨胀，JUC中除了ReentrantLock外还有哪些锁？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#volatile%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-number">7.</span> <span class="nav-text">volatile关键字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jvm%E9%85%8D%E7%BD%AE%E5%A4%A7%E5%86%85%E5%AD%98%E6%97%B6%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E4%BB%80%E4%B9%88"><span class="nav-number">8.</span> <span class="nav-text">jvm配置大内存时需要注意什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XX-UseCompressedOops%E5%8F%82%E6%95%B0%E4%BD%9C%E7%94%A8"><span class="nav-number">9.</span> <span class="nav-text">-XX:-UseCompressedOops参数作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ThreadPoolExecutor%E7%9A%84%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F"><span class="nav-number">10.</span> <span class="nav-text">ThreadPoolExecutor的线程池工作方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Exception%E3%80%81Error%E3%80%81Throwable%E3%80%81RuntimeException%E5%8C%BA%E5%88%AB"><span class="nav-number">11.</span> <span class="nav-text">Exception、Error、Throwable、RuntimeException区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JDK%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E5%92%8Ccglib%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F%E6%9C%89%E4%BD%95%E4%B8%8D%E5%90%8C"><span class="nav-number">12.</span> <span class="nav-text">JDK动态代理和cglib的实现方式有何不同</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BIO%E3%80%81NIO%E3%80%81AIO%E5%8C%BA%E5%88%AB%E3%80%82poll%E5%92%8Cepoll%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%E3%80%82"><span class="nav-number">13.</span> <span class="nav-text">BIO、NIO、AIO区别。poll和epoll有什么区别。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A%E4%BA%8B%E7%89%A9%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%EF%BC%8C%E8%A1%A8%E9%94%81%E5%92%8C%E8%A1%8C%E9%94%81%EF%BC%8C%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95%EF%BC%8C%E8%81%9A%E7%B0%87%E7%B4%A2%E5%BC%95"><span class="nav-number">14.</span> <span class="nav-text">数据库：事物隔离级别，表锁和行锁，联合索引，聚簇索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis%E3%80%81memcached%E5%8C%BA%E5%88%AB%EF%BC%8C%E5%86%85%E5%AD%98%E5%AE%9E%E7%8E%B0%E3%80%82%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E9%AB%98%E5%8F%AF%E7%94%A8%E3%80%82"><span class="nav-number">15.</span> <span class="nav-text">redis、memcached区别，内存实现。如何实现高可用。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tcp-timewait%E7%8A%B6%E6%80%81"><span class="nav-number">16.</span> <span class="nav-text">tcp timewait状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%8Cspring%E6%BA%90%E7%A0%81%EF%BC%8Cbeanfactory%E5%92%8Cfactorybean%E5%8C%BA%E5%88%AB"><span class="nav-number">17.</span> <span class="nav-text">spring bean的生命周期，spring源码，beanfactory和factorybean区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jdk%E5%BA%8F%E5%88%97%E5%8C%96%E5%8E%9F%E7%90%86%EF%BC%8Cfastjson%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BA%8F%E5%88%97%E5%8C%96%E4%BC%9A%E6%9B%B4%E5%BF%AB%E3%80%82"><span class="nav-number">18.</span> <span class="nav-text">jdk序列化原理，fastjson为什么序列化会更快。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rabbitmq%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81%E6%9C%89%E5%BA%8F"><span class="nav-number">19.</span> <span class="nav-text">rabbitmq怎么保证有序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E9%9B%B6%E6%8B%B7%E8%B4%9D"><span class="nav-number">20.</span> <span class="nav-text">什么是零拷贝</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李城"
+      src="/lc-icon.jpg">
+  <p class="site-author-name" itemprop="name">李城</p>
+  <div class="site-description" itemprop="description">知行合一</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">111</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/licheng-xd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;licheng-xd" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:licheng_xd@163.com" title="E-Mail → mailto:licheng_xd@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.me/lchml" title="500px → https:&#x2F;&#x2F;500px.me&#x2F;lchml" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i>500px</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://jandan.net/" title="Jandan → https:&#x2F;&#x2F;jandan.net" rel="noopener" target="_blank"><i class="fa fa-transgender-alt fa-fw"></i>Jandan</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/4qg55j4w/home?wvr=5" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;4qg55j4w&#x2F;home?wvr&#x3D;5" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.qingtian16265.com/" title="晴天博客 → https:&#x2F;&#x2F;blog.qingtian16265.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-leanpub fa-fw"></i>晴天博客</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/java-brief/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/lc-icon.jpg">
+      <meta itemprop="name" content="李城">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="旅行的代码">
+      <meta itemprop="description" content="知行合一">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Java常见知识点 | 旅行的代码">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java常见知识点
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-07-06 00:00:00" itemprop="dateCreated datePublished" datetime="2018-07-06T00:00:00+08:00">2018-07-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/technology/java-brief/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="technology/java-brief/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>Java是解释执行还是编译运行？其实这个问题本身就是一个错误的问题，以现在jvm的发展来说，jvm在执行字节码时，本身就融合了解释和编译两种方式，部分代码由jvm解释执行，部分代码会由JIT一次性编译成机器指令直接运行。</p>
+<span id="more"></span>
+
+<h3 id="泛型、反射原理"><a href="#泛型、反射原理" class="headerlink" title="泛型、反射原理"></a>泛型、反射原理</h3><p>泛型擦除，反射实现动态创建对象。动态编译</p>
+<h3 id="Java-IO"><a href="#Java-IO" class="headerlink" title="Java IO"></a>Java IO</h3><p>根据处理数据类型的不同分为：字符流、字节流。根据数据流向不同分为：输出流、输入流。常用的IO对象：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">JavaIO</span><br><span class="line">    |--字符流</span><br><span class="line">        --Reader</span><br><span class="line">            --BufferedReader</span><br><span class="line">            --InputStreamReader</span><br><span class="line">                --FileReader</span><br><span class="line">            -- ......</span><br><span class="line">        --Writer</span><br><span class="line">            --BufferedWriter</span><br><span class="line">            --OutputSteamWriter</span><br><span class="line">                --FileWriter</span><br><span class="line">            -- ......</span><br><span class="line">    |--字节流</span><br><span class="line">        --InputStream</span><br><span class="line">            --FileInputStream</span><br><span class="line">            --FilterInputStream</span><br><span class="line">                --BufferedInputStream</span><br><span class="line">            -- ......</span><br><span class="line">        --OutputStream</span><br><span class="line">            --FileOutputStream</span><br><span class="line">            --FilterOutputStream</span><br><span class="line">                --BufferedOutputStream</span><br><span class="line">            -- ......</span><br></pre></td></tr></table></figure>
+
+<h3 id="JVM：内存、GC、动态编译、类加载、字节码指令、工具"><a href="#JVM：内存、GC、动态编译、类加载、字节码指令、工具" class="headerlink" title="JVM：内存、GC、动态编译、类加载、字节码指令、工具"></a>JVM：内存、GC、动态编译、类加载、字节码指令、工具</h3><ul>
+<li>内存管理：直接内存、程序计数器、虚拟机栈、本地方法栈、堆、方法区、运行时常量池</li>
+<li>内存模型：主内存、工作内存。</li>
+<li>GC算法：标记清除算法、复制算法、标记整理算法</li>
+<li>GC策略：Serial、ParNew、Paralle Scavenge、Serial Old、Paralle Old、CMS、G1</li>
+<li>类加载过程：加载、验证、准备、解析、初始化、使用、卸载</li>
+<li>类加载器：双亲委派模型、双亲委派模型逆向</li>
+<li>字节码方法调用指令：invokestatic、invokespecial、invokevirtual、invokeinterface、invokedynamic。</li>
+<li>调用分类：解析调用（Resolution）、分派调用（Dispatch）</li>
+<li>类型分类：静态类型（Static Type）、实际类型（Actual Type）</li>
+<li>常用工具：jps、jstat、jmap、jstack</li>
+</ul>
+<h3 id="哪些情况会引起OutOfMemoryError"><a href="#哪些情况会引起OutOfMemoryError" class="headerlink" title="哪些情况会引起OutOfMemoryError"></a>哪些情况会引起OutOfMemoryError</h3><p>在上面说的内存管理中，除了虚拟机栈和本地方法栈溢出时是StackOverflowError，其他内存区域的溢出都是OutOfMemoryError。</p>
+<h3 id="wait，sleep区别"><a href="#wait，sleep区别" class="headerlink" title="wait，sleep区别"></a>wait，sleep区别</h3><ol>
+<li>wait是Object的成员方法，sleep是Thread的静态方法</li>
+<li>wait会释放锁，而sleep会一直持有锁。</li>
+<li>两者都可以让线程暂停一段时间，但本质的区别是，sleep是线程运行状态的控制，而wait是线程之间通信的问题。wait可以把一个线程挂起，直到超时或同一个对象调用notify或notifyAll方法唤醒。wait，notify，notifyAll方法都只能在同步控制方法或代码块中使用。</li>
+<li>sleep必须catch异常</li>
+</ol>
+<h3 id="Synchronized和ReentrantLock有什么区别，什么是偏向锁、自旋锁，什么是锁升级，膨胀，JUC中除了ReentrantLock外还有哪些锁？"><a href="#Synchronized和ReentrantLock有什么区别，什么是偏向锁、自旋锁，什么是锁升级，膨胀，JUC中除了ReentrantLock外还有哪些锁？" class="headerlink" title="Synchronized和ReentrantLock有什么区别，什么是偏向锁、自旋锁，什么是锁升级，膨胀，JUC中除了ReentrantLock外还有哪些锁？"></a>Synchronized和ReentrantLock有什么区别，什么是偏向锁、自旋锁，什么是锁升级，膨胀，JUC中除了ReentrantLock外还有哪些锁？</h3><p>[锁相关知识点][1]</p>
+<ol>
+<li>Synchronized是java关键字，语言层面的同步实现，Lock是一个锁的抽象类，把同步控制交由用户处理</li>
+<li>当发生异常时Synchronized会自动释放锁。Lock必须手动在finally中释放锁。</li>
+<li>Synchronized无法判断当前锁的状态，Lock可以</li>
+<li>Synchronized可重入，不可中断，非公平。Lock可重入，可中断，可以自由选择是否公平锁。</li>
+</ol>
+<h3 id="volatile关键字"><a href="#volatile关键字" class="headerlink" title="volatile关键字"></a>volatile关键字</h3><p>保证变量对所有线程的可见性。禁止指令重排序优化。由于java里的运算不是原子操作，所以volatile变量的运算在并发下依旧是不安全的。</p>
+<h3 id="jvm配置大内存时需要注意什么"><a href="#jvm配置大内存时需要注意什么" class="headerlink" title="jvm配置大内存时需要注意什么"></a>jvm配置大内存时需要注意什么</h3><p>JVM配置大内存的问题主要是FullGC发生的频率和时间的控制。越大的内存，触发FullGC时需要的时间越长。根据业务需求，如果注重吞吐量，忽略延时。那么可以将FullGC的阈值调大。如果延时敏感，则要控制好FullGC发生时的时间。</p>
+<h3 id="XX-UseCompressedOops参数作用"><a href="#XX-UseCompressedOops参数作用" class="headerlink" title="-XX:-UseCompressedOops参数作用"></a>-XX:-UseCompressedOops参数作用</h3><p>在64位JVM中采用32位的寻址方式，压缩指针，减少内存开销。实现方式是在机器码中植入压缩与解压指令，当对象被读取时，解压，存入heap时，压缩。</p>
+<h3 id="ThreadPoolExecutor的线程池工作方式"><a href="#ThreadPoolExecutor的线程池工作方式" class="headerlink" title="ThreadPoolExecutor的线程池工作方式"></a>ThreadPoolExecutor的线程池工作方式</h3><p>从JDK的源码注释就可以知道。</p>
+<ul>
+<li>corePoolSize： the number of threads to keep in the pool, even if they are idle, unless {@code allowCoreThreadTimeOut} is set</li>
+<li>maximumPoolSize： the maximum number of threads to allow in the pool</li>
+<li>keepAliveTime： when the number of threads is greater than the core, this is the maximum time that excess idle threads will wait for new tasks before terminating.</li>
+<li>workQueue： the queue to use for holding tasks before they are executed.  This queue will hold only the {@code Runnable} tasks submitted by the {@code execute} method.</li>
+<li>threadFactory： the factory to use when the executor creates a new thread</li>
+<li>handler： the handler to use when execution is blocked because the thread bounds and queue capacities are reached</li>
+</ul>
+<h3 id="Exception、Error、Throwable、RuntimeException区别"><a href="#Exception、Error、Throwable、RuntimeException区别" class="headerlink" title="Exception、Error、Throwable、RuntimeException区别"></a>Exception、Error、Throwable、RuntimeException区别</h3><p>Throwable是Error和Exception的父类，RuntimeException是Exception的子类</p>
+<h3 id="JDK动态代理和cglib的实现方式有何不同"><a href="#JDK动态代理和cglib的实现方式有何不同" class="headerlink" title="JDK动态代理和cglib的实现方式有何不同"></a>JDK动态代理和cglib的实现方式有何不同</h3><p>JDK动态代理是基于反射和字节码生成实现的，被代理类必须实现接口。cglib是通过继承实现的，所以可以不实现接口，但final类和private方法都无法被代理。还有一种更快的动态代理实现方法，就是采用javaassist或ASM库生成字节码的方式实现，比如HikariCP的连接池中就采用这种方式。</p>
+<h3 id="BIO、NIO、AIO区别。poll和epoll有什么区别。"><a href="#BIO、NIO、AIO区别。poll和epoll有什么区别。" class="headerlink" title="BIO、NIO、AIO区别。poll和epoll有什么区别。"></a>BIO、NIO、AIO区别。poll和epoll有什么区别。</h3><p>简单的理解：BIO一个请求对应一个线程，服务器线程资源会很紧张，导致服务能力上不去。NIO是事件驱动模型，由一个线程处理系统IO事件，上层应用只有在事件发生时才需要处理。AIO与NIO最大的区别是，NIO当有读写事件时，会通知上层做读写操作，而AIO会有系统先完成读写，数据存到缓冲去中，通知上层时数据已经准备好。</p>
+<h3 id="数据库：事物隔离级别，表锁和行锁，联合索引，聚簇索引"><a href="#数据库：事物隔离级别，表锁和行锁，联合索引，聚簇索引" class="headerlink" title="数据库：事物隔离级别，表锁和行锁，联合索引，聚簇索引"></a>数据库：事物隔离级别，表锁和行锁，联合索引，聚簇索引</h3><p>InnoDB中的四种事务隔离级别：</p>
+<table>
+<thead>
+<tr>
+<th align="left">隔离级别</th>
+<th align="left">脏读（Dirty Read）</th>
+<th align="left">不可重复读（NonRepeatable Read）</th>
+<th align="left">幻读（Phantom Read）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">未提交读（Read uncommitted）</td>
+<td align="left">可能</td>
+<td align="left">可能</td>
+<td align="left">可能</td>
+</tr>
+<tr>
+<td align="left">已提交读（Read committed）</td>
+<td align="left">不可能</td>
+<td align="left">可能</td>
+<td align="left">可能</td>
+</tr>
+<tr>
+<td align="left">可重复读（Repeatable read）</td>
+<td align="left">不可能</td>
+<td align="left">不可能</td>
+<td align="left">可能</td>
+</tr>
+<tr>
+<td align="left">可串行化（Serializable ）</td>
+<td align="left">不可能</td>
+<td align="left">不可能</td>
+<td align="left">不可能</td>
+</tr>
+</tbody></table>
+<ul>
+<li>未提交读(Read Uncommitted)：允许脏读，也就是可能读取到其他会话中未提交事务修改的数据</li>
+<li>提交读(Read Committed)：只能读取到已经提交的数据。Oracle等多数数据库默认都是该级别 (不重复读)</li>
+<li>可重复读(Repeated Read)：可重复读。在同一个事务内的查询都是事务开始时刻一致的，InnoDB默认级别。在SQL标准中，该隔离级别消除了不可重复读，但是还存在幻象读</li>
+<li>串行读(Serializable)：完全串行化的读，每次读都需要获得表级共享锁，读写相互都会阻塞</li>
+</ul>
+<p>MySQL的存储引擎是从MyISAM到InnoDB，锁从表锁到行锁。后者的出现从某种程度上是弥补前者的不足。比如：MyISAM不支持事务，InnoDB支持事务。表锁虽然开销小，锁表快，但高并发下性能低。行锁虽然开销大，锁表慢，但高并发下相比之下性能更高。事务和行锁都是在确保数据准确的基础上提高并发的处理能力。MySQL常用的存储引擎是InnoDB，相对于MyISAM而言。InnoDB更适合高并发场景，同时也支持事务处理。</p>
+<p>联合索引的最左原则，如果where中是or条件，则对应的联合索引不起作用。<br>mysql的聚簇索引是指innodb引擎的特性，mysiam并没有，如果需要该索引，只要将索引指定为主键（primary key）就可以了。聚簇索引的叶节点就是数据节点，而非聚簇索引的叶节点仍然是索引节点，并保留一个链接指向对应数据块。聚簇索引主键的插入速度要比非聚簇索引主键的插入速度慢很多。相比之下，聚簇索引适合排序，非聚簇索引（也叫二级索引）不适合用在排序的场合。 </p>
+<h3 id="redis、memcached区别，内存实现。如何实现高可用。"><a href="#redis、memcached区别，内存实现。如何实现高可用。" class="headerlink" title="redis、memcached区别，内存实现。如何实现高可用。"></a>redis、memcached区别，内存实现。如何实现高可用。</h3><p>redis内存管理采用了自己实现的zmalloc.c，在内存管理上比C的malloc性能要好得多。memcache利用Slab Allocator机制管理内存。预先吧内存划分成数个大小IM的slab class仓库，再把每个仓库分成不同尺寸的块。C语言原生的malloc在不断的申请释放过程中会产生很多内存碎片，降低内存的使用率和访问效率。<br>高可用实现，redis本身已经支持cluster和sentinel模式。redis，memcached都可以通过Twemproxy(又称为nutcracker)实现高可用。也可以自己采用一致性哈希的方式实现。<br>[一致性哈希的原理][2] </p>
+<h3 id="tcp-timewait状态"><a href="#tcp-timewait状态" class="headerlink" title="tcp timewait状态"></a>tcp timewait状态</h3><p><img src="/technology/java-brief/tcp.png" alt="1"></p>
+<p>[TCP相关知识][3]<br>TIME_WAIT的产生条件：主动关闭方在发送四次挥手的最后一个ACK会变为TIME_WAIT状态，保留次状态的时间为两个MSL（linux里一个MSL为30s，是不可配置的）<br>TIME_WAIT两个MSL的作用：可靠安全的关闭TCP连接。比如网络拥塞，主动方最后一个ACK被动方没收到，这时被动方会对FIN开启TCP重传，发送多个FIN包，在这时尚未关闭的TIME_WAIT就会把这些尾巴问题处理掉，不至于对新连接及其它服务产生影响。<br>TIME_WAIT占用的资源：少量内存（大约4K，tcp socket buffer）和一个fd。<br>TIME_WAIT关闭的危害：1、  网络情况不好时，如果主动方无TIME_WAIT等待，关闭前个连接后，主动方与被动方又建立起新的TCP连接，这时被动方重传或延时过来的FIN包过来后会直接影响新的TCP连接；2、  同样网络情况不好并且无TIME_WAIT等待，关闭连接后无新连接，当接收到被动方重传或延迟的FIN包后，会给被动方回一个RST包，可能会影响被动方其它的服务连接。<br>TCP: time wait bucket table overflow产生原因及影响：原因是超过了linux系统tw数量的阀值。危害是超过阀值后﹐系统会把多余的time-wait socket 删除掉，并且显示警告信息，如果是NAT网络环境又存在大量访问，会产生各种连接不稳定断开的情况。<br>两个重要参数间net.ipv4.tcp_fin_timeout&#x3D;30，默认是60s。tcp_max_tw_buckets&#x3D;256000，最大允许的time_wait数量 </p>
+<h3 id="spring-bean的生命周期，spring源码，beanfactory和factorybean区别"><a href="#spring-bean的生命周期，spring源码，beanfactory和factorybean区别" class="headerlink" title="spring bean的生命周期，spring源码，beanfactory和factorybean区别"></a>spring bean的生命周期，spring源码，beanfactory和factorybean区别</h3><p>spring bean生命周期很多地方都有[详细的说明][4]。FactoryBean是用来生成Bean的工厂类接口，比如Mybatis中的SqlSessionFactoryBean，用于生产SqlSessionFactory类。BeanFactory是所有Spring容器的接口。</p>
+<h3 id="jdk序列化原理，fastjson为什么序列化会更快。"><a href="#jdk序列化原理，fastjson为什么序列化会更快。" class="headerlink" title="jdk序列化原理，fastjson为什么序列化会更快。"></a>jdk序列化原理，fastjson为什么序列化会更快。</h3><p>jdk序列化最重要的两个类，ObjectInputStream和ObjectOutputStream，其中writeObject()是序列化方法，readObject是反序列化方法，注意集合类必须自己实现这两个方法。每个类也可以自己实现这两方法来自定义序列化。<br>fastjson序列化的核心方法是serializer.write(object)。<br>序列化的主要优化有：<br>SerializeWriter.class实现了类似StringBuilder的功能，可以减少数组越界检查，可以性能更好的实现字符串拼接。<br>使用ThreadLocal缓存buf提升性能<br>引入ASM可以避免通过java反射的方式获取属性值，可以提升性能。<br>json的object是一种key&#x2F;value结构，正常的hashmap是无序的，fastjson默认是排序输出的，这是为deserialize优化做准备。<br>反序列化的主要优化有：<br>JSONScanner中预测下一个值的方法nextToken()<br>fastjson自己实现了一个特别的IdentityHashMap，去掉transfer操作的IdentityHashMap，能够在并发时工作，但是不会导致死循环。<br>fastjson的serialize是按照key的顺序进行的，于是fastjson做deserializer时候，采用一种优化算法，就是假设key&#x2F;value的内容是有序的，读取的时候只需要做key的匹配，而不需要把key从输入中读取出来。通过这个优化，使得fastjson在处理json文本的时候，少读取超过50%的token，这个是一个十分关键的优化算法。基于这个算法，使用asm实现，性能提升十分明显，超过300％的性能提升。<br>deserialize的时候，会使用asm来构造对象，并且做batch set，也就是说合并连续调用多个setter方法，而不是分散调用，这个能够提升性能。<br>我们看xml或者javac的parser实现，经常会看到有一个这样的东西symbol table，它就是把一些经常使用的关键字缓存起来，在遍历char[]的时候，同时把hash计算好，通过这个hash值在hashtable中来获取缓存好的symbol，避免创建新的字符串对象。这种优化在fastjson里面用在key的读取，以及enum value的读取。这是也是parse性能优化的关键算法之一。 </p>
+<h3 id="rabbitmq怎么保证有序"><a href="#rabbitmq怎么保证有序" class="headerlink" title="rabbitmq怎么保证有序"></a>rabbitmq怎么保证有序</h3><p>在正常使用mq的场景中大多数都是不需要消息的有序的，如果要保证消息绝对有序，那么可以通过hash把需要保证有序的消息全部都分发到同一个队列中，队列只允许有一个消费者，尽量把消息拆多个有序的分组，提高处理速度。</p>
+<h3 id="什么是零拷贝"><a href="#什么是零拷贝" class="headerlink" title="什么是零拷贝"></a>什么是零拷贝</h3><p>传统意义的零拷贝：Zero-Copy describes computer operations in which the CPU does not perform the task of copying data from one memory area to another.</p>
+<p>传统方式需要四次数据拷贝和四次上下文切换：   </p>
+<ol>
+<li>数据从磁盘读取到内核的read buffer </li>
+<li>数据从内核缓冲区拷贝到用户缓冲区 </li>
+<li>数据从用户缓冲区拷贝到内核的socket buffer </li>
+<li>数据从内核的socket buffer拷贝到网卡接口的缓冲区</li>
+</ol>
+<p>明显上面的第二步和第三步是没有必要的，<br>通过java的FileChannel.transferTo方法（NIO），可以避免上面两次多余的拷贝（当然这需要底层操作系统支持） </p>
+<ol>
+<li>调用transferTo,数据从文件由DMA引擎拷贝到内核read buffer </li>
+<li>接着DMA从内核read buffer将数据拷贝到网卡接口buffer</li>
+</ol>
+<p>上面的两次操作都不需要CPU参与，所以就达到了零拷贝。</p>
+<p>Netty的零拷贝体现在三个方面： </p>
+<ol>
+<li>Netty的接收和发送ByteBuffer采用DIRECT BUFFERS，使用堆外直接内存进行Socket读写，不需要进行字节缓冲区的二次拷贝。如果使用传统的堆内存（HEAP BUFFERS）进行Socket读写，JVM会将堆内存Buffer拷贝一份到直接内存中，然后才写入Socket中。相比于堆外直接内存，消息在发送过程中多了一次缓冲区的内存拷贝。</li>
+<li>Netty提供了组合Buffer对象，可以聚合多个ByteBuffer对象，用户可以像操作一个Buffer那样方便的对组合Buffer进行操作，避免了传统通过内存拷贝的方式将几个小Buffer合并成一个大的Buffer。 </li>
+<li>Netty的文件传输采用了transferTo方法，它可以直接将文件缓冲区的数据发送到目标Channel，避免了传统通过循环write方式导致的内存拷贝问题。</li>
+</ol>
+<p>[1]:	<a target="_blank" rel="noopener" href="http://www.importnew.com/21933.html">http://www.importnew.com/21933.html</a><br>[2]:	<a target="_blank" rel="noopener" href="https://yikun.github.io/2016/06/09/%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95%E7%9A%84%E7%90%86%E8%A7%A3%E4%B8%8E%E5%AE%9E%E8%B7%B5/">https://yikun.github.io/2016/06/09/%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95%E7%9A%84%E7%90%86%E8%A7%A3%E4%B8%8E%E5%AE%9E%E8%B7%B5/</a><br>[3]:	<a target="_blank" rel="noopener" href="https://github.com/BeginMan/BookNotes/blob/master/Unix/Unix-Network-Programming-Volume-1-The-Sockets-Networking-API-3rd-Edition/top2.md">https://github.com/BeginMan/BookNotes/blob/master/Unix/Unix-Network-Programming-Volume-1-The-Sockets-Networking-API-3rd-Edition/top2.md</a><br>[4]:	<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/3944792a5fff">https://www.jianshu.com/p/3944792a5fff</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/donate-page/simple/images/wechat.jpg" alt="李城 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/donate-page/simple/images/alipay.jpg" alt="李城 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%9D%8E%E5%9F%8E/" rel="tag"><i class="fa fa-tag"></i> 李城</a>
+              <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"><i class="fa fa-tag"></i> 面试</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/life/deep-think/" rel="prev" title="碎片化思维">
+                  <i class="fa fa-chevron-left"></i> 碎片化思维
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/technology/hikari-maxlifetime/" rel="next" title="Hikari经常出现Failed to validate connection并阻塞应用线程问题">
+                  Hikari经常出现Failed to validate connection并阻塞应用线程问题 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa-solid fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李城</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"cdn":"//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML","tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"lchml","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

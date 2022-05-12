@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lchml.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="又踩了一个数据库连接池的坑，纪念一下。公司的分布式数据库由于更新驱动层，并且目前还只支持Druid连接池，因此项目的数据库连接池也从Hikari换到了Druid。然后换上没多久，测试服就开始频繁报警。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Druid经常出现连接不可用的问题">
+<meta property="og:url" content="https://lchml.com/technology/druid-validation/index.html">
+<meta property="og:site_name" content="旅行的代码">
+<meta property="og:description" content="又踩了一个数据库连接池的坑，纪念一下。公司的分布式数据库由于更新驱动层，并且目前还只支持Druid连接池，因此项目的数据库连接池也从Hikari换到了Druid。然后换上没多久，测试服就开始频繁报警。">
+<meta property="og:locale">
+<meta property="article:published_time" content="2018-09-05T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-12T06:01:18.529Z">
+<meta property="article:author" content="李城">
+<meta property="article:tag" content="李城">
+<meta property="article:tag" content="Druid">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="数据库">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://lchml.com/technology/druid-validation/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lchml.com/technology/druid-validation/","path":"technology/druid-validation/","title":"Druid经常出现连接不可用的问题"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Druid经常出现连接不可用的问题 | 旅行的代码</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71702178-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-71702178-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">旅行的代码</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">李城的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李城"
+      src="/lc-icon.jpg">
+  <p class="site-author-name" itemprop="name">李城</p>
+  <div class="site-description" itemprop="description">知行合一</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">111</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/licheng-xd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;licheng-xd" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:licheng_xd@163.com" title="E-Mail → mailto:licheng_xd@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.me/lchml" title="500px → https:&#x2F;&#x2F;500px.me&#x2F;lchml" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i>500px</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://jandan.net/" title="Jandan → https:&#x2F;&#x2F;jandan.net" rel="noopener" target="_blank"><i class="fa fa-transgender-alt fa-fw"></i>Jandan</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/4qg55j4w/home?wvr=5" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;4qg55j4w&#x2F;home?wvr&#x3D;5" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.qingtian16265.com/" title="晴天博客 → https:&#x2F;&#x2F;blog.qingtian16265.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-leanpub fa-fw"></i>晴天博客</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/druid-validation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/lc-icon.jpg">
+      <meta itemprop="name" content="李城">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="旅行的代码">
+      <meta itemprop="description" content="知行合一">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Druid经常出现连接不可用的问题 | 旅行的代码">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Druid经常出现连接不可用的问题
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-09-06 00:00:00" itemprop="dateCreated datePublished" datetime="2018-09-06T00:00:00+08:00">2018-09-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/technology/druid-validation/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="technology/druid-validation/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>又踩了一个数据库连接池的坑，纪念一下。公司的分布式数据库由于更新驱动层，并且目前还只支持Druid连接池，因此项目的数据库连接池也从Hikari换到了Druid。然后换上没多久，测试服就开始频繁报警。</p>
+<span id="more"></span>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">The last packet successfully received from the server was 2,357,232 milliseconds ago.  </span><br><span class="line">The last packet sent successfully to the server was 931,359 milliseconds ago.</span><br><span class="line"></span><br><span class="line">CommunicationsException, druid version 1.1.10, jdbcUrl : jdbc:mysql:ddb://xx.xxx.xxx.xxx:6000/dbname, </span><br><span class="line">testWhileIdle true, idle millis 22216001, minIdle 20, poolingCount 19, timeBetweenEvictionRunsMillis 60000, </span><br><span class="line">lastValidIdleMillis 22216001, driver com.netease.lbd.LBDriver, exceptionSorter com.alibaba.druid.pool.vendor.MySqlExceptionSorter</span><br></pre></td></tr></table></figure>
+<p>这个错误的原因很明显，使用了一个已经失效的连接去做db操作，就会返回这个错误。也就是说db操作的时候从数据库连接池里拿到了一个烂的连接。然而首先我们是配置了time-between-eviction-runs-millis的，理论上应该是会定时对连接池中的连接做检查的，但是实际结果显然并没有。</p>
+<p>我们直接开始检查druid源码吧，在核心类DruidDataSource中我们可以看到初始化连接池的时候会调用createAndStartDestroyThread()创建一个定时任务来执行DestroyTask，再看DestroyTask里面做了什么。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DestroyTask</span> <span class="keyword">implements</span> <span class="title class_">Runnable</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">        shrink(<span class="literal">true</span>, keepAlive);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (isRemoveAbandoned()) &#123;</span><br><span class="line">            removeAbandoned();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中isRemoveAbandoned()没有配置，默认是false的。所以，这个task就执行了一句话：shrink(true, keepAlive)</p>
+<p>在shrink方法里面的最后我们可以看到有这段代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (keepAliveCount &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="built_in">this</span>.getDataSourceStat().addKeepAliveCheckCount(keepAliveCount);</span><br><span class="line">    <span class="comment">// keep order</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> keepAliveCount - <span class="number">1</span>; i &gt;= <span class="number">0</span>; --i) &#123;</span><br><span class="line">        <span class="type">DruidConnectionHolder</span> <span class="variable">holer</span> <span class="operator">=</span> keepAliveConnections[i];</span><br><span class="line">        <span class="type">Connection</span> <span class="variable">connection</span> <span class="operator">=</span> holer.getConnection();</span><br><span class="line">        holer.incrementKeepAliveCheckCount();</span><br><span class="line"></span><br><span class="line">        <span class="type">boolean</span> <span class="variable">validate</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.validateConnection(connection);  <span class="comment">// 重点</span></span><br><span class="line">            validate = <span class="literal">true</span>;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable error) &#123;</span><br><span class="line">            <span class="keyword">if</span> (LOG.isDebugEnabled()) &#123;</span><br><span class="line">                LOG.debug(<span class="string">&quot;keepAliveErr&quot;</span>, error);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// skip</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (validate) &#123;</span><br><span class="line">            holer.lastActiveTimeMillis = System.currentTimeMillis();</span><br><span class="line">            put(holer);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            JdbcUtils.close(connection);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    Arrays.fill(keepAliveConnections, <span class="literal">null</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>用于检查经过shrink以后留存下来的连接是否可用。其中的主要方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">validateConnection</span><span class="params">(Connection conn)</span> <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">query</span> <span class="operator">=</span> getValidationQuery();</span><br><span class="line">    <span class="keyword">if</span> (conn.isClosed()) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">SQLException</span>(<span class="string">&quot;validateConnection: connection closed&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (validConnectionChecker != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">result</span> <span class="operator">=</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="type">Exception</span> <span class="variable">error</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            result = validConnectionChecker.isValidConnection(conn, validationQuery, validationQueryTimeout);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SQLException ex) &#123;</span><br><span class="line">            <span class="keyword">throw</span> ex;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception ex) &#123;</span><br><span class="line">            error = ex;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (!result) &#123;</span><br><span class="line">            <span class="type">SQLException</span> <span class="variable">sqlError</span> <span class="operator">=</span> error != <span class="literal">null</span> ? <span class="comment">//</span></span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">SQLException</span>(<span class="string">&quot;validateConnection false&quot;</span>, error) <span class="comment">//</span></span><br><span class="line">                : <span class="keyword">new</span> <span class="title class_">SQLException</span>(<span class="string">&quot;validateConnection false&quot;</span>);</span><br><span class="line">            <span class="keyword">throw</span> sqlError;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">null</span> != query) &#123;</span><br><span class="line">        <span class="type">Statement</span> <span class="variable">stmt</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            stmt = conn.createStatement();</span><br><span class="line">            <span class="keyword">if</span> (getValidationQueryTimeout() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                stmt.setQueryTimeout(getValidationQueryTimeout());</span><br><span class="line">            &#125;</span><br><span class="line">            rs = stmt.executeQuery(query);</span><br><span class="line">            <span class="keyword">if</span> (!rs.next()) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">SQLException</span>(<span class="string">&quot;validationQuery didn&#x27;t return a row&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            JdbcUtils.close(rs);</span><br><span class="line">            JdbcUtils.close(stmt);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再跟进去到validConnectionChecker.isValidConnection(conn, validationQuery, validationQueryTimeout)方法。在这个方法里面可以看到</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isValidConnection</span><span class="params">(Connection conn, String validateQuery, <span class="type">int</span> validationQueryTimeout)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    <span class="keyword">if</span> (conn.isClosed()) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 省略 。。。</span></span><br><span class="line"></span><br><span class="line">    <span class="type">String</span> <span class="variable">query</span> <span class="operator">=</span> validateQuery;</span><br><span class="line">    <span class="keyword">if</span> (validateQuery == <span class="literal">null</span> || validateQuery.isEmpty()) &#123;</span><br><span class="line">        query = DEFAULT_VALIDATION_QUERY;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">Statement</span> <span class="variable">stmt</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        stmt = conn.createStatement();</span><br><span class="line">        <span class="keyword">if</span> (validationQueryTimeout &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            stmt.setQueryTimeout(validationQueryTimeout);</span><br><span class="line">        &#125;</span><br><span class="line">        rs = stmt.executeQuery(query);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        JdbcUtils.close(rs);</span><br><span class="line">        JdbcUtils.close(stmt);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果没有配置validationQuery，会默认使用 “SELECT 1”。于是我们认为不配置validationQuery是没关系的。然后没过多久，还是继续出现了上面说的异常，说明就是有烂的连接留存在连接池里。</p>
+<p>重新再看一遍代码，注意到上面的validConnectionChecker有没有可能是null呢？于是找到validConnectionChecker的初始化方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">initValidConnectionChecker</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">this</span>.validConnectionChecker != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">String</span> <span class="variable">realDriverClassName</span> <span class="operator">=</span> driver.getClass().getName();</span><br><span class="line">    <span class="keyword">if</span> (JdbcUtils.isMySqlDriver(realDriverClassName)) &#123;</span><br><span class="line">        <span class="built_in">this</span>.validConnectionChecker = <span class="keyword">new</span> <span class="title class_">MySqlValidConnectionChecker</span>();</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (realDriverClassName.equals(JdbcConstants.ORACLE_DRIVER)</span><br><span class="line">            || realDriverClassName.equals(JdbcConstants.ORACLE_DRIVER2)) &#123;</span><br><span class="line">        <span class="built_in">this</span>.validConnectionChecker = <span class="keyword">new</span> <span class="title class_">OracleValidConnectionChecker</span>();</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (realDriverClassName.equals(JdbcConstants.SQL_SERVER_DRIVER)</span><br><span class="line">               || realDriverClassName.equals(JdbcConstants.SQL_SERVER_DRIVER_SQLJDBC4)</span><br><span class="line">               || realDriverClassName.equals(JdbcConstants.SQL_SERVER_DRIVER_JTDS)) &#123;</span><br><span class="line">        <span class="built_in">this</span>.validConnectionChecker = <span class="keyword">new</span> <span class="title class_">MSSQLValidConnectionChecker</span>();</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (realDriverClassName.equals(JdbcConstants.POSTGRESQL_DRIVER)</span><br><span class="line">            || realDriverClassName.equals(JdbcConstants.ENTERPRISEDB_DRIVER)) &#123;</span><br><span class="line">        <span class="built_in">this</span>.validConnectionChecker = <span class="keyword">new</span> <span class="title class_">PGValidConnectionChecker</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>发现如果是数据库的标准驱动，那么validConnectionChecker就是对应数据库的checker，然后恰巧我们的项目中用的是自己实现的db driver。所以这个地方其实根本没有初始化成功。所以validConnectionChecker果然是个null。<br>因此上面的检查代码其实根本没有进到isValidConnection()方法中，所以默认的”SELECT 1”也不起作用了。<br>validateConnection()方法再往下可以看到if (null !&#x3D; query) 的条件下，druid还有一个兜底检查行为。<br>然而又恰好我们又没有配置validationQuery，所以最后兜底也没有兜到。</p>
+<p>加上配置以后，第二天发现还是出现了一样的问题，说明连接池里还是有烂掉的连接。继续看源码，直接查看会调用validationConnection的核心方法shrink：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">shrink</span><span class="params">(<span class="type">boolean</span> checkTime, <span class="type">boolean</span> keepAlive)</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        lock.lockInterruptibly();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> <span class="variable">evictCount</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">keepAliveCount</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!inited) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="type">int</span> <span class="variable">checkCount</span> <span class="operator">=</span> poolingCount - minIdle;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">long</span> <span class="variable">currentTimeMillis</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; poolingCount; ++i) &#123;</span><br><span class="line">            <span class="type">DruidConnectionHolder</span> <span class="variable">connection</span> <span class="operator">=</span> connections[i];</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (checkTime) &#123;</span><br><span class="line">                <span class="keyword">if</span> (phyTimeoutMillis &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="type">long</span> <span class="variable">phyConnectTimeMillis</span> <span class="operator">=</span> currentTimeMillis - connection.connectTimeMillis;</span><br><span class="line">                    <span class="keyword">if</span> (phyConnectTimeMillis &gt; phyTimeoutMillis) &#123;</span><br><span class="line">                        evictConnections[evictCount++] = connection;</span><br><span class="line">                        <span class="keyword">continue</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="type">long</span> <span class="variable">idleMillis</span> <span class="operator">=</span> currentTimeMillis - connection.lastActiveTimeMillis;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (idleMillis &lt; minEvictableIdleTimeMillis) &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (checkTime &amp;&amp; i &lt; checkCount) &#123;</span><br><span class="line">                    evictConnections[evictCount++] = connection;</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (idleMillis &gt; maxEvictableIdleTimeMillis) &#123;</span><br><span class="line">                    evictConnections[evictCount++] = connection;</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (keepAlive) &#123;</span><br><span class="line">                    keepAliveConnections[keepAliveCount++] = connection;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (i &lt; checkCount) &#123;</span><br><span class="line">                    evictConnections[evictCount++] = connection;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> <span class="variable">removeCount</span> <span class="operator">=</span> evictCount + keepAliveCount;</span><br><span class="line">        <span class="keyword">if</span> (removeCount &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            System.arraycopy(connections, removeCount, connections, <span class="number">0</span>, poolingCount - removeCount);</span><br><span class="line">            Arrays.fill(connections, poolingCount - removeCount, poolingCount, <span class="literal">null</span>);</span><br><span class="line">            poolingCount -= removeCount;</span><br><span class="line">        &#125;</span><br><span class="line">        keepAliveCheckCount += keepAliveCount;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        lock.unlock();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (evictCount &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; evictCount; ++i) &#123;</span><br><span class="line">            <span class="type">DruidConnectionHolder</span> <span class="variable">item</span> <span class="operator">=</span> evictConnections[i];</span><br><span class="line">            <span class="type">Connection</span> <span class="variable">connection</span> <span class="operator">=</span> item.getConnection();</span><br><span class="line">            JdbcUtils.close(connection);</span><br><span class="line">            destroyCountUpdater.incrementAndGet(<span class="built_in">this</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        Arrays.fill(evictConnections, <span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (keepAliveCount &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">this</span>.getDataSourceStat().addKeepAliveCheckCount(keepAliveCount);</span><br><span class="line">        <span class="comment">// keep order</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> keepAliveCount - <span class="number">1</span>; i &gt;= <span class="number">0</span>; --i) &#123;</span><br><span class="line">            <span class="type">DruidConnectionHolder</span> <span class="variable">holer</span> <span class="operator">=</span> keepAliveConnections[i];</span><br><span class="line">            <span class="type">Connection</span> <span class="variable">connection</span> <span class="operator">=</span> holer.getConnection();</span><br><span class="line">            holer.incrementKeepAliveCheckCount();</span><br><span class="line"></span><br><span class="line">            <span class="type">boolean</span> <span class="variable">validate</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="built_in">this</span>.validateConnection(connection);</span><br><span class="line">                validate = <span class="literal">true</span>;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Throwable error) &#123;</span><br><span class="line">                <span class="keyword">if</span> (LOG.isDebugEnabled()) &#123;</span><br><span class="line">                    LOG.debug(<span class="string">&quot;keepAliveErr&quot;</span>, error);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// skip</span></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (validate) &#123;</span><br><span class="line">                holer.lastActiveTimeMillis = System.currentTimeMillis();</span><br><span class="line">                put(holer);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                JdbcUtils.close(connection);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        Arrays.fill(keepAliveConnections, <span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从代码中可以看出来，keepAlive的默认值是false，这样就会导致每次shrink之后的keepAliveCount&#x3D;&#x3D;0，也就进不到最后检查存活连接的逻辑中。并且会导致nimIdle的配置失效，连接池最后会被回收至只剩0个连接。所以，我们还差一下配置，keepAlive必须配置为true。</p>
+<p>总结：用开源还是得多看源码。还有，druid的代码写的真的是乱，非常乱。对比Hikari的代码，代码可读性差的不是一点点。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/donate-page/simple/images/wechat.jpg" alt="李城 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/donate-page/simple/images/alipay.jpg" alt="李城 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%9D%8E%E5%9F%8E/" rel="tag"><i class="fa fa-tag"></i> 李城</a>
+              <a href="/tags/Druid/" rel="tag"><i class="fa fa-tag"></i> Druid</a>
+              <a href="/tags/Java/" rel="tag"><i class="fa fa-tag"></i> Java</a>
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag"><i class="fa fa-tag"></i> 数据库</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/technology/zipkin/" rel="prev" title="分布式调用追踪系统Zipkin集成">
+                  <i class="fa fa-chevron-left"></i> 分布式调用追踪系统Zipkin集成
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/technology/tomcat-ssl/" rel="next" title="Tomcat配置CloudFlare免费ssl证书问题">
+                  Tomcat配置CloudFlare免费ssl证书问题 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa-solid fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李城</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"cdn":"//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML","tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"lchml","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

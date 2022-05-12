@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lchml.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="项目放在github上，python版本ipdb_creator，java版本ip-locator。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IP数据库">
+<meta property="og:url" content="https://lchml.com/technology/ipdb-creator/index.html">
+<meta property="og:site_name" content="旅行的代码">
+<meta property="og:description" content="项目放在github上，python版本ipdb_creator，java版本ip-locator。">
+<meta property="og:locale">
+<meta property="article:published_time" content="2015-01-19T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-12T06:06:39.476Z">
+<meta property="article:author" content="李城">
+<meta property="article:tag" content="李城">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="IPDB">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://lchml.com/technology/ipdb-creator/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lchml.com/technology/ipdb-creator/","path":"technology/ipdb-creator/","title":"IP数据库"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>IP数据库 | 旅行的代码</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71702178-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-71702178-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">旅行的代码</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">李城的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#IP%E6%95%B0%E6%8D%AE%E5%BA%93%E7%94%9F%E6%88%90"><span class="nav-number">1.</span> <span class="nav-text">IP数据库生成</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CN%E8%AE%B0%E5%BD%95%E6%8B%86%E5%88%86%E4%B8%BA24%E7%BD%91%E6%AE%B5"><span class="nav-number">1.1.</span> <span class="nav-text">CN记录拆分为24网段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E5%8F%8A%E9%A2%91%E7%8E%87%E9%99%90%E5%88%B6"><span class="nav-number">1.2.</span> <span class="nav-text">查询及频率限制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IP%E7%BD%91%E6%AE%B5%E5%90%88%E5%B9%B6"><span class="nav-number">1.3.</span> <span class="nav-text">IP网段合并</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IP%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BD%BF%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">IP数据库使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#RadixTree"><span class="nav-number">2.1.</span> <span class="nav-text">RadixTree</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%92%E5%85%A5"><span class="nav-number">2.2.</span> <span class="nav-text">插入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE"><span class="nav-number">2.3.</span> <span class="nav-text">查找</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9D%9F"><span class="nav-number">3.</span> <span class="nav-text">结束</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李城"
+      src="/lc-icon.jpg">
+  <p class="site-author-name" itemprop="name">李城</p>
+  <div class="site-description" itemprop="description">知行合一</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">111</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/licheng-xd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;licheng-xd" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:licheng_xd@163.com" title="E-Mail → mailto:licheng_xd@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.me/lchml" title="500px → https:&#x2F;&#x2F;500px.me&#x2F;lchml" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i>500px</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://jandan.net/" title="Jandan → https:&#x2F;&#x2F;jandan.net" rel="noopener" target="_blank"><i class="fa fa-transgender-alt fa-fw"></i>Jandan</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/4qg55j4w/home?wvr=5" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;4qg55j4w&#x2F;home?wvr&#x3D;5" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.qingtian16265.com/" title="晴天博客 → https:&#x2F;&#x2F;blog.qingtian16265.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-leanpub fa-fw"></i>晴天博客</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/ipdb-creator/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/lc-icon.jpg">
+      <meta itemprop="name" content="李城">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="旅行的代码">
+      <meta itemprop="description" content="知行合一">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="IP数据库 | 旅行的代码">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          IP数据库
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2015-01-20 00:00:00" itemprop="dateCreated datePublished" datetime="2015-01-20T00:00:00+08:00">2015-01-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/technology/ipdb-creator/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="technology/ipdb-creator/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>项目放在github上，python版本<a target="_blank" rel="noopener" href="https://github.com/licheng-xd/ipdb_creator">ipdb_creator</a>，java版本<a target="_blank" rel="noopener" href="https://github.com/licheng-xd/ip-locator">ip-locator</a>。</p>
+<span id="more"></span>
+
+<h3 id="IP数据库生成"><a href="#IP数据库生成" class="headerlink" title="IP数据库生成"></a>IP数据库生成</h3><p>首先要知道IP的分配是一直变化的，所以不会存在绝对准确的IP库。<strong>IP库需要经常更新才能保证较高的准确度</strong>。IP的分配由国际非盈利性组织ICANN负责，所以要生成最新的IP库首先需要从<a target="_blank" rel="noopener" href="http://ftp.apnic.net/stats/">这里</a>下载5个最新原始分配文件，分别是<code>delegated-arin-latest</code> <code>delegated-ripencc-latest</code> <code>delegated-lacnic-latest</code> <code>delegated-afrinic-latest</code> <code>delegated-apnic-latest</code>。</p>
+<p>我们需要处理的是文件中ipv4的记录，每条记录的格式如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apnic|AU|ipv4|1.0.0.0|256|20110811|assigned</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>AU: 表示澳大利亚的简称</li>
+<li>ipv4: 表示记录的ip类型</li>
+<li>1.0.0.0: 表示记录的起始IP</li>
+<li>256: 表示记录从起始IP往后256个地址</li>
+<li>20110811: 表示分配时间</li>
+<li>assigned(allocated): 表示已分配</li>
+</ul>
+<p>国家缩写与名字的对应关系，可以直接看python项目中的<a target="_blank" rel="noopener" href="https://github.com/licheng-xd/ipdb_creator/blob/master/input/country_code">country_code</a>文件。在大部分应用场景下，国内IP需要精确到省或者市级别，国外IP大部分只需要精确到国家级别。那怎么才能得到比较准确的国内IP库呢？</p>
+<p>现在网上有很多免费的IP查询工具，有的比较友好提供了HTTP的查询接口。经过长时间的查询对比发现，其中<a target="_blank" rel="noopener" href="http://ip.taobao.com/ipSearch.php">IP淘宝</a>和<a target="_blank" rel="noopener" href="http://www.ipip.net/ip.php">17MON</a>的准确率相对比较高。为了得到最全面的数据，我把delegated-apnic-latest中分配给CN的所有记录拿出来，然后对每条记录中的每个24网段进行扫描，最后把得到的中国全部24网段IP地址进行合并，就得到了国内IP库。对于IP分配中一些没有指明国家码的记录也可以用同样地方法。<br>要注意，大部分免费提供的IP查询接口都是对频率有限制的，如上面说的两个都是限制每个来源IP每秒10次的频率。</p>
+<h4 id="CN记录拆分为24网段"><a href="#CN记录拆分为24网段" class="headerlink" title="CN记录拆分为24网段"></a>CN记录拆分为24网段</h4><p>以一条记录为例 <code>apnic|CN|ipv4|1.0.8.0|2048|20110412|allocated</code>，把记录转换成CIDR格式1.0.8.0&#x2F;21，以java为例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">String[] params = line.split(<span class="string">&quot;\\|&quot;</span>); </span><br><span class="line"><span class="comment">// do filter ...</span></span><br><span class="line"><span class="type">String</span> <span class="variable">baseIP</span> <span class="operator">=</span> params[<span class="number">3</span>];</span><br><span class="line"><span class="type">int</span> <span class="variable">masklen</span> <span class="operator">=</span> <span class="number">32</span> - (<span class="type">int</span>) (log(Integer.parseInt(params[<span class="number">4</span>]), <span class="number">2</span>));</span><br><span class="line"><span class="type">String</span> <span class="variable">netcidr</span> <span class="operator">=</span> baseIP + <span class="string">&quot;/&quot;</span> + masklen;</span><br><span class="line"><span class="keyword">if</span> (masklen &gt; <span class="number">24</span>) masklen = <span class="number">24</span>;</span><br><span class="line"><span class="type">IPv4Network</span> <span class="variable">networks</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">IPv4Network</span>(prefix);</span><br><span class="line"><span class="keyword">for</span> (String subnet : networks.getSubnet(<span class="number">24</span>)) &#123;</span><br><span class="line">    <span class="comment">// query ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到关键的方法就是getSubnet(24)，简单地说就是，从起始地址开始，每隔256个IP截断，最后就得到了对应的24网段列表。来看它的实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;String&gt; <span class="title function_">getSubnet</span><span class="params">(<span class="type">int</span> masklen)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (masklen &gt; <span class="number">32</span> || masklen &lt; <span class="number">8</span> || masklen &lt; numericCIDR) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NumberFormatException</span>(<span class="string">&quot;masklen can not be greater than 32&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> <span class="variable">numberOfIPs</span> <span class="operator">=</span> <span class="number">1</span> &lt;&lt; (<span class="number">32</span> - masklen);</span><br><span class="line">    <span class="type">Long</span> <span class="variable">startIP</span> <span class="operator">=</span> baseIPnumeric &amp; netmaskNumeric;</span><br><span class="line">    List&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;String&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>; i&lt;Math.pow(<span class="number">2</span>, masklen-numericCIDR); i++) &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">subnet</span> <span class="operator">=</span> IPUtil.ipLong2String(startIP) + <span class="string">&quot;/&quot;</span> + masklen;</span><br><span class="line">        startIP += numberOfIPs;</span><br><span class="line">        list.add(subnet);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> list;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="查询及频率限制"><a href="#查询及频率限制" class="headerlink" title="查询及频率限制"></a>查询及频率限制</h4><p>以淘宝IP查询为例，接口可以在浏览器输入 <code>http://ip.taobao.com/service/getIpInfo.php?ip=1.0.8.1</code> 查看返回的结果，返回结果为json格式，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> IpData <span class="title function_">queryFromTaobao</span><span class="params">(String ip)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    limitRate.check();</span><br><span class="line">    <span class="type">String</span> <span class="variable">ret</span> <span class="operator">=</span> HttpClientPool.getInstance().getMethod(TAOBAO_URL + <span class="string">&quot;?ip=&quot;</span> + ip, <span class="number">5000</span>);</span><br><span class="line">    <span class="keyword">if</span> (ret == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="type">JSONObject</span> <span class="variable">json</span> <span class="operator">=</span> JSON.parseObject(ret);</span><br><span class="line">        <span class="keyword">if</span> (json.getInteger(<span class="string">&quot;code&quot;</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="type">JSONObject</span> <span class="variable">dataJson</span> <span class="operator">=</span> json.getJSONObject(<span class="string">&quot;data&quot;</span>);</span><br><span class="line">            <span class="type">IpData</span> <span class="variable">ipData</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">IpData</span>();</span><br><span class="line">            ipData.setCountry(dataJson.getString(<span class="string">&quot;country&quot;</span>));</span><br><span class="line">            ipData.setProvince(dataJson.getString(<span class="string">&quot;region&quot;</span>));</span><br><span class="line">            ipData.setCity(dataJson.getString(<span class="string">&quot;city&quot;</span>));</span><br><span class="line">            ipData.setIsp(dataJson.getString(<span class="string">&quot;isp&quot;</span>));</span><br><span class="line">            ipData.setIp(ip);</span><br><span class="line">            <span class="keyword">return</span> ipData;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中LimitRate是本地实现的一个简单频率控制，通过Queue<T>接口实现一个限制队列大小的LimitQueue<T>类，然后在一个单例的LimitRate中初始化一个LimitQueue<Long>队列，指定队列大小为10，时间间隔为1000ms。每次查询前先调用LimitRate的check方法，如果队列长度小于10，直接返回；等于10就从LimitQueue队列中取出队列顶部的时间（即最早进入队列的时间）与当前时间对比，若间隔小于1000ms，则sleep(1001-间隔ms数)，最后把当前时间写入队列。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">check</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">    <span class="keyword">if</span> (queue.size() &lt; limit)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="type">Long</span> <span class="variable">first</span> <span class="operator">=</span> queue.peek();</span><br><span class="line">    <span class="keyword">if</span> (first == <span class="literal">null</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="type">long</span> <span class="variable">now</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">    <span class="keyword">if</span> (now - first &lt;= duration) &#123;</span><br><span class="line">        logger.info(<span class="string">&quot;limit rate checked, sleep a while&quot;</span>);</span><br><span class="line">        Thread.sleep(duration - now + first + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    queue.offer(now);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>虽然对查询频率做了限制，但这并不保证接口的每一次查询都能正确返回结果，所以查询结果无效时应该重新查询，直到得到有效结果为止。</p>
+<h4 id="IP网段合并"><a href="#IP网段合并" class="headerlink" title="IP网段合并"></a>IP网段合并</h4><p>最后需要对扫描的结果进行合并，由于扫描时全部拆分成24网段，而IP的分配又是不连续的，所以合并的时候要仔细，不要出错。首先要对扫描结果按IP排序，然后依次取出每一条结果，如果第n条与第n-1条的结果是相同的，则存入临时队列，直到当n与n-1的结果不同，这时把临时队列中的数据进行合并，合并结果存入最终的输出队列，并清空临时队列，循环此过程，最后就可以得到合并的结果。<br>以下面三条结果的合并为例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1.0.1.0/24;中国;福建省;福州市;电信;1.0.1.123;256</span><br><span class="line">1.0.2.0/24;中国;福建省;福州市;电信;1.0.2.20;256</span><br><span class="line">1.0.3.0/24;中国;福建省;福州市;电信;1.0.3.247;256</span><br></pre></td></tr></table></figure>
+
+<p>(1) 首先对每一个网段的IP范围，如1.0.1.0&#x2F;24的IPRange是1.0.1.0~1.0.1.255对应的long型范围是16777472-16777727，<br>1.0.2.0&#x2F;24对应16777728-16777983，如果16777728 - 1 &lt;&#x3D; 16777727，则说明两个网段是连续的，则合并成新的IPRange：16777472-16777983，以此类推，最后得到16777472-16778239（如果网段中存在不连续的情况，则会得到多个IPRange）。</p>
+<p>(2) 接着处理得到的IPRange(s)，先把IPRange转换成能包含它本身的最小IP网段，16777472-16778239的startIP为16777472，endIP为16778239，n从1开始，n++直到满足</p>
+<p>$$endIP - 2^n &lt;&#x3D; startIP$$</p>
+<p>$$endIP - 2^{n-1} &gt; startIP$$</p>
+<p>得到结果startIP&#x2F;(32-n)转换成可读形式：1.0.0.0&#x2F;22。</p>
+<p>(3) 最后，由于合并后网段包含范围超出了原本的三个网段，所以要对该结果再进行拆分。如果合并后的网段的起始IP小于合并前的起始IP，则以合并前的最小网段为界，把合并后网段拆分为小于，等于，大于合并前的最小网段的三个范围（合并后的网段的最大IP大于合并前的最大IP情况，也同理可推），这里的实现稍微有点复杂，通过代码来理解会比较容易一些，对应方法为IPUtil.cidrPartition()。最后得到合并后的网段：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1.0.1.0/24;中国;福建省;福州市;电信;1.0.3.247;256</span><br><span class="line">1.0.2.0/23;中国;福建省;福州市;电信;1.0.3.247;512</span><br></pre></td></tr></table></figure>
+
+<h3 id="IP数据库使用"><a href="#IP数据库使用" class="headerlink" title="IP数据库使用"></a>IP数据库使用</h3><p>完整的数据库已经生成，那么如何使用它呢？</p>
+<h4 id="RadixTree"><a href="#RadixTree" class="headerlink" title="RadixTree"></a>RadixTree</h4><p><a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Radix_tree">RadixTree</a>（基树）是通用的字典类型数据结构，在Linux内核及Nginx中被用于路由表的设计。RadixTree与传统的二叉树差不多，只是在寻找方式上，利用比如一个unsigned int的类型的每一个比特位作为树节点的判断。比如一个数  10001010101010100101010100101010按照Radix树的插入就是在根节点，如果遇到0，就指向左节点，如果遇到1就指向右节点，在插入过程中构造树节点，在删除过程中删除树节点。</p>
+<h4 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h4><p>由于java中没有无符号整型，为了能表示最大的ipv4，我们用long型的低32位代替。key为ip的主机字节序，mask为网段的子网掩码，value为该网段的信息。以<code>1.0.1.0/24</code>为例，key&#x3D;0x01000100，mask&#x3D;0xFFFFFF00。从最高位开始，判断key的每一个位，1则前往右节点，0则前往左节点。如果当前节点不存在，则创建新的节点。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">put</span><span class="params">(<span class="type">long</span> key, <span class="type">long</span> mask, IpData value)</span> &#123;</span><br><span class="line">    <span class="type">long</span> <span class="variable">bit</span> <span class="operator">=</span> <span class="number">0x80000000L</span>;  <span class="comment">// 128.0.0.0</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">node</span> <span class="operator">=</span> ROOT_PTR;</span><br><span class="line">    <span class="type">int</span> <span class="variable">next</span> <span class="operator">=</span> ROOT_PTR;</span><br><span class="line">    <span class="comment">// 从最高位开始，判断key的每一个位，1则前往右节点，0则前往左节点</span></span><br><span class="line">    <span class="keyword">while</span> ((bit &amp; mask) != <span class="number">0</span>) &#123;   </span><br><span class="line">        next = ((key &amp; bit) != <span class="number">0</span>) ? rights[node] : lefts[node]; </span><br><span class="line">        <span class="keyword">if</span> (next == NULL_PTR) <span class="comment">// 节点不存在，跳出循环</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        bit &gt;&gt;= <span class="number">1</span>; </span><br><span class="line">        node = next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (next != NULL_PTR) &#123;</span><br><span class="line">    <span class="comment">// next不为NULL，是因bit&amp;mask为0，也就是已经判断过key的最后一位，而退出上面的while的，则覆盖当前节点的值</span></span><br><span class="line">        values[node] = value;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> ((bit &amp; mask) != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (size == allocatedSize)</span><br><span class="line">            expandAllocatedSize();</span><br><span class="line">        next = size; <span class="comment">// 新增一个空节点</span></span><br><span class="line">        values[next] = NO_VALUE;</span><br><span class="line">        rights[next] = NULL_PTR;</span><br><span class="line">        lefts[next] = NULL_PTR;</span><br><span class="line">        <span class="keyword">if</span> ((key &amp; bit) != <span class="number">0</span>) &#123;</span><br><span class="line">            rights[node] = next;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            lefts[node] = next;</span><br><span class="line">        &#125;</span><br><span class="line">        bit &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">        node = next;</span><br><span class="line">        size++;</span><br><span class="line">    &#125;</span><br><span class="line">    values[node] = value; <span class="comment">// 最后走完key的所有位，到达目标节点，存入value</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="查找"><a href="#查找" class="headerlink" title="查找"></a>查找</h4><p>如果明白插入的原理，那么查找就比较简单了。给定一个ip，首先将ip地址转换成主机字节序的四个字节，从32位的key的最高位开始，0就转向左节点，1就转向右节点，这样从树的根节点开始，直到找到对应的叶子节点为止，在此查找路径上最后一个值不为NO_VALUE的node的value就是查找的结果。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> IpData <span class="title function_">selectValue</span><span class="params">(<span class="type">long</span> key)</span> &#123;</span><br><span class="line">    <span class="type">long</span> <span class="variable">bit</span> <span class="operator">=</span> <span class="number">0x80000000L</span>;</span><br><span class="line">    <span class="type">IpData</span> <span class="variable">value</span> <span class="operator">=</span> NO_VALUE;</span><br><span class="line">    <span class="type">int</span> <span class="variable">node</span> <span class="operator">=</span> ROOT_PTR;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (node != NULL_PTR) &#123;</span><br><span class="line">        <span class="keyword">if</span> (values[node] != NO_VALUE)</span><br><span class="line">            value = values[node];</span><br><span class="line">        node = ((key &amp; bit) != <span class="number">0</span>) ? rights[node] : lefts[node];</span><br><span class="line">        bit &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h3><p>为了省点买IP付费数据库的钱，也不容易啊。方案还在进一步完善中，目前由于是单台机器，在1秒10次的频率限制下，完整跑一次需要的时间较长，正在考虑设置代理请求，加快查询频率，如果出口IP够多的话，可以大幅提高速度。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/donate-page/simple/images/wechat.jpg" alt="李城 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/donate-page/simple/images/alipay.jpg" alt="李城 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%9D%8E%E5%9F%8E/" rel="tag"><i class="fa fa-tag"></i> 李城</a>
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"><i class="fa fa-tag"></i> 数据结构</a>
+              <a href="/tags/IPDB/" rel="tag"><i class="fa fa-tag"></i> IPDB</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/life/ourworld/" rel="prev" title="我们的世界">
+                  <i class="fa fa-chevron-left"></i> 我们的世界
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/life/kindle/" rel="next" title="新版国行kindle paperwhite2开箱">
+                  新版国行kindle paperwhite2开箱 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa-solid fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李城</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"cdn":"//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML","tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"lchml","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>
