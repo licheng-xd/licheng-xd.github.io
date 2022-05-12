@@ -19,17 +19,17 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"lchml.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="在调研了多个开源服务发现，或服务治理平台之后，如Eureka、Consul，dubbo等，发现由于都不能完美的适配当前已有系统。 原方案的缺点，单个节点独立部署，可靠性差，扩展性差。不方便维护更新，更新一台服务器时，需要先把对应的服务调用方的流量切换到其他服务器，然后对服务进行更新，更新后再把流量切回来。整个过程操作复杂、容易出错。当服务器较多时，耗时耗力。 因此我们需要一个更好的架构来解决上">
+    <meta name="description" content="在调研了多个开源服务发现，或服务治理平台之后，如Eureka、Consul，dubbo等，发现由于都不能完美的适配当前已有系统。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="基于Zookeeper实现的服务注册发现平台">
 <meta property="og:url" content="https://lchml.com/technology/yxguard/index.html">
 <meta property="og:site_name" content="旅行的代码">
-<meta property="og:description" content="在调研了多个开源服务发现，或服务治理平台之后，如Eureka、Consul，dubbo等，发现由于都不能完美的适配当前已有系统。 原方案的缺点，单个节点独立部署，可靠性差，扩展性差。不方便维护更新，更新一台服务器时，需要先把对应的服务调用方的流量切换到其他服务器，然后对服务进行更新，更新后再把流量切回来。整个过程操作复杂、容易出错。当服务器较多时，耗时耗力。 因此我们需要一个更好的架构来解决上">
+<meta property="og:description" content="在调研了多个开源服务发现，或服务治理平台之后，如Eureka、Consul，dubbo等，发现由于都不能完美的适配当前已有系统。">
 <meta property="og:locale">
 <meta property="og:image" content="https://lchml.com/technology/yxguard/yxguard1.png">
 <meta property="og:image" content="https://lchml.com/technology/yxguard/yxguard2.png">
 <meta property="article:published_time" content="2016-09-14T16:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-12T05:56:28.149Z">
+<meta property="article:modified_time" content="2022-05-12T07:12:50.270Z">
 <meta property="article:author" content="李城">
 <meta property="article:tag" content="李城">
 <meta property="article:tag" content="服务发现">
@@ -273,9 +273,9 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <span id="more"></span>
+        <p>在调研了多个开源服务发现，或服务治理平台之后，如Eureka、Consul，dubbo等，发现由于都不能完美的适配当前已有系统。</p>
+<span id="more"></span>
 
-<p>在调研了多个开源服务发现，或服务治理平台之后，如Eureka、Consul，dubbo等，发现由于都不能完美的适配当前已有系统。</p>
 <p>原方案的缺点，单个节点独立部署，可靠性差，扩展性差。不方便维护更新，更新一台服务器时，需要先把对应的服务调用方的流量切换到其他服务器，然后对服务进行更新，更新后再把流量切回来。整个过程操作复杂、容易出错。当服务器较多时，耗时耗力。</p>
 <p>因此我们需要一个更好的架构来解决上面的问题，首先，服务端提供方对调用方来说不应该是被写死在配置文件中的一个地址端口，而应该是提供一种抽象的服务，调用方调用这种服务。这样，在整个架构中就隐藏了物理地址的信息，抽象出服务的概念后，服务提供方和调用方的部署中就不需要关注每台服务器的具体链接情况，这些全都交由服务发现平台完成。总结一下服务发现需要完成的功能：</p>
 <ul>
