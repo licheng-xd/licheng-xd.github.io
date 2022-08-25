@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lchml.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3437461276610909"
+     crossorigin="anonymous"></script>
+    <meta name="description" content="SaaS系统的构建是基于互联网提供软件服务的应用模式。 在21世纪开始兴起的SaaS概念打破传统软件概念，SaaS模式随着互联网技术的发展和应用软件的成熟不断完善，是软件科技发展的最新趋势。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从0到1构建SaaS系统">
+<meta property="og:url" content="https://lchml.com/technology/build-saas/index.html">
+<meta property="og:site_name" content="旅行的代码">
+<meta property="og:description" content="SaaS系统的构建是基于互联网提供软件服务的应用模式。 在21世纪开始兴起的SaaS概念打破传统软件概念，SaaS模式随着互联网技术的发展和应用软件的成熟不断完善，是软件科技发展的最新趋势。">
+<meta property="og:locale">
+<meta property="og:image" content="https://lchml.com/technology/build-saas/1.png">
+<meta property="og:image" content="https://lchml.com/technology/build-saas/1.1.png">
+<meta property="og:image" content="https://lchml.com/technology/build-saas/2.png">
+<meta property="og:image" content="https://lchml.com/technology/build-saas/3.png">
+<meta property="og:image" content="https://lchml.com/technology/build-saas/4.png">
+<meta property="og:image" content="https://lchml.com/technology/build-saas/5.png">
+<meta property="og:image" content="https://lchml.com/technology/build-saas/6.png">
+<meta property="og:image" content="https://lchml.com/technology/build-saas/7.png">
+<meta property="og:image" content="https://lchml.com/technology/build-saas/8.png">
+<meta property="og:image" content="https://lchml.com/technology/build-saas/9.png">
+<meta property="article:published_time" content="2022-08-24T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-08-25T04:06:36.455Z">
+<meta property="article:author" content="李城">
+<meta property="article:tag" content="李城">
+<meta property="article:tag" content="架构">
+<meta property="article:tag" content="SaaS">
+<meta property="article:tag" content="分布式">
+<meta property="article:tag" content="服务器">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lchml.com/technology/build-saas/1.png">
+
+
+<link rel="canonical" href="https://lchml.com/technology/build-saas/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lchml.com/technology/build-saas/","path":"technology/build-saas/","title":"从0到1构建SaaS系统"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>从0到1构建SaaS系统 | 旅行的代码</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71702178-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-71702178-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">旅行的代码</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">李城的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SaaS%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.</span> <span class="nav-text">SaaS是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%B7%E5%80%BC"><span class="nav-number">1.2.</span> <span class="nav-text">价值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">基础架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A5%E5%8F%A3"><span class="nav-number">2.1.</span> <span class="nav-text">入口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A5%E5%85%A5%E5%B1%82"><span class="nav-number">2.2.</span> <span class="nav-text">接入层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%9A%E5%8A%A1%E5%B1%82"><span class="nav-number">2.3.</span> <span class="nav-text">业务层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%B1%82"><span class="nav-number">2.4.</span> <span class="nav-text">数据层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E7%BB%B4%E8%83%BD%E5%8A%9B"><span class="nav-number">2.5.</span> <span class="nav-text">运维能力</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">部署模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B1%E4%BA%AB%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.1.</span> <span class="nav-text">共享模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%93%E5%B1%9E%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.2.</span> <span class="nav-text">专属模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%B7%E5%90%88%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.3.</span> <span class="nav-text">混合模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AA%E6%9D%A5%E5%8F%91%E5%B1%95"><span class="nav-number">4.</span> <span class="nav-text">未来发展</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李城"
+      src="/lc-icon.jpg">
+  <p class="site-author-name" itemprop="name">李城</p>
+  <div class="site-description" itemprop="description">知行合一</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">117</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/licheng-xd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;licheng-xd" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:licheng_xd@163.com" title="E-Mail → mailto:licheng_xd@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.me/lchml" title="500px → https:&#x2F;&#x2F;500px.me&#x2F;lchml" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i>500px</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://jandan.net/" title="Jandan → https:&#x2F;&#x2F;jandan.net" rel="noopener" target="_blank"><i class="fa fa-transgender-alt fa-fw"></i>Jandan</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/4qg55j4w/home?wvr=5" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;4qg55j4w&#x2F;home?wvr&#x3D;5" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.qingtian16265.com/" title="晴天博客 → https:&#x2F;&#x2F;blog.qingtian16265.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-leanpub fa-fw"></i>晴天博客</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3437461276610909"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-3437461276610909"
+     data-ad-slot="5369128557"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/build-saas/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/lc-icon.jpg">
+      <meta itemprop="name" content="李城">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="旅行的代码">
+      <meta itemprop="description" content="知行合一">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="从0到1构建SaaS系统 | 旅行的代码">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从0到1构建SaaS系统
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-08-25 00:00:00" itemprop="dateCreated datePublished" datetime="2022-08-25T00:00:00+08:00">2022-08-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote>
+<p>SaaS系统的构建是基于互联网提供软件服务的应用模式。 在21世纪开始兴起的SaaS概念打破传统软件概念，SaaS模式随着互联网技术的发展和应用软件的成熟不断完善，是软件科技发展的最新趋势。</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="SaaS是什么"><a href="#SaaS是什么" class="headerlink" title="SaaS是什么"></a>SaaS是什么</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>相信大家都对云服务中的IaaS、PaaS、SaaS早就有所耳闻，现在更是衍生出了aPaaS、iPaaS、DaaS等等的类似概念。对于SaaS也有各种各样的定义，这里我们给出的定义是：<br>SaaS是一种基于互联网提供服务和软件的交付模型，所有网络基础设施及软件、硬件运作平台的所有前期实施、后期维护都由SaaS平台完成，用户只需要租赁软件服务并通过互联网接入使用。SaaS模型依赖敏捷性和运营效率，作为推动增长、覆盖和创新的业务战略的支柱。 业内大家通常会以Salesforce作为SaaS的标杆。<br><img src="1.png" width="500px"></p>
+<h3 id="价值"><a href="#价值" class="headerlink" title="价值"></a>价值</h3><p>目前市场上越来越多的企业和组织采用SaaS服务来替代原来传统的软件采购部署方式，其原因可以主要总结为以下几个方面。<br><img src="1.1.png" width="700px"><br>另外，相比于传统软件，SaaS的盈利模式也决定了客户的成功对于SaaS产商来说极其重要，只有客户成功了，才会有续费， SaaS项目才有办法继续下去。当然SaaS相比传统软件也会有一些缺点，如独立性、可控性、个性化等。</p>
+<h2 id="基础架构"><a href="#基础架构" class="headerlink" title="基础架构"></a>基础架构</h2><p>SaaS系统通常首先是一个普通的分布式系统，因此它一定具有分布式系统的所有组成要素，如服务发现、负载均衡、序列化协议、传输协议、授权认证、网络安全等等。</p>
+<h3 id="入口"><a href="#入口" class="headerlink" title="入口"></a>入口</h3><p>客户最直接接触的通常是SaaS系统的客户端，客户端的形式可以根据业务的需求决定，常见的有浏览器网页、移动端APP、小程序、智能设备等等。</p>
+<p>客户端到服务器的入口通常是一个通用域名或者是每个租户的独立子域名。如网易互客的入口是huke.163.com，网易七鱼的入口是xxx.qiyukf.com。域名的背后就一定需要DNS的存在，需要配置出合理的DNS解析，通常传统的基于UDP的DNS服务容易受到中间人攻击，存在被劫持的风险，另外也存在被运营商封禁等情况，因此SaaS系统通常搭建自己的HTTPDNS来规避风险。</p>
+<p>有了域名作为入口之后，下一步就是客户端和服务器之间的通信协议，对于少数简单的SaaS系统来说只要通过域名和HTTP协议就可以完成所有服务，但大部分SaaS系统都会存在双向通信的需求，因此还需要维护长连接通道，常用的如原生TCP协议，或websocket协议。另外如果业务中有媒体流传输的需求，还会用到UDP，RTP协议等等。当然，目前市场上对于各种场景和需求都有对应的成熟解决方案，因此SaaS系统通常不会去从0开始解决所有问题，如长链接和媒体流我们可以集成网易云信的服务来解决。</p>
+<img src="2.png" width="450px">
+
+<h3 id="接入层"><a href="#接入层" class="headerlink" title="接入层"></a>接入层</h3><p>接入层通常是各种路由协议以及多层代理组成，如运营商和AS之间通常用BGP协议或者三线，机房内部通常会有接入的三层交换机，四层代理等等。网易七鱼目前的接入方案如下图所示，而对于规模较小的业务，为了灵活性和性价比，通常会在交换机和Nginx之间加入四层代理nlb。这一层基本都是由集团的SA同学负责搭建和运维。</p>
+<img src="3.png" width="800px">
+
+<h3 id="业务层"><a href="#业务层" class="headerlink" title="业务层"></a>业务层</h3><p>这里我们不去讨论业务上的各种设计模式和分层，因此把接入层之后数据层之前的所有服务和设施统称为业务层。通常业务层是一个SaaS系统研发中投入资源最大的，线上问题如性能瓶颈、稳定性、安全漏洞等大部分都来自于业务层，因此该层也是开发和线上运维的重点。</p>
+<p>在业务层目前SaaS系统最常用的还是微服务的架构，不同于IaaS或PaaS，SaaS业务的一个重要特征是其业务复杂度很高、业务链路很长，而微服务的架构刚好可以很好的应对这种情况。当然在业务刚开始的时候，我们可以用简单的单体应用来快速实现原型验证，等业务发展起来后再开始逐步微服务拆分。</p>
+<p>流量通过接入层后，一般为了系统的灵活性，会通过Nginx的upstream来转发请求到网关，由网关统一分发到对应的业务服务，而业务服务又可以拆分为许多独立的微服务相互调用。这也就带来了SaaS系统中的大部分常见问题，如：</p>
+<p>谁可以使用什么服务？（租户管理）</p>
+<p>服务在哪里？（服务发现）</p>
+<p>请求应该由哪个服务节点处理？（负载均衡）</p>
+<p>信息怎么传输？（传输协议）</p>
+<p>如何避免一个租户影响另一个租户？（资源隔离）</p>
+<p>输入和输出如何表示？（序列化协议）</p>
+<p>网络出现分区、超时或者服务出错了怎么办？（熔断、降级、服务治理）</p>
+<p>服务权限如何管理？（认证授权）</p>
+<p>如何保证通信安全？（网络安全）</p>
+<p>重要程度和依赖关系怎么样？（服务分级）</p>
+<p>如何保证不同机器的服务状态一致？（分布式数据一致性）</p>
+<p>等等，这些全都需要研发人员投入大量的精力，每个点展开细说都是一个很大的话题。基于业务和技术的考虑，通常还需要引入消息队列、缓存、配置中心、定时任务等组件。</p>
+<img src="4.png" width="700px">
+
+<h3 id="数据层"><a href="#数据层" class="headerlink" title="数据层"></a>数据层</h3><p>所有业务逻辑，最后一定都会在数据存储上得到体现。在一个SaaS系统中，最常用的存储依然是关系型数据库，如我们的DDB、另外常用HBase、TiDB等作为冷数据存储，ES、MongoDB等作为对应功能的数据存储。因此SaaS系统中多个数据存储之间的一致性是一个需要重视的地方。</p>
+<p>对象存储方面，我们集团内有Nos，市面上的云厂商也都有相应的服务，不需要自己构建。不论客户存储的对象还是系统中的某些资源，为了提高客户的访问速度，我们都需要有CDN的存在。</p>
+<p>SaaS业务中还有一个常见的需求就是BI，这要求系统具有数据分析能力，OLAP数据库也是必不可少的，网易云商采用的是ClickHouse。</p>
+<p>在某些特定的业务场景，也许还需要用到TSDB，录入智能设备的传感器读数，用户的活动轨迹，系统的状态变化等等。</p>
+<p>数据层还有一个非常重要，但经常被忽视的话题就是数据合规。特别是对于SaaS业务，因为面向的客户都是企业和组织，因此数据的安全合规是非常重要的。例如网易云商有专门的中间件用于数据库的敏感数据加密。</p>
+<img src="5.png" width="400px">
+
+
+<h3 id="运维能力"><a href="#运维能力" class="headerlink" title="运维能力"></a>运维能力</h3><p>到目前为止，一个SaaS系统基本已经搭建成型可以提供服务了。但是我们对系统的状态还一无所知，因此还要构建足够强大的运维能力。其中包括了可观测性、计量计费、快速恢复、故障演练、系统治理各个方面。以可观测性为例，我们需要采集系统中的各种数据并通过大量技术手段来观测系统的状态，如系统资源、业务指标、健康状态、链路追踪、业务埋点、报警管理、错误统计、流量水位、趋势分析、变更管理等。针对SaaS业务的特点，还需要特别对系统进行租户维度的监控和管理。</p>
+<img src="6.png" width="600px">
+
+<h2 id="部署模式"><a href="#部署模式" class="headerlink" title="部署模式"></a>部署模式</h2><p>SaaS系统根据隔离程度的不一样可以分为三种部署模式，每种部署模式都会涉及到架构的调整适配，都有各自的优缺点。</p>
+<h3 id="共享模式"><a href="#共享模式" class="headerlink" title="共享模式"></a>共享模式</h3><p>指SaaS系统中的所有资源，如业务服务、数据存储等全部是共享的，这要是绝大分部SaaS系统一开始采用的模式，这种模式系统的优势是灵活性高，资源利用率高，采用集中化管理，开发运维更简单。缺点是租户间容易相互影响，合规性也容易被一些特定行业客户挑战，还有很难为不同租户提供差异化服务。</p>
+<img src="7.png" width="300px">
+
+<h3 id="专属模式"><a href="#专属模式" class="headerlink" title="专属模式"></a>专属模式</h3><p>指SaaS系统中几乎所有资源都是租户独占的，这种部署模式的优势是每个租户有完全隔离的环境，租户之间不会有影响，可以针对不同租户提供个性化的服务。但是缺点也很明显，这种部署模式的资源利用率低，成本高，运维难度高，管理复杂。通常会被用于一些特定行业或者特殊需求的客户场景。</p>
+<img src="8.png" width="300px">
+
+<h3 id="混合模式"><a href="#混合模式" class="headerlink" title="混合模式"></a>混合模式</h3><p>指SaaS系统中有部分资源是所有租户共享的，还有部分资源是租户独占的，这种模式是现在大型SaaS系统常见的部署模式，可以兼顾上面种模式的优缺点，针对不同的客户提供不同的解决方案。</p>
+<img src="9.png" width="300px">
+
+<h2 id="未来发展"><a href="#未来发展" class="headerlink" title="未来发展"></a>未来发展</h2><p>上面简要介绍了搭建一个SaaS系统的主要过程，尽管SaaS的设计初衷是快速为特定业务场景提供垂直解决方案，但企业对跨业务跨部门的需求也越来越强烈，例如营销服务一体化、私域运营等场景。因此，业界无论在业务还是技术方面都还在不断的探索之中，例如对于SaaS的成本控制，合规性，可扩展性，针对不同租户的差异化服务等等，都是SaaS产商经常面临的难题。有人在探索部署方式的优化，有人在探索产品的设计方案，有人在探索低代码的模式，还有人在探索生态合作的方案。无论如何，大家的的努力都是在为了客户的成功，回到我们的起点，只有客户成功了，SaaS才有存在下去的价值。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/donate-page/simple/images/wechat.jpg" alt="李城 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/donate-page/simple/images/alipay.jpg" alt="李城 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%9D%8E%E5%9F%8E/" rel="tag"><i class="fa fa-tag"></i> 李城</a>
+              <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"><i class="fa fa-tag"></i> 架构</a>
+              <a href="/tags/SaaS/" rel="tag"><i class="fa fa-tag"></i> SaaS</a>
+              <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag"><i class="fa fa-tag"></i> 分布式</a>
+              <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag"><i class="fa fa-tag"></i> 服务器</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/book/read/" rel="prev" title="阅过留痕">
+                  <i class="fa fa-chevron-left"></i> 阅过留痕
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3437461276610909"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-3437461276610909"
+     data-ad-slot="4281038472"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa-solid fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李城</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"cdn":"//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML","tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"lchml","count":false,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>
