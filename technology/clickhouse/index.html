@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lchml.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3437461276610909"
+     crossorigin="anonymous"></script>
+    <meta name="description" content="由于业务上要用到ClickHouse，因此花了两三天看了此书，讲的不是特别深，但是挺适合作为ClickHouse使用者的入门，常用的使用姿势和应用需要了解的一些原理都有讲到。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《ClickHouse原理解析与应用实践》">
+<meta property="og:url" content="https://lchml.com/technology/clickhouse/index.html">
+<meta property="og:site_name" content="旅行的代码">
+<meta property="og:description" content="由于业务上要用到ClickHouse，因此花了两三天看了此书，讲的不是特别深，但是挺适合作为ClickHouse使用者的入门，常用的使用姿势和应用需要了解的一些原理都有讲到。">
+<meta property="og:locale">
+<meta property="article:published_time" content="2022-12-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-12-16T02:32:11.548Z">
+<meta property="article:author" content="李城">
+<meta property="article:tag" content="李城">
+<meta property="article:tag" content="数据库">
+<meta property="article:tag" content="服务器">
+<meta property="article:tag" content="大数据">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://lchml.com/technology/clickhouse/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lchml.com/technology/clickhouse/","path":"technology/clickhouse/","title":"《ClickHouse原理解析与应用实践》"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>《ClickHouse原理解析与应用实践》 | 旅行的代码</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71702178-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-71702178-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">旅行的代码</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">李城的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86%EF%BC%8C%E8%83%8C%E6%99%AF%E7%AF%87"><span class="nav-number">1.</span> <span class="nav-text">第一部分，背景篇</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86%EF%BC%8C%E5%9F%BA%E7%A1%80%E7%AF%87"><span class="nav-number">2.</span> <span class="nav-text">第二部分，基础篇</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E9%83%A8%E5%88%86%EF%BC%8C%E5%8E%9F%E7%90%86%E7%AF%87"><span class="nav-number">3.</span> <span class="nav-text">第三部分，原理篇</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李城"
+      src="/lc-icon.jpg">
+  <p class="site-author-name" itemprop="name">李城</p>
+  <div class="site-description" itemprop="description">知行合一</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">90</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">123</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/licheng-xd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;licheng-xd" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:licheng_xd@163.com" title="E-Mail → mailto:licheng_xd@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.me/lchml" title="500px → https:&#x2F;&#x2F;500px.me&#x2F;lchml" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i>500px</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://jandan.net/" title="Jandan → https:&#x2F;&#x2F;jandan.net" rel="noopener" target="_blank"><i class="fa fa-transgender-alt fa-fw"></i>Jandan</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/4qg55j4w/home?wvr=5" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;4qg55j4w&#x2F;home?wvr&#x3D;5" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.qingtian16265.com/" title="晴天博客 → https:&#x2F;&#x2F;blog.qingtian16265.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-leanpub fa-fw"></i>晴天博客</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3437461276610909"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-3437461276610909"
+     data-ad-slot="5369128557"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/clickhouse/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/lc-icon.jpg">
+      <meta itemprop="name" content="李城">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="旅行的代码">
+      <meta itemprop="description" content="知行合一">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="《ClickHouse原理解析与应用实践》 | 旅行的代码">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          《ClickHouse原理解析与应用实践》
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-12-16 00:00:00" itemprop="dateCreated datePublished" datetime="2022-12-16T00:00:00+08:00">2022-12-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>由于业务上要用到ClickHouse，因此花了两三天看了此书，讲的不是特别深，但是挺适合作为ClickHouse使用者的入门，常用的使用姿势和应用需要了解的一些原理都有讲到。</p>
+<span id="more"></span>
+
+<p>ClickHouse在线文档：(<a target="_blank" rel="noopener" href="https://clickhouse.com/docs/zh/)[https://clickhouse.com/docs/zh/]">https://clickhouse.com/docs/zh/)[https://clickhouse.com/docs/zh/]</a></p>
+<h2 id="第一部分，背景篇"><a href="#第一部分，背景篇" class="headerlink" title="第一部分，背景篇"></a>第一部分，背景篇</h2><p>OLTP→OLAP</p>
+<p>ROLAP，直接使用关系模型构建。海量数据问题。</p>
+<p>MOLAP，使用多维数组的形式保存数据，其核心思想是借助预先聚合结果，使用空间换取时间的形式最终提升查询性能。数据膨胀和滞后性问题。</p>
+<p>HOLAP，混合上面两种</p>
+<p>数据立方体概念</p>
+<p>MyISAM引擎使用B+树结构存储索引，而数据则使用另外单独的存储文件；InnoDB引擎使用B+树同时存储索引和数据，数据直接挂载在叶子节点中。</p>
+<p>HBase使用LSM树索引结构，发源于Google的BigTable。LSM本质上可以看做是将一颗大树拆成了许多小树。先在内存中构建一颗小树，小树构建过程中会进行排序，小树的数量达到某个阈值输入磁盘生成一小段数据。在每个数据段中，数据局部有序。</p>
+<p>发展历程：mysql→Metrage→OLAPServer→ClickHouse</p>
+<p>不适用场景：</p>
+<p>1、不支持事务</p>
+<p>2、不擅长根据主键按行粒度进行查询（虽然支持）</p>
+<p>3、不擅长按行删除数据（虽然支持）</p>
+<p>ClickHouse拥有完备的管理功能，是一个DBMS（数据库管理系统），而不仅仅是一个数据库。</p>
+<p>列式存储和数据压缩通常是伴生的，ClickHouse默认使用L4Z算法压缩，在Yandex的生成环境，数据总体压缩比可以达到8:1。</p>
+<p>ClickHouse目前利用SSE4.2指令集实现向量化执行</p>
+<p>ClickHouse架构设计中的核心模块：（图）</p>
+<p>Data Streams，Server，Parsers、Interpreters，Storages，Columns，DataTypes，Functions</p>
+<p>ClickHouse的1个节点只能拥有1个分片，也就是说如果要实现1分片、1副本，则至少需要部署2个服务节点。</p>
+<p>分片只是一个逻辑概念，其物理承载还是由副本承担的。</p>
+<p>SIMD被广泛应用于文本转换、数据过滤、数据解压和JSON转换等场景。</p>
+<h2 id="第二部分，基础篇"><a href="#第二部分，基础篇" class="headerlink" title="第二部分，基础篇"></a>第二部分，基础篇</h2><p>基础类型：数值、字符串、时间（没有Boolean）</p>
+<p>数值类型分为：整数（Int）、浮点数（Float）、定点数（Decimal）</p>
+<p>字符串类型分为：String、FixedString、UUID</p>
+<p>时间类型：DateTime、DateTime64、Date，最高精度是秒</p>
+<p>复合类型：数组（Array）、元组（Tuple）、枚举（Enum）、嵌套（Nested）</p>
+<p>特殊类型：</p>
+<p>Nullable，只能和基础类型搭配使用，不能作为索引字段</p>
+<p>Domain，IPv6、IPv6</p>
+<p>数据库引擎类型：</p>
+<p>Ordinary：默认引擎</p>
+<p>Dictionary：字典引擎，自动为所有数据字典创建他们的数据表</p>
+<p>Memory：内存引擎，临时数据，只停留在内存中</p>
+<p>Lazy：日志引擎，只能使用Log系列的表引擎</p>
+<p>MySQL：MySQL引擎，会自动拉取远端MySQL中的数据，并为它们创建MySQL表引擎的数据表</p>
+<p>三种基本的建表方法：常规定义、复制其他表结构、SELECT字句形式</p>
+<p>表字段支持三种默认值表达式的定义方法：DEFAULT、MATERIALIZED、ALIAS</p>
+<p>临时表 create temporary table …，只支持Memory表引擎，优先级大于普通表</p>
+<p>分区表，数据分区（partition）和数据分片（shard）是完全不同的两个概念。数据分区是针对本地数据而言的，是数据的一种纵向切分。而数据分片是数据的一种横向切分。</p>
+<p>只有合并树（MergeTree）家族系列的表引擎才支持数据分区，通过partition by指定分区键</p>
+<p>普通视图：create view view_name as select …</p>
+<p>不存储任何数据，只是一层单纯的SELECT查询映射，简化查询、明晰语义的作用，对查询性能不会有任何增强。</p>
+<p>物化视图：create materialized view table_name to name engine&#x3D;xxx populate as select …</p>
+<p>支持表引擎，如果源表被写入新数据，那么物化视图也会同步更新。populate修饰符觉得初始化策略，是否连带源表中已存在的数据一并导入。</p>
+<p>物化视图本质上是一张特殊的数据表</p>
+<p>目前只有MergeTree、Merge、Distribute三类表引擎支持ALTER查询</p>
+<p>RENAME可以用于移动数据表，仅限单个节点范围内</p>
+<p>分布式DDL，只需要在DDL后面加上 ON CLUSTER cluster_name</p>
+<p>数据写入方式：</p>
+<p>常规：INSERT INTO table_name VALUES (xxx)</p>
+<p>指定格式：INSERT INTO table_name FORMAT format_name data_set</p>
+<p>SELECT子语句：INSERT INTO table_name SELECT …</p>
+<p>数据删除与修改</p>
+<p>ClickHouse的Delete和Update能力被成为Mutation查询，它可以看做ALTER语句的变种，是一种很重的操作，不支持事务，执行是异步的后台过程，语句提交之后就会立即返回，执行进度需要通过system.mutaitons系统表查询。每执行一条ALTER DELETE语句，都会在mutations系统表中生成一条对应的执行计划。数据删除过程是以数据表的每个分区目录为单位，将所有目录重写为新的目录，新目录的命名规则是在原有名称上加上system.mutaitions.block_numbers.number。数据在重写过程中会将需要删除的数据去掉。旧的数据目录不会立即删除，而是会被标记成非激活状。等到MergeTree引擎下次合并动作触发时，这些非激活目录才会真正从物理意义上删除。</p>
+<p><strong><strong>ClickHouse多种实时更新方法总结：</strong></strong><a target="_blank" rel="noopener" href="https://www.modb.pro/db/197765">https://www.modb.pro/db/197765</a></p>
+<p>ClickHouse拥有内置和扩展两类数据字典，目前内置的只有YM字典，扩展的有7种类型，其中flat、hashed、range_hashed依次拥有最高的性能。</p>
+<h2 id="第三部分，原理篇"><a href="#第三部分，原理篇" class="headerlink" title="第三部分，原理篇"></a>第三部分，原理篇</h2><p>分区规则，分区目录合并规则</p>
+<p>一级索引，稀疏索引</p>
+<p>二级索引，跳数索引</p>
+<p>如果把MergeTree比作一本书，primary.idx一级索引就好比这本书的一级章节目录，.bin（数据存储文件）中的数据就好比这本书中的文字，.mrk（数据标记文件）会为一级章节目录和具体的文字之间建立关联。</p>
+<p>数据TTL，分为列级别和表级别，默认合并频率1天，可以通过merge_with_ttl_timeout来控制</p>
+<p>多路径存储策略：默认，JBOD，HOT&#x2F;COLD</p>
+<p>ReplacingMergeTree处理逻辑</p>
+<p>1、使用ORDER BY排序键作为判断重复数据的逻辑</p>
+<p>2、只有在合并分区的时候才会触发删除重复数据的逻辑</p>
+<p>3、以数据分区为单位删除重复数据。当分区合并时，同一分区内的重复数据才会被删除；不同分区之间的重复数据不会被删除</p>
+<p>4、在进行数据去重时，因为分区内的数据已经基于ORDER BY进行排序，所以能够找到那些相邻的重复数据</p>
+<p>5、数据去重策略有两种：</p>
+<p>如果没有设置ver版本号，则保留同一组重复数据中的最后一行</p>
+<p>如果设置了ver版本号，则保留同一组重复数据中ver字段取值最大的那一行</p>
+<p>如果同时声明了ORDER BY和PRIMARY KEY，MergeTree会强制要求PRIMARY KEY列字段必须是ORDER BY的前缀</p>
+<p>SummingMergeTree处理逻辑</p>
+<p>1、用ORDER BY排序键作为聚合数据的条件Key</p>
+<p>2、只有在合并分区的时候才会触发汇总的逻辑</p>
+<p>3、以数据分区为单位来聚合数据。当分区合并时，同一数据分区内聚合Key相同的数据会被合并汇总，而不同分区之间的数据则不会被汇总</p>
+<p>4、如果在定义引擎时指定了columns汇总列（非主键的数值类型字段），则SUM汇总这些列字段，如果未指定，则聚合所有非主键的数值类型字段</p>
+<p>5、在进行数据汇总时，同一分区内，相同聚合Key的多行数据会合并成一行。其中，汇总字段会进行SUM计算，对于那些非汇总字段，则会使用第一行数据的取值</p>
+<p>6、支持嵌套结构，但列字段名称必须以Map后缀结尾。嵌套类型中，默认以第一个字段作为聚合Key。除第一个字段外，任何名称以Key、Id或Type为后缀结尾的字段，都将和第一个字段组成复合Key</p>
+<p>AggregatingMergeTree处理逻辑</p>
+<p>1、用ORDER BY排序键作为聚合数据的条件Key</p>
+<p>2、使用AggregateFunction字段类型定义聚合函数的类型以及聚合的字段</p>
+<p>3、只有在合并分区的时候才会触发汇总的逻辑</p>
+<p>4、以数据分区为单位来聚合数据。当分区合并时，同一数据分区内聚合Key相同的数据会被合并汇总，而不同分区之间的数据则不会被汇总</p>
+<p>5、在进行数据计算时，因为分区内的数据已经基于ORDER BY进行排序，所以能够找到那些相邻且拥有相同聚合Key的数据</p>
+<p>6、在聚合数据时，同一分区内，相同聚合Key的多行数据会合并成一行。对于那些非主键、非AggregateFunction类型字段，则会使用第一行数据的取值</p>
+<p>7、AggregateFunction类型的字段使用二进制存储，在写入数据时，需要调用<em>State函数；而在查询数据时，则需要调用相应的</em>Merge函数。其中，*表示定义时使用的聚合函数</p>
+<p>8、AggregatingMergeTree通常作为物化视图的表引擎，与普通MergeTree搭配使用</p>
+<p>另外还有CollapsingMergeTree、VersionedCollapsingMergeTree、GraphiteMergeTree，以及整个MergeTree家族引擎的关系</p>
+<p>其他常见表引擎</p>
+<p>外部存储类型：HDFS、MySQL、JDBC、Kafka、File</p>
+<p>内存类型：Memory、Set、Join、Buffer</p>
+<p>日志类型：TinyLog、StripeLog、Log</p>
+<p>接口类型：Merge、Dictionary、Distributed</p>
+<p>其他类型：Live View、Null、URL</p>
+<p>对于列式存储数据库，应尽量避免使用select *查询</p>
+<p>ClickHouse支持的查询语法</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">WITH</span> expr_list<span class="operator">|</span>(subquery)]</span><br><span class="line"><span class="keyword">SELECT</span> [<span class="keyword">DISTINCT</span>] expr_list</span><br><span class="line">[<span class="keyword">FROM</span> [db.]<span class="keyword">table</span> <span class="operator">|</span> (subquery) <span class="operator">|</span> table_function] [<span class="keyword">FINAL</span>]</span><br><span class="line">[SAMPLE sample_coeff]</span><br><span class="line">[<span class="keyword">ARRAY</span> <span class="keyword">JOIN</span> ...]</span><br><span class="line">[<span class="keyword">GLOBAL</span>] [<span class="keyword">ANY</span><span class="operator">|</span><span class="keyword">ALL</span><span class="operator">|</span>ASOF] [<span class="keyword">INNER</span><span class="operator">|</span><span class="keyword">LEFT</span><span class="operator">|</span><span class="keyword">RIGHT</span><span class="operator">|</span><span class="keyword">FULL</span><span class="operator">|</span><span class="keyword">CROSS</span>] [<span class="keyword">OUTER</span><span class="operator">|</span>SEMI<span class="operator">|</span>ANTI] <span class="keyword">JOIN</span> (subquery)<span class="operator">|</span><span class="keyword">table</span> (<span class="keyword">ON</span> <span class="operator">&lt;</span>expr_list<span class="operator">&gt;</span>)<span class="operator">|</span>(<span class="keyword">USING</span> <span class="operator">&lt;</span>column_list<span class="operator">&gt;</span>)</span><br><span class="line">[PREWHERE expr]</span><br><span class="line">[<span class="keyword">WHERE</span> expr]</span><br><span class="line">[<span class="keyword">GROUP</span> <span class="keyword">BY</span> expr_list] [<span class="keyword">WITH</span> TOTALS]</span><br><span class="line">[<span class="keyword">HAVING</span> expr]</span><br><span class="line">[<span class="keyword">ORDER</span> <span class="keyword">BY</span> expr_list] [<span class="keyword">WITH</span> FILL] [<span class="keyword">FROM</span> expr] [<span class="keyword">TO</span> expr] [STEP expr]</span><br><span class="line">[LIMIT [offset_value, ]n <span class="keyword">BY</span> columns]</span><br><span class="line">[LIMIT [n, ]m] [<span class="keyword">WITH</span> TIES]</span><br><span class="line">[<span class="keyword">UNION</span> <span class="keyword">ALL</span> ...]</span><br><span class="line">[<span class="keyword">INTO</span> OUTFILE filename]</span><br><span class="line">[FORMAT format]</span><br></pre></td></tr></table></figure>
+
+<p>WITH：定义变量、调用函数、定义子查询、在子查询中重复使用WITH</p>
+<p>FROM：</p>
+<p>SAMPLE：数据采样</p>
+<p>ARRAY JOIN：支持INSERT和LEFT两种JOIN策略，同时对多个数组字段进行ARRAY JON操作时，查询的计算逻辑是按行合并而不是产生笛卡尔积</p>
+<p>JOIN：按精度可以分为ALL、ANY、ASOF三种，按类型可以分为外连接、内连接、交叉连接三种</p>
+<p>WHERE和PREWHERE：PREWHERE只能用于MergeTree系列引擎，它首先会读取PREWEHRE指定的列字段，用于数据过滤的条件判断。待数据过滤后再读取SELECT声明的列字段以补全其余属性。性能更高。</p>
+<p>GROUP BY：SELECT如果声明了列字段，则只能使用聚合键包含的字段。WITH ROLLUP，WITH CUBE，WITH TOTALS三种额外汇总信息</p>
+<p>HAVING：需要和GROUP BY同时使用，不能单独使用。在聚合计算之后实现二次过滤数据</p>
+<p>ORDER BY：全局排序，可以通过NULL FIRST&#x2F;LAST修饰NULL值的排序</p>
+<p>LIMIT BY：和LIMIT不同，运行于ORDER BY之后和LIMIT之前，能够按指定分组，最多返回前n行数据，常用于TOP N的查询场景</p>
+<p>LIMIT：</p>
+<p>SELCT：</p>
+<p>DISTINCT：</p>
+<p>UNION ALL：联合左右两边的两组子查询，将结果一并返回。</p>
+<p>Replicated前缀表引擎才能应用副本的能力，增加了zk监听的部分，通过zk存储mutaions操作日志</p>
+<p>Distributed表引擎，本身不存储任何数据，它能够作为分布式表的一层透明代理。</p>
+<p>多副本的路由规则，四种负载均衡算法：random、nearest_hostname，in_order、first_or_random</p>
+<p>多分片查询的核心流程：查询各个分片数据，合并返回结果</p>
+<p>使用Global优化分布式查询</p>
+<p>服务监控可以从两个方面入手：</p>
+<p>系统表：metrics、events、asynchronous_metrics</p>
+<p>查询日志：query_log、query_thread_log、part_log、text_log、metric_log</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/donate-page/simple/images/wechat.jpg" alt="李城 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/donate-page/simple/images/alipay.jpg" alt="李城 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%9D%8E%E5%9F%8E/" rel="tag"><i class="fa fa-tag"></i> 李城</a>
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag"><i class="fa fa-tag"></i> 数据库</a>
+              <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag"><i class="fa fa-tag"></i> 服务器</a>
+              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"><i class="fa fa-tag"></i> 大数据</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/book/zycxdglz/" rel="prev" title="《卓有成效的管理者》">
+                  <i class="fa fa-chevron-left"></i> 《卓有成效的管理者》
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/book/read/" rel="next" title="阅过留痕">
+                  阅过留痕 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3437461276610909"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-3437461276610909"
+     data-ad-slot="4281038472"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa-solid fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李城</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"cdn":"//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML","tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"lchml","count":false,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>
