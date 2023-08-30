@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lchml.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3437461276610909"
+     crossorigin="anonymous"></script>
+    <meta name="description" content="首先我们承认一个基本事实：系统不可能 100%可靠。人无完人，由人创造的系统同样也不可能是完美的系统。因此我们在研发工作中对风险管理的目标从来不是100%可靠，而是在特定环境下，在特定时间段内，控制某种损失发生的可能性。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从风险角度看SaaS研发工作">
+<meta property="og:url" content="https://lchml.com/technology/dev-risk/index.html">
+<meta property="og:site_name" content="旅行的代码">
+<meta property="og:description" content="首先我们承认一个基本事实：系统不可能 100%可靠。人无完人，由人创造的系统同样也不可能是完美的系统。因此我们在研发工作中对风险管理的目标从来不是100%可靠，而是在特定环境下，在特定时间段内，控制某种损失发生的可能性。">
+<meta property="og:locale">
+<meta property="og:image" content="https://lchml.com/technology/dev-risk/dev-risk-1.jpg">
+<meta property="og:image" content="https://lchml.com/technology/dev-risk/dev-risk-2.jpg">
+<meta property="og:image" content="https://lchml.com/technology/dev-risk/dev-risk-3.jpg">
+<meta property="article:published_time" content="2023-08-29T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-08-30T01:59:04.615Z">
+<meta property="article:author" content="李城">
+<meta property="article:tag" content="李城">
+<meta property="article:tag" content="管理">
+<meta property="article:tag" content="研发">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lchml.com/technology/dev-risk/dev-risk-1.jpg">
+
+
+<link rel="canonical" href="https://lchml.com/technology/dev-risk/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lchml.com/technology/dev-risk/","path":"technology/dev-risk/","title":"从风险角度看SaaS研发工作"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>从风险角度看SaaS研发工作 | 旅行的代码</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71702178-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-71702178-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">旅行的代码</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">李城的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李城"
+      src="/lc-icon.jpg">
+  <p class="site-author-name" itemprop="name">李城</p>
+  <div class="site-description" itemprop="description">知行合一</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">93</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">126</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/licheng-xd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;licheng-xd" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:licheng_xd@163.com" title="E-Mail → mailto:licheng_xd@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.me/lchml" title="500px → https:&#x2F;&#x2F;500px.me&#x2F;lchml" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i>500px</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://jandan.net/" title="Jandan → https:&#x2F;&#x2F;jandan.net" rel="noopener" target="_blank"><i class="fa fa-transgender-alt fa-fw"></i>Jandan</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/4qg55j4w/home?wvr=5" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;4qg55j4w&#x2F;home?wvr&#x3D;5" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.qingtian16265.com/" title="晴天博客 → https:&#x2F;&#x2F;blog.qingtian16265.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-leanpub fa-fw"></i>晴天博客</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3437461276610909"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-3437461276610909"
+     data-ad-slot="5369128557"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/dev-risk/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/lc-icon.jpg">
+      <meta itemprop="name" content="李城">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="旅行的代码">
+      <meta itemprop="description" content="知行合一">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="从风险角度看SaaS研发工作 | 旅行的代码">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从风险角度看SaaS研发工作
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-08-30 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-30T00:00:00+08:00">2023-08-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>首先我们承认一个基本事实：系统不可能 100%可靠。人无完人，由人创造的系统同样也不可能是完美的系统。因此我们在研发工作中对风险管理的目标从来不是100%可靠，而是在特定环境下，在特定时间段内，控制某种损失发生的可能性。</p>
+<span id="more"></span>
+
+<p>一个项目或者产品的研发工作不可避免的存在风险。比如公司调整、市场变化、突发政策、人员变动、依赖延期、系统BUG、技术难题等等。作为系统架构师或研发管理者，我们需要对项目的各种风险做到心中有数，设计好应对措施并跟踪风险情况。同时，风险的影响面和发生概率随着项目的阶段和环境的变化都可能会发生变化，需要及时进行重新分析和评估。</p>
+<p>研发工作中的风险，从产生来源可以分为技术风险和业务风险，其中技术风险主要是指由技术直接或间接产生的风险，包括可行性风险、系统风险、操作风险等。务风险主要是指项目能否正常进行以及是否能带来预期价值的风险，包括市场风险、成本风险、政策风险、组织风险等。从影响程度和发生概率看，又可以分为高风险、低风险、大概率风险、小概率风险。</p>
+<p><img src="/technology/dev-risk/dev-risk-1.jpg"></p>
+<p>当项目或产品处于不同的发展阶段时，对风险的管理也需要有不同的思路。当一个产品处于发展初期，那么他的业务风险通常会远高于技术风险，因为在发展初期，最大的风险通常是业务的生存问题和价值问题，是否能通过立项，是否能为客户提供价值，是否会被组织调整，是否能在市场上站稳脚跟。而此时技术视角下，系统稳定性、功能BUG等风险通常造成的损失可控，影响范围小，因此我们应该更注重研发效率和适应快速的变化。</p>
+<p>对于成熟期的产品，通常已经有大量的客户，有一定的市场占有率，业务风险相对已经比较小。这时更多的是技术风险，因为作为成熟期的产品，一定是有存量客户，有对客户非常重要的服务场景，甚至直接是客户关键生产链路中的一环。一旦出现功能BUG、预期不符、系统不可用等情况，都会影响客户，甚至造成巨大资损，直接影响客户留存和品牌声誉。</p>
+<p><img src="/technology/dev-risk/dev-risk-2.jpg"></p>
+<p>想要管理风险的前提是要能识别风险，识别风险有很多方法，有人靠经验，有人靠数据，也有人靠直觉，还有燃尽图、FEMA、交通灯等各种方法论，无论哪种方式，前提一定是要有大量的信息输入，这就要求我们在做研发工作时，要掌握尽可能全面的信息。例如在研发工作中有大量的风险都是围绕着变更引起的，如产品需求、技术优化、代码重构、架构调整、机房迁移、人员调整等。因此只要涉及到变更，就一定要想到风险，并基于此去挖掘更多相关的信息。</p>
+<p>识别到风险的下一步是根据影响大小，紧急程度等结果采取相应的应对措施，在研发工作中，常用的风险应对措施有回避、减轻、接受、转移等。</p>
+<ul>
+<li>回避风险</li>
+</ul>
+<p>风险回避策略是指当项目风险潜在威胁发生可能性太大，不利后果也太严重，又无其它风险管理策略可用时，主动放弃项目或改变项目目标与行动方案，从而规避风险的一种风险管理策略。相信大家都有过砍需求的经历，例如当我们评估某个需求变更或技术优化会带来极大风险（可能是进度、成本、稳定性等各种风险），而只有有限的收益时，我们可以选择放弃此次变更，这就是一种回避风险的方式。</p>
+<ul>
+<li>减轻风险</li>
+</ul>
+<p>减轻风险策略是通过缓和或预知等手段来减轻风险，降低风险发生的可能性或减缓风险带来的不利后果，以达到风险减少的目的。这是一种积极的风险处理手段。也研发流程中是最常用的方式，如测试就是为了减轻系统变更的风险，应急预案演练、全链路压测都是为了减轻系统稳定性风险，技术方案评审是为了减轻技术架构变更和腐烂带来的风险，灰度发布是为了减轻服务发布带来的风险，每日站会通是为了减轻进度风险。</p>
+<ul>
+<li>接受风险</li>
+</ul>
+<p>接受风险策略是指有意识地选择自己承担风险后果的策略。当采取其它风险规避方法的费用超过风险事件造成的损失时，可采取接受风险的方法。例如当我们的客户有突发大流量时，我们通常会选择限流或降级的措施，而不是日常冗余大量空闲资源。例如当确认有进度风险时，采用赶工的方式来解决。</p>
+<ul>
+<li>转移风险</li>
+</ul>
+<p>转移风险策略是指将风险转移至其他人或其它组织，其目的是借用合同或协议，在风险事故一旦发生时将损失的一部分转移到有能力承受或控制项目风险的个人或组织。如项目BPO，或采购第三方系统，签订背靠背合约。</p>
+<p>风险处置之后，还需要对风险进行跟踪和复盘。对于高风险事件，需要保证所有风险都有相应的措施。对于低风险事件，可以通过系统化流程化的方式进行跟踪。同时在风险的复盘中，我们要积极探究风险产生的结构化因素，如分支模型有问题、发布流程有问题等，并对相应的问题改进优化，降低后续风险发生的可能性。</p>
+<p><img src="/technology/dev-risk/dev-risk-3.jpg"></p>
+<p>商业在本质上是一种冒险的尝试。无论在经营还是研发中，我们必须能够识别和平衡风险与回报。比如，研发新功能或者做系统重构，显然都会有风险，但也应该有足够的回报。彼得德鲁克说：“没有尽善尽美的战略决策。人们总要付出代价。对相互矛盾的目标、相互矛盾的观点及相互矛盾的重点，人们总要进行平衡。最佳的战略决策只能是近似合理的，而且总是带有风险的。”。风险是业务的成功的阶梯，对风险的理解和管理是研发工作的重点内容。我相信没有缓解的风险越多，出现重大问题的可能性就越大。将风险视为一种可能性，而非威胁，积极面对风险才能解决风险。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/donate-page/simple/images/wechat.jpg" alt="李城 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/donate-page/simple/images/alipay.jpg" alt="李城 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%9D%8E%E5%9F%8E/" rel="tag"><i class="fa fa-tag"></i> 李城</a>
+              <a href="/tags/%E7%AE%A1%E7%90%86/" rel="tag"><i class="fa fa-tag"></i> 管理</a>
+              <a href="/tags/%E7%A0%94%E5%8F%91/" rel="tag"><i class="fa fa-tag"></i> 研发</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/book/read/" rel="prev" title="阅过留痕">
+                  <i class="fa fa-chevron-left"></i> 阅过留痕
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3437461276610909"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-3437461276610909"
+     data-ad-slot="4281038472"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa-solid fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李城</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"cdn":"//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML","tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"lchml","count":false,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>
