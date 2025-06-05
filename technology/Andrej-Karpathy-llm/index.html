@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lchml.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3437461276610909"
+     crossorigin="anonymous"></script>
+    <meta name="description" content="本文整理自 Andrej Karpathy最新（2025.2.6）发布在YouTube上的视频：Deep Dive into LLMs like ChatGPT。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入探讨ChatGPT类大语言模型">
+<meta property="og:url" content="https://lchml.com/technology/Andrej-Karpathy-llm/index.html">
+<meta property="og:site_name" content="旅行的代码">
+<meta property="og:description" content="本文整理自 Andrej Karpathy最新（2025.2.6）发布在YouTube上的视频：Deep Dive into LLMs like ChatGPT。">
+<meta property="og:locale">
+<meta property="og:image" content="https://lchml.com/technology/Andrej-Karpathy-llm/Andrej-Karpathy-llm.png">
+<meta property="article:published_time" content="2025-06-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-05T06:10:22.424Z">
+<meta property="article:author" content="李城">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="大模型">
+<meta property="article:tag" content="AI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lchml.com/technology/Andrej-Karpathy-llm/Andrej-Karpathy-llm.png">
+
+
+<link rel="canonical" href="https://lchml.com/technology/Andrej-Karpathy-llm/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lchml.com/technology/Andrej-Karpathy-llm/","path":"technology/Andrej-Karpathy-llm/","title":"深入探讨ChatGPT类大语言模型"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>深入探讨ChatGPT类大语言模型 | 旅行的代码</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71702178-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-71702178-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">旅行的代码</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">李城的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%84%E8%AE%AD%E7%BB%83-Pretraining"><span class="nav-number">1.</span> <span class="nav-text">预训练 (Pretraining):</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%84%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE-%E4%BA%92%E8%81%94%E7%BD%91"><span class="nav-number">1.1.</span> <span class="nav-text">预训练数据 (互联网)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tokenization-%E5%88%86%E8%AF%8D"><span class="nav-number">1.2.</span> <span class="nav-text">Tokenization (分词)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E8%BE%93%E5%85%A5-x2F-%E8%BE%93%E5%87%BA"><span class="nav-number">1.3.</span> <span class="nav-text">神经网络的输入&#x2F;输出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84"><span class="nav-number">1.4.</span> <span class="nav-text">神经网络内部结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A8%E7%90%86-Inference"><span class="nav-number">1.5.</span> <span class="nav-text">推理 (Inference)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GPT-2-%E8%AE%AD%E7%BB%83%E4%B8%8E%E6%8E%A8%E7%90%86%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.6.</span> <span class="nav-text">GPT-2: 训练与推理示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Llama-3-1-Base-Model-%E6%8E%A8%E7%90%86"><span class="nav-number">1.7.</span> <span class="nav-text">Llama 3.1 Base Model 推理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%91%E7%9D%A3%E5%BE%AE%E8%B0%83-Supervised-Finetuning"><span class="nav-number">2.</span> <span class="nav-text">监督微调 (Supervised Finetuning)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E9%A2%84%E8%AE%AD%E7%BB%83%E5%88%B0%E5%90%8E%E8%AE%AD%E7%BB%83-pretraining-to-post-training"><span class="nav-number">2.1.</span> <span class="nav-text">从预训练到后训练 (pretraining to post-training)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%BB%E8%A7%89%E3%80%81%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%E3%80%81%E7%9F%A5%E8%AF%86-x2F-%E5%B7%A5%E4%BD%9C%E8%AE%B0%E5%BF%86"><span class="nav-number">2.2.</span> <span class="nav-text">幻觉、工具使用、知识&#x2F;工作记忆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E6%88%91%E8%AE%A4%E7%9F%A5-knowledge-of-self"><span class="nav-number">2.3.</span> <span class="nav-text">自我认知 (knowledge of self)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E9%9C%80%E8%A6%81-tokens-%E6%89%8D%E8%83%BD%E6%80%9D%E8%80%83"><span class="nav-number">2.4.</span> <span class="nav-text">模型需要 tokens 才能思考</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tokenization-%E5%86%8D%E6%8E%A2%EF%BC%9A%E6%A8%A1%E5%9E%8B%E5%9C%A8%E6%8B%BC%E5%86%99%E6%96%B9%E9%9D%A2%E7%9A%84%E4%B8%8D%E8%B6%B3"><span class="nav-number">2.5.</span> <span class="nav-text">Tokenization 再探：模型在拼写方面的不足</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E5%B7%AE%E4%B8%8D%E9%BD%90%E7%9A%84%E6%99%BA%E8%83%BD-jagged-intelligence"><span class="nav-number">2.6.</span> <span class="nav-text">参差不齐的智能 (jagged intelligence)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0-Reinforcement-Learning"><span class="nav-number">3.</span> <span class="nav-text">强化学习 (Reinforcement Learning):</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E7%9B%91%E7%9D%A3%E5%BE%AE%E8%B0%83%E5%88%B0%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0"><span class="nav-number">3.1.</span> <span class="nav-text">从监督微调到强化学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0-reinforcement-learning"><span class="nav-number">3.2.</span> <span class="nav-text">强化学习 (reinforcement learning)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DeepSeek-R1"><span class="nav-number">3.3.</span> <span class="nav-text">DeepSeek-R1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DeepSeek-R1-%E7%9A%84%E5%8F%AF%E8%AE%BF%E9%97%AE%E6%80%A7%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="nav-number">3.4.</span> <span class="nav-text">DeepSeek-R1 的可访问性与应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AlphaGo"><span class="nav-number">3.5.</span> <span class="nav-text">AlphaGo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E4%BA%BA%E7%B1%BB%E5%8F%8D%E9%A6%88%E7%9A%84%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0-RLHF"><span class="nav-number">3.6.</span> <span class="nav-text">基于人类反馈的强化学习 (RLHF)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AA%E6%9D%A5%E5%B1%95%E6%9C%9B"><span class="nav-number">4.</span> <span class="nav-text">未来展望</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李城"
+      src="/lc-icon.jpg">
+  <p class="site-author-name" itemprop="name">李城</p>
+  <div class="site-description" itemprop="description">知行合一</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">107</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">145</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/licheng-xd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;licheng-xd" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:licheng_xd@163.com" title="E-Mail → mailto:licheng_xd@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.me/lchml" title="500px → https:&#x2F;&#x2F;500px.me&#x2F;lchml" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i>500px</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://jandan.net/" title="Jandan → https:&#x2F;&#x2F;jandan.net" rel="noopener" target="_blank"><i class="fa fa-transgender-alt fa-fw"></i>Jandan</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/4qg55j4w/home?wvr=5" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;4qg55j4w&#x2F;home?wvr&#x3D;5" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.qingtian16265.com/" title="晴天博客 → https:&#x2F;&#x2F;blog.qingtian16265.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-leanpub fa-fw"></i>晴天博客</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3437461276610909"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-3437461276610909"
+     data-ad-slot="5369128557"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/Andrej-Karpathy-llm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/lc-icon.jpg">
+      <meta itemprop="name" content="李城">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="旅行的代码">
+      <meta itemprop="description" content="知行合一">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="深入探讨ChatGPT类大语言模型 | 旅行的代码">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          深入探讨ChatGPT类大语言模型
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-06-05 00:00:00" itemprop="dateCreated datePublished" datetime="2025-06-05T00:00:00+08:00">2025-06-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>本文整理自 Andrej Karpathy最新（2025.2.6）发布在YouTube上的视频：Deep Dive into LLMs like ChatGPT。</p>
+<span id="more"></span>
+
+
+<h2 id="预训练-Pretraining"><a href="#预训练-Pretraining" class="headerlink" title="预训练 (Pretraining):"></a>预训练 (Pretraining):</h2><p>涵盖数据准备、Tokenization 分词技术、Transformer 神经网络的输入&#x2F;输出及内部结构、推理过程、GPT-2 训练示例，以及 Llama 3.1 基础模型推理示例。</p>
+<h3 id="预训练数据-互联网"><a href="#预训练数据-互联网" class="headerlink" title="预训练数据 (互联网)"></a>预训练数据 (互联网)</h3><p>LLM 的构建首先从预训练阶段开始。第一步是下载并处理互联网数据。Karpathy 推荐参考 Hugging Face 的 FineWeb 数据集，这是一个代表性的高质量预训练数据集。大型 LLM 提供商，如 OpenAI、Anthropic 和 Google，都有类似的内部数据集。预训练数据的目标是获取海量、高质量、多样化的互联网文本，以赋予模型广泛的知识基础。</p>
+<p>构建 FineWeb 这样的数据集是一个复杂的多阶段过程，包括：</p>
+<ul>
+<li>URL 过滤: 使用黑名单过滤恶意网站、垃圾网站、营销网站、种族歧视网站、成人网站等，排除不良信息源。</li>
+<li>文本提取: 从原始 HTML 网页中提取纯文本内容，去除 HTML 标记、CSS、导航栏等非文本元素。</li>
+<li>语言过滤: 使用语言分类器识别网页语言，FineWeb 侧重英语，例如仅保留 65% 以上内容为英语的网页。语言过滤的策略会影响模型的多语言能力。</li>
+<li>去重与 PII 移除: 进行数据去重，并移除个人身份信息 (PII)，如地址、社保号码等，保护隐私。<br>最终，FineWeb 数据集大小约为 44TB，包含约 15 万亿 tokens。Karpathy 用 200 个网页的文本拼接展示了原始互联网文本的庞大规模和复杂性，强调下一步是训练神经网络来学习这种文本的模式和结构。</li>
+</ul>
+<h3 id="Tokenization-分词"><a href="#Tokenization-分词" class="headerlink" title="Tokenization (分词)"></a>Tokenization (分词)</h3><p>在将文本输入神经网络之前，需要进行 Tokenization，将文本转换为神经网络能够处理的数字符号序列。神经网络期望输入的是一维的符号序列，且符号集是有限的。</p>
+<ul>
+<li>UTF-8 编码: 将文本转换为计算机可读的比特流，每个字符用 8 比特表示。</li>
+<li>Bytes (字节) 序列: 将比特流分组为字节序列，每个字节代表一个符号，符号数量为 256 个。字节序列比比特序列更短，但符号集更大。</li>
+<li>Byte Pair Encoding (BPE) 算法: 进一步压缩序列长度，通过寻找频繁出现的连续字节对，并将其合并为一个新的符号。重复此过程可不断缩短序列长度，同时增加词汇量。</li>
+<li>Tokenization 的目标: 在序列长度和词汇量之间取得平衡。GPT-4 使用了 100,277 个 tokens。<br>Karpathy 介绍了 Tiktokenizer 工具，用于探索 GPT-4 的 Tokenization 过程。通过示例，展示了不同文本片段如何被切分为 tokens，以及 tokens 的 ID 和与文本的对应关系。强调 Tokenization 是将文本转换为神经网络可处理格式的关键步骤，最终文本数据被表示为一维的 token 序列。</li>
+</ul>
+<h3 id="神经网络的输入-x2F-输出"><a href="#神经网络的输入-x2F-输出" class="headerlink" title="神经网络的输入&#x2F;输出"></a>神经网络的输入&#x2F;输出</h3><p>经过 Tokenization 后，互联网文本被转化为 token 序列。预训练阶段的目标是训练神经网络，使其能够建模 token 序列中 token 之间的统计关系，即预测序列中下一个 token。</p>
+<ul>
+<li>滑动窗口: 从 token 序列中提取固定长度的 token 窗口作为上下文 (context)。窗口长度可变，实际应用中可能达到 8000 tokens。</li>
+<li>上下文作为输入: 将上下文 tokens 输入神经网络。</li>
+<li>输出概率分布: 神经网络输出一个概率分布，表示词汇表中每个 token 作为下一个 token 的概率。词汇表大小为 100,277，因此输出向量长度也为 100,277。</li>
+<li>损失函数与反向传播: 使用损失函数衡量模型预测与真实下一个 token 的差异。通过反向传播算法调整神经网络的参数 (权重)，使模型预测概率更接近真实分布。</li>
+<li>批量训练: 在大量 token 窗口上并行进行训练和参数更新，提升训练效率。<br>神经网络训练是一个迭代优化过程，目标是使模型的预测概率与训练数据中 token 的统计模式相一致。</li>
+</ul>
+<h3 id="神经网络内部结构"><a href="#神经网络内部结构" class="headerlink" title="神经网络内部结构"></a>神经网络内部结构</h3><p>神经网络内部是一个复杂的数学表达式，将输入 tokens 与网络参数 (权重) 混合，生成输出预测。</p>
+<ul>
+<li>参数 (权重): 现代 LLMs 拥有数十亿甚至数万亿的参数。初始参数随机设定。</li>
+<li>数学表达式: 神经网络内部的数学表达式由乘法、加法、指数运算、除法等简单运算构成。神经网络架构研究致力于设计高效的数学表达式，以实现强大的表达能力、可优化性和并行性。</li>
+<li>Transformer 架构: Transformer 是一种特殊的神经网络结构，被广泛应用于 LLMs。Karpathy 推荐使用 Transformer Neural Net 3D visualizer 网站，以可视化方式理解 Transformer 的内部结构。</li>
+<li>Transformer 的组成: Transformer 包含 Token Embedding 层、多层 Transformer Block (包含 Attention 机制和多层感知机 MLP)、Layer Normalization 层等。信息在网络中流动，最终输出 token 预测的 logits (用于计算概率)。</li>
+<li>神经元: 可以将 Transformer 中的中间值 loosely 地理解为“合成神经元”的激活率，但强调这些神经元比生物神经元简单得多，没有记忆，是无状态的。<br>神经网络的核心是一个参数化的数学函数，训练的目标是找到一组最优参数，使得模型的预测与训练数据中的模式相符。</li>
+</ul>
+<h3 id="推理-Inference"><a href="#推理-Inference" class="headerlink" title="推理 (Inference)"></a>推理 (Inference)</h3><p>推理阶段是使用已训练好的模型生成新文本的过程。</p>
+<ul>
+<li>起始 tokens (prefix): 推理从用户提供的起始文本 (prefix) 开始，例如用户在 ChatGPT 中输入的 prompt。</li>
+<li>概率采样: 将 prefix tokens 输入模型，模型输出下一个 token 的概率分布。基于此概率分布进行采样，选择一个 token 作为模型的输出。采样过程具有随机性 (stochastic)。</li>
+<li>迭代生成: 将模型输出的 token 添加到序列末尾，作为新的上下文，再次输入模型，重复采样过程，逐个 token 生成后续文本。</li>
+<li>随机性与多样性: 由于采样过程的随机性，即使对于相同的 prefix，模型每次生成的文本也可能不同。模型生成的是训练数据的“remixes”，而非完全复现训练文本。</li>
+<li>ChatGPT 中的推理: 当用户与 ChatGPT 交互时，模型参数是固定的，只进行推理过程，根据用户输入完成 token 序列的生成。</li>
+</ul>
+<h3 id="GPT-2-训练与推理示例"><a href="#GPT-2-训练与推理示例" class="headerlink" title="GPT-2: 训练与推理示例"></a>GPT-2: 训练与推理示例</h3><p>Karpathy 以 OpenAI 的 GPT-2 模型为例，更具体地解释了训练和推理过程。GPT-2 是 GPT 系列的第二代模型，是现代 LLM 技术栈的早期代表。</p>
+<ul>
+<li>GPT-2 模型参数: 1.5 亿参数，上下文长度 1024 tokens，训练数据约 1000 亿 tokens。相比现代模型规模较小。</li>
+<li>GPT-2 复现项目 (llm.c): Karpathy 尝试复现 GPT-2 的训练过程，并开源项目 llm.c，展示了训练 GPT-2 的成本已大幅降低，硬件和软件的进步是关键因素。</li>
+<li>训练过程实时监控: 展示了 GPT-2 模型训练过程的实时监控界面，关键指标是损失 (loss) 值，损失值越低表示模型预测性能越好。训练过程中，模型不断生成文本示例，随着训练进行，生成文本的连贯性和质量逐渐提高。</li>
+<li>计算资源: GPT-2 训练需要强大的计算资源，通常在云端 GPU 集群上进行。Karpathy 使用 8x H100 GPU 节点进行训练，展示了 GPU 在 LLM 训练中的核心作用，以及 Nvidia GPU 市场价值飙升的原因。</li>
+<li>数据中心与 GPU 需求: 大型科技公司对 GPU 的巨大需求推动了 GPU 技术和市场的快速发展。</li>
+</ul>
+<h3 id="Llama-3-1-Base-Model-推理"><a href="#Llama-3-1-Base-Model-推理" class="headerlink" title="Llama 3.1 Base Model 推理"></a>Llama 3.1 Base Model 推理</h3><p>由于训练大型模型成本高昂，Karpathy 转而使用 Meta 发布的 Llama 3 模型进行演示。Llama 3 是一个更现代、更大规模的模型，包含 40.5 亿参数，训练数据达 15 万亿 tokens。</p>
+<ul>
+<li>Base Model 与 Instruct Model: 区分了 Base Model (基础模型) 和 Instruct Model (指令模型)。Base Model 仅是 token 模拟器，无法直接作为助手使用。Instruct Model 经过指令微调，可以回答问题和执行指令。</li>
+<li>Base Model 的发布: 模型发布通常包括模型代码 (描述网络结构) 和模型参数 (权重)。</li>
+<li>Hyperbolic 平台: Karpathy 使用 Hyperbolic 平台演示 Llama 3.1 Base Model 的推理能力。强调务必选择 “Llama 3.1 405B Base” 模型。</li>
+<li>Base Model 非助手特性: 演示 Base Model 无法直接回答问题，例如提问 “What is 2 + 2?”，Base Model 只是根据互联网文本的统计模式进行续写，而非给出答案。</li>
+<li>Base Model 的随机性: Base Model 的输出具有随机性，即使对于相同的 prompt，每次生成的文本也可能不同。</li>
+<li>Base Model 的知识蕴含: 尽管 Base Model 并非直接可用的助手，但它在预训练阶段学习了大量世界知识，并将这些知识存储在网络参数中。</li>
+<li>知识提取: 通过巧妙的 prompt 设计 (例如 “Top 10 landmarks in Paris”)，可以从 Base Model 中提取出一定的知识。但强调 Base Model 的知识是模糊、概率性和统计性的，并非精确记忆。</li>
+<li>记忆与复述: 演示 Base Model 可以复述训练数据中频繁出现的文本 (例如 Wikipedia 条目)，这被称为“复述 (regurgitation)”，通常是不期望的。</li>
+<li>幻觉 (Hallucination): 演示 Base Model 在面对超出其知识范围的问题 (例如 2024 年美国大选结果) 时，会基于其训练数据进行推测和“幻觉”，生成看似合理但不真实的内容。</li>
+<li>In-context Learning (情境学习): 演示 Base Model 具备情境学习能力，可以通过 few-shot prompt (少量示例) 学习并执行特定任务，例如语言翻译。</li>
+<li>Prompt Engineering 技巧: 展示如何通过构建类似对话网页的 prompt，将 Base Model “prompt hack” 成一个简单的助手。</li>
+</ul>
+<h2 id="监督微调-Supervised-Finetuning"><a href="#监督微调-Supervised-Finetuning" class="headerlink" title="监督微调 (Supervised Finetuning)"></a>监督微调 (Supervised Finetuning)</h2><p>重点讲解对话数据的使用，并从 “LLM 心理学” 的角度分析幻觉现象、工具的使用、知识与工作记忆、自我认知、模型需要 tokens 才能思考、拼写问题以及参差不齐的智能等问题。</p>
+<h3 id="从预训练到后训练-pretraining-to-post-training"><a href="#从预训练到后训练-pretraining-to-post-training" class="headerlink" title="从预训练到后训练 (pretraining to post-training)"></a>从预训练到后训练 (pretraining to post-training)</h3><p>总结了预训练阶段的目标是获得 Base Model，一个互联网文本 token 模拟器。但为了得到可用的助手，需要进入后训练阶段。后训练阶段计算成本较低，但至关重要，目标是将 Base Model 转变为能够回答问题、执行指令的助手。</p>
+<p>后训练数据 (对话) (post-training data (conversations))</p>
+<p>后训练的核心是使用对话数据对 Base Model 进行进一步训练。</p>
+<ul>
+<li>对话数据示例: 展示了对话数据的示例，包括多轮对话、助手个性化、拒绝回答不当问题等。</li>
+<li>通过对话数据编程助手行为: 通过构建对话数据集，隐式地“编程”助手的行为模式。</li>
+<li>数据来源：人工标注: 对话数据主要由人工标注员创建，标注员根据指令，为给定的用户 prompt 编写理想的助手回复。</li>
+<li>Tokenization 对话: 展示了如何将对话编码为 token 序列，使用了特殊 token (例如 IM start, IM end) 来标记用户和助手的回合。</li>
+<li>推理时对话格式: 展示了推理时如何构建对话上下文，并从模型中采样生成助手回复。</li>
+<li>InstructGPT 论文: 介绍了 OpenAI 的 InstructGPT 论文，这是首次公开讨论如何通过对话数据微调语言模型使其成为助手的论文。</li>
+<li>人工标注员与标注指令: 介绍了 InstructGPT 论文中描述的人工标注员和标注指令，强调标注指令的核心原则是 “helpful, truthful, and harmless” (有帮助、真实、无害)。</li>
+<li>开源对话数据集: 介绍了 Open Assistant 项目，这是一个尝试复现 InstructGPT 数据集的开源项目。展示了 Open Assistant 数据集中的对话示例，包括用户 prompt 和助手回复。</li>
+<li>现代数据集合成化趋势: 指出当前对话数据集的合成化趋势，LLMs 被广泛用于辅助生成对话数据，例如 UltraChat 数据集。</li>
+<li>ChatGPT 的本质: 强调与 ChatGPT 对话的本质，并非与神奇的 AI 交流，而是与一个统计模型互动，该模型模仿了接受过标注指令训练的人工标注员的行为。ChatGPT 的回答是对标注员行为的统计模拟。</li>
+<li>案例：推荐巴黎地标: 通过案例说明 ChatGPT 的回答是对人工标注员可能给出的答案的统计模拟，而非模型自行研究和排序地标。</li>
+</ul>
+<h3 id="幻觉、工具使用、知识-x2F-工作记忆"><a href="#幻觉、工具使用、知识-x2F-工作记忆" class="headerlink" title="幻觉、工具使用、知识&#x2F;工作记忆"></a>幻觉、工具使用、知识&#x2F;工作记忆</h3><p>开始讨论 LLM 的“心理学”特性，首先关注幻觉问题。</p>
+<p>幻觉的来源: 通过 “Who is Orson Kovats?” 的例子，解释了幻觉的产生原因：模型在训练数据中学习到以自信的语气回答 “who is” 类型的问题，但在面对未知问题时，仍然会模仿这种自信的语气，编造答案。</p>
+<p>Falcon 7B 模型演示: 使用 Falcon 7B 模型演示幻觉现象，模型对 “Orson Kovats” 编造了多个不同的身份</p>
+<p>ChatGPT 的改进: 对比 ChatGPT，它能够识别自身知识边界，并告知用户 “I don’t know”。</p>
+<p>缓解幻觉的方法: Meta 公司在 Llama 3 系列模型中采用的方法：</p>
+<ul>
+<li>知识边界探测: 通过提问模型，判断模型对哪些事实知识掌握不足。</li>
+<li>负例数据增强: 针对模型知识不足的问题，在训练数据集中加入 “I don’t know” 的回答示例，让模型学习在不确定时拒绝回答。</li>
+</ul>
+<p>工具使用 (Tool Use): 为了进一步提升模型的事实性和准确性，引入工具使用机制，例如 Web Search</p>
+<ul>
+<li>Web Search 工具原理: 模型可以生成特殊 token (例如 search start, search end) 来调用 Web Search 工具。程序接收到这些 token 后，暂停模型生成，执行 Web Search 查询，并将搜索结果文本插入到模型的上下文窗口中。</li>
+<li>工作记忆 (Context Window): 上下文窗口被视为模型的工作记忆，模型可以直接访问和利用上下文窗口中的信息。</li>
+<li>工具使用训练: 通过对话数据集示例，训练模型学习何时以及如何使用 Web Search 工具。</li>
+<li>ChatGPT 工具使用演示: 演示 ChatGPT 使用 Web Search 工具回答 “Who is Orson Kovats?” 的过程，模型引用搜索结果并给出参考文献。</li>
+</ul>
+<p>知识分类: 区分了模型参数中存储的“模糊记忆” (pre-training knowledge) 和上下文窗口中的“工作记忆” (context window knowledge)</p>
+<p>工作记忆的重要性: 强调将重要信息放入上下文窗口的重要性，例如总结长文本时，将原文复制粘贴到 prompt 中比仅仅依赖模型的记忆效果更好。</p>
+<h3 id="自我认知-knowledge-of-self"><a href="#自我认知-knowledge-of-self" class="headerlink" title="自我认知 (knowledge of self)"></a>自我认知 (knowledge of self)</h3><p>讨论 LLM 是否具有自我认知的问题。</p>
+<p>LLM 没有持久自我: 强调 LLMs 是无状态的 token tumbler，每次对话都是从头开始，没有持久的自我意识或身份</p>
+<p>模型身份的来源: 解释了模型回答 “What model are you?” 等问题时，实际上是在进行统计推测，基于训练数据中最常见的答案来回答。例如，Falcon 模型可能会回答 “I’m ChatGPT by OpenAI”，因为互联网上存在大量类似回答</p>
+<p>硬编码模型身份: 介绍了两种硬编码模型身份的方法：</p>
+<ul>
+<li>数据硬编码: 在训练数据集中加入关于模型自身的问题和预设答案。</li>
+<li>系统消息 (System Message): 在对话开始时，通过 system message 将模型身份信息注入到上下文窗口中。</li>
+</ul>
+<h3 id="模型需要-tokens-才能思考"><a href="#模型需要-tokens-才能思考" class="headerlink" title="模型需要 tokens 才能思考"></a>模型需要 tokens 才能思考</h3><p>强调 LLMs 的计算能力受限于 token 处理的顺序性和计算资源的限制。</p>
+<ul>
+<li>计算资源限制: 每个 token 的处理都只有有限的计算资源，神经网络的层数有限，单次 forward pass 的计算量有限。</li>
+<li>分布式计算: 复杂的计算和推理需要分布在多个 tokens 上完成，不能期望模型在单个 token 内完成过多计算。</li>
+<li>逐步推理的重要性: 在 prompt 中引导模型逐步推理，生成中间结果，有助于模型解决复杂问题。对比了直接给出答案和逐步推理两种回答方式的优劣。</li>
+<li>单 token 回答的局限性: 通过实验证明，对于简单的数学问题，模型可以尝试单 token 回答，但对于更复杂的问题则会失败。</li>
+<li>工具使用 (Code Interpreter) 的优势: 推荐使用 Code Interpreter 等工具来解决计算问题，因为代码执行比模型的“心算”更可靠。</li>
+<li>计数能力的局限性: 模型在计数方面表现不佳，因为计数需要大量计算，难以在单个 token 内完成。推荐使用 Code Interpreter 进行计数任务。</li>
+</ul>
+<h3 id="Tokenization-再探：模型在拼写方面的不足"><a href="#Tokenization-再探：模型在拼写方面的不足" class="headerlink" title="Tokenization 再探：模型在拼写方面的不足"></a>Tokenization 再探：模型在拼写方面的不足</h3><p>再次回到 Tokenization 的话题，强调模型在拼写相关任务上的不足</p>
+<ul>
+<li>模型不直接处理字符: 模型处理的是 tokens，而非字符。Tokenization 导致模型难以处理字符级别的任务。</li>
+<li>字符级任务的失败: 演示模型在 “ubiquitous” 字符串上提取每三个字符的任务失败。</li>
+<li>工具使用 (Code Interpreter) 的解决: 使用 Code Interpreter 可以解决拼写相关任务，因为 Python 可以直接处理字符。</li>
+<li>草莓中 R 的数量: 提及 “strawberry” 中 “R” 的数量的著名例子，说明模型在字符计数方面的早期困难。</li>
+</ul>
+<h3 id="参差不齐的智能-jagged-intelligence"><a href="#参差不齐的智能-jagged-intelligence" class="headerlink" title="参差不齐的智能 (jagged intelligence)"></a>参差不齐的智能 (jagged intelligence)</h3><p>强调 LLMs 的能力呈现“瑞士奶酪”状，在很多领域表现出色，但在某些简单任务上却会犯错，体现了“参差不齐的智能”。</p>
+<ul>
+<li>简单比较大小的失败: 演示模型在比较 “9.11” 和 “9.9” 大小时犯错的例子，即使是简单的比较，模型也可能出错。</li>
+<li>圣经经文的干扰: 推测模型在比较 “9.11” 和 “9.9” 大小时，可能受到训练数据中圣经经文的影响，导致误判。</li>
+<li>对 LLM 的正确态度: 强调要将 LLMs 视为随机系统，既强大又不可完全信任，应作为工具使用，而非完全依赖。</li>
+</ul>
+<h2 id="强化学习-Reinforcement-Learning"><a href="#强化学习-Reinforcement-Learning" class="headerlink" title="强化学习 (Reinforcement Learning):"></a>强化学习 (Reinforcement Learning):</h2><p>阐释“熟能生巧”的强化学习理念，并结合 DeepSeek-R1、AlphaGo 和 RLHF 等实例，深入剖析强化学习在 LLM 训练中的应用</p>
+<h3 id="从监督微调到强化学习"><a href="#从监督微调到强化学习" class="headerlink" title="从监督微调到强化学习"></a>从监督微调到强化学习</h3><p>回顾了 LLM 训练的三个阶段：预训练、监督微调 (SFT) 和强化学习 (RL)。</p>
+<ul>
+<li>预训练 (Pre-training): 在互联网文档上训练，获得 Base Model，一个互联网文档模拟器。</li>
+<li>监督微调 (SFT): 在对话数据集上微调 Base Model，使其成为助手。SFT 模型模仿人工标注员的行为。</li>
+<li>强化学习 (RL): RL 是后训练的第三阶段，算法与预训练和 SFT 相同，但数据和目标不同。RL 阶段旨在进一步提升模型的能力，尤其是在推理和问题解决方面。</li>
+</ul>
+<h3 id="强化学习-reinforcement-learning"><a href="#强化学习-reinforcement-learning" class="headerlink" title="强化学习 (reinforcement learning)"></a>强化学习 (reinforcement learning)</h3><p>深入探讨强化学习阶段，并以教学场景类比，解释 RL 的作用。</p>
+<ul>
+<li>教学场景类比: 将 LLM 训练比作教育过程，预训练对应于阅读教材，SFT 对应于学习例题，RL 对应于做练习题。</li>
+<li>RL 的核心思想：试错学习: RL 的核心思想是通过试错和奖励机制，让模型自主学习最优策略。</li>
+<li>奖励信号：正确答案: 在可验证领域 (例如数学题)，奖励信号可以是模型的回答是否正确。</li>
+<li>模型自主探索: RL 允许模型自主探索不同的解题路径，发现更有效的策略，而非仅仅模仿人类专家。</li>
+<li>RL 训练过程: 模型生成多个候选解，根据是否得到正确答案进行奖励，并使用强化学习算法更新模型参数，鼓励生成更可能得到正确答案的解。</li>
+<li>RL 的优势: RL 能够让模型发现人类专家可能忽略的更有效的解题策略。SFT 模型只是模仿专家，而 RL 模型可以超越专家水平。</li>
+</ul>
+<h3 id="DeepSeek-R1"><a href="#DeepSeek-R1" class="headerlink" title="DeepSeek-R1"></a>DeepSeek-R1</h3><p>在大型语言模型（LLMs）的训练过程中，强化学习（RL）正逐渐成为一个至关重要的阶段，尤其是在提升模型的推理能力方面。DeepSeek-R1，是由中国公司 DeepSeek 开发的模型，因其公开的论文而备受瞩目，这篇论文详细阐述了强化学习微调在大型语言模型中的重要性，并分享了复现结果所需的关键细节，重新激发了公众对 RL 在 LLMs 应用中的兴趣。</p>
+<p>强化学习的重要性与优势</p>
+<p>DeepSeek-R1 的论文强调了 RL 训练对于提升 LLMs 性能的关键作用，尤其是在解决需要复杂推理的问题时。传统的前期训练和监督微调（SFT）阶段主要关注知识的获取和模仿人类专家的行为。而 RL 阶段则更进一步，如同学生通过练习题来巩固知识一样，它让模型在试错中学习，发现更有效的解题策略。</p>
+<p>DeepSeek-R1 的研究表明，经过 RL 训练的模型在解决数学问题时的准确率显著提升。更令人印象深刻的是，模型在提升准确率的同时，也发展出了更长的回答，这并非偶然，而是因为模型学会了通过更细致的思考过程来解决问题。</p>
+<p>涌现的思考能力：链式思考（Chain of Thought）</p>
+<p>DeepSeek-R1 展现出的一个重要特性是其涌现的“链式思考”能力。模型在解决问题时，不再是简单地模仿人类的答案，而是展现出类似人类思考过程的步骤，例如：</p>
+<ul>
+<li>步骤分解: 模型会将复杂问题分解为更小的步骤，逐步求解。</li>
+<li>自我评估与回顾: 模型会主动进行自我评估，检查每一步的计算或推理是否正确，甚至会主动回顾之前的步骤。</li>
+<li>多角度尝试: 模型会尝试从不同角度分析问题，甚至尝试多种解题方法。</li>
+<li>回溯与修正: 当模型发现之前的步骤可能存在问题时，会进行回溯并修正。</li>
+</ul>
+<p>这些“思考”过程并非人为硬编码，而是模型在强化学习过程中，为了追求更高的解题准确率而自发涌现出来的策略。DeepSeek-R1 通过 RL 训练，学会了类似人类进行数学问题求解时的复杂思考模式，这显著提升了其解决复杂问题的能力。</p>
+<h3 id="DeepSeek-R1-的可访问性与应用"><a href="#DeepSeek-R1-的可访问性与应用" class="headerlink" title="DeepSeek-R1 的可访问性与应用"></a>DeepSeek-R1 的可访问性与应用</h3><p>DeepSeek-R1 模型以 MIT 许可证开源，这意味着任何人都可以下载和使用其权重，这在当时开源社区中是十分罕见的，尤其对于如此强大的模型而言。用户可以通过多种途径体验 DeepSeek-R1 的能力：</p>
+<ul>
+<li>DeepSeek 官方平台: 在 chat.deepseek.com 网站上，用户可以通过开启 “Deep Think” 按钮来体验 R1 模型。</li>
+<li>Together AI 平台: Together AI 等推理提供商也托管了 DeepSeek-R1 模型，用户可以在这些平台上选择 DeepSeek-R1 进行交互。</li>
+</ul>
+<p>虽然 DeepSeek-R1 仍然处于实验阶段，但它代表了 LLMs 发展的前沿方向，预示着通过强化学习，模型不仅能模仿人类，更能发展出超越简单模仿的、更深入的推理和思考能力。</p>
+<h3 id="AlphaGo"><a href="#AlphaGo" class="headerlink" title="AlphaGo"></a>AlphaGo</h3><p>将 LLM 的 RL 训练与 AlphaGo 在围棋领域的突破联系起来，强调 RL 的强大潜力。</p>
+<ul>
+<li>AlphaGo 的成功: AlphaGo 系统在围棋游戏中超越人类顶尖棋手，证明了 RL 在复杂策略学习方面的强大能力。</li>
+<li>监督学习 vs. 强化学习: 对比了监督学习 (模仿人类棋谱) 和强化学习 (自我对弈) 在围棋游戏中的效果。RL 模型可以超越监督学习模型，达到甚至超越人类水平。</li>
+<li>Move 37: AlphaGo 下出的 “Move 37” 震惊围棋界，这是一个人类专家难以理解但事后证明极其精妙的棋步，体现了 RL 模型可能发现人类未知的策略。</li>
+<li>RL 的未来展望: 展望 RL 在 LLM 领域应用的未来，认为 RL 有可能让 LLMs 发展出超越人类的推理和思考能力。</li>
+</ul>
+<h3 id="基于人类反馈的强化学习-RLHF"><a href="#基于人类反馈的强化学习-RLHF" class="headerlink" title="基于人类反馈的强化学习 (RLHF)"></a>基于人类反馈的强化学习 (RLHF)</h3><p>讨论如何在不可验证的领域 (例如创意写作) 应用强化学习，介绍了基于人类反馈的强化学习 (RLHF) 方法。</p>
+<ul>
+<li>不可验证领域的问题: 在创意写作等领域，难以像数学题一样自动评估答案的正确性，无法直接应用传统的 RL 方法。</li>
+<li>RLHF 的核心思想：间接监督: RLHF 的核心思想是训练一个奖励模型 (Reward Model) 来模拟人类的偏好，然后使用奖励模型作为 RL 的奖励信号。</li>
+<li>奖励模型训练: 通过人类对模型生成结果的排序 (而非直接评分) 来训练奖励模型，降低了人工标注的难度。</li>
+<li>奖励模型作为模拟人类偏好的函数: 奖励模型成为人类偏好的模拟器，RL 算法可以针对奖励模型进行优化。</li>
+<li>RLHF 的优势: RLHF 允许在不可验证领域应用 RL，并可能通过降低标注难度提升数据质量。</li>
+<li>RLHF 的局限性: 奖励模型只是人类偏好的 lossy 模拟，可能被模型“game”，导致模型生成看似高分但实际质量低劣的结果 (对抗样本)。</li>
+<li>RLHF 不是真正的 RL: 强调 RLHF 中的 RL 与传统 RL 的区别，RLHF 中的奖励函数 (奖励模型) 是可被 game 的，导致 RLHF 的效果有限。</li>
+<li>RLHF 的实际应用: 尽管有局限性，RLHF 仍然是一种有效的微调方法，ChatGPT 等模型也使用了 RLHF 技术。</li>
+</ul>
+<h2 id="未来展望"><a href="#未来展望" class="headerlink" title="未来展望"></a>未来展望</h2><p>展望 LLM 的未来发展趋势。</p>
+<ul>
+<li>多模态 (Multimodal): LLMs 将迅速发展为多模态模型，能够处理文本、音频、图像等多种模态的数据，实现更自然的交互。</li>
+<li>长期任务执行 (Agents): LLMs 将发展出更强的长期任务执行能力，成为能够自主完成复杂任务的智能体 (Agent)。</li>
+<li>无处不在的 LLMs (Pervasive and Invisible): LLMs 将更深入地集成到各种工具和应用中，变得更加普及和隐形。</li>
+<li>计算机使用能力 (Computer Using): LLMs 将具备更强的计算机使用能力，例如操作键盘鼠标，执行更复杂的任务。</li>
+<li>测试时训练 (Test Time Training): 未来的 LLMs 可能会具备测试时训练能力，能够持续学习和适应新任务，克服当前上下文窗口有限的局限。</li>
+</ul>
+<p>总结 (grand summary)</p>
+<p>最后，Karpathy 再次总结了整个视频的核心内容，回顾了 LLM 的训练流程 (预训练、SFT、RL)，强调了 LLM 的本质是 token 序列生成器，以及其能力的局限性和“瑞士奶酪”特性。强调要将 LLMs 作为工具使用，谨慎对待其输出，并保持批判性思维。同时，也展望了 LLM 技术的未来发展，以及 RL 在推动 LLM 发展中的重要作用。</p>
+<p>以下是原视频和内容中的笔记</p>
+<p><img src="/technology/Andrej-Karpathy-llm/Andrej-Karpathy-llm.png"></p>
+<div style="position: relative; width: 60%; height: 0; padding-bottom: 75%;">
+<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=113956991606745&bvid=BV1WnNHeqEFK&cid=28246281470&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+</div>
+
+
+
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/donate-page/simple/images/wechat.jpg" alt="李城 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/donate-page/simple/images/alipay.jpg" alt="李城 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/LLM/" rel="tag"><i class="fa fa-tag"></i> LLM</a>
+              <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag"><i class="fa fa-tag"></i> 大模型</a>
+              <a href="/tags/AI/" rel="tag"><i class="fa fa-tag"></i> AI</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/book/read/" rel="prev" title="阅过留痕">
+                  <i class="fa fa-chevron-left"></i> 阅过留痕
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3437461276610909"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-3437461276610909"
+     data-ad-slot="4281038472"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa-solid fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李城</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"cdn":"//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML","tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"lchml","count":false,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>
