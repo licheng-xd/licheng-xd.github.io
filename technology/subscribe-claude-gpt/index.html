@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lchml.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3437461276610909"
+     crossorigin="anonymous"></script>
+    <meta name="description" content="本文记录了我订阅 Claude Pro 和 ChatGPT Plus 的完整流程，核心思路是：用自建梯子保证 IP 稳定，用日区 Apple ID 完成支付。整个过程一次配好，基本可以长期免维护。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何稳定订阅 Claude 和 ChatGPT">
+<meta property="og:url" content="https://lchml.com/technology/subscribe-claude-gpt/index.html">
+<meta property="og:site_name" content="旅行的代码">
+<meta property="og:description" content="本文记录了我订阅 Claude Pro 和 ChatGPT Plus 的完整流程，核心思路是：用自建梯子保证 IP 稳定，用日区 Apple ID 完成支付。整个过程一次配好，基本可以长期免维护。">
+<meta property="og:locale">
+<meta property="og:image" content="https://lchml.com/technology/subscribe-claude-gpt/aws-login.png">
+<meta property="og:image" content="https://lchml.com/technology/subscribe-claude-gpt/lightsail-create.png">
+<meta property="og:image" content="https://lchml.com/technology/subscribe-claude-gpt/ssr-scripts.png">
+<meta property="og:image" content="https://lchml.com/technology/subscribe-claude-gpt/shadowrocket-icon.png">
+<meta property="og:image" content="https://lchml.com/technology/subscribe-claude-gpt/shadowrocket-config1.png">
+<meta property="og:image" content="https://lchml.com/technology/subscribe-claude-gpt/shadowrocket-config2.png">
+<meta property="og:image" content="https://lchml.com/technology/subscribe-claude-gpt/giftcard-email.png">
+<meta property="og:image" content="https://lchml.com/technology/subscribe-claude-gpt/chatgpt-subscribe.png">
+<meta property="og:image" content="https://lchml.com/technology/subscribe-claude-gpt/claude-subscribe.png">
+<meta property="article:published_time" content="2026-04-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-10T02:38:33.986Z">
+<meta property="article:author" content="李城">
+<meta property="article:tag" content="工具">
+<meta property="article:tag" content="Claude">
+<meta property="article:tag" content="ChatGPT">
+<meta property="article:tag" content="梯子">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lchml.com/technology/subscribe-claude-gpt/aws-login.png">
+
+
+<link rel="canonical" href="https://lchml.com/technology/subscribe-claude-gpt/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lchml.com/technology/subscribe-claude-gpt/","path":"technology/subscribe-claude-gpt/","title":"如何稳定订阅 Claude 和 ChatGPT"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>如何稳定订阅 Claude 和 ChatGPT | 旅行的代码</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71702178-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-71702178-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">旅行的代码</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">李城的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%90%AD%E5%BB%BA%E7%A8%B3%E5%AE%9A%E7%9A%84%E4%B8%93%E5%B1%9E%E6%A2%AF%E5%AD%90"><span class="nav-number">1.</span> <span class="nav-text">一、搭建稳定的专属梯子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%94%A8%E5%B8%82%E5%94%AE%E6%A2%AF%E5%AD%90%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">为什么不用市售梯子？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-1%EF%BC%9A%E7%99%BB%E5%BD%95-AWS-%E5%9B%BD%E9%99%85%E7%AB%99"><span class="nav-number">1.2.</span> <span class="nav-text">Step 1：登录 AWS 国际站</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-2%EF%BC%9A%E5%88%9B%E5%BB%BA-Lightsail-%E5%AE%9E%E4%BE%8B"><span class="nav-number">1.3.</span> <span class="nav-text">Step 2：创建 Lightsail 实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-3%EF%BC%9A%E5%AE%89%E8%A3%85-ShadowsocksR-%E6%9C%8D%E5%8A%A1%E7%AB%AF"><span class="nav-number">1.4.</span> <span class="nav-text">Step 3：安装 ShadowsocksR 服务端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-4%EF%BC%9A%E5%AE%89%E8%A3%85-Shadowrocket-%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">1.5.</span> <span class="nav-text">Step 4：安装 Shadowrocket 客户端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-5%EF%BC%9AIP-%E8%A2%AB%E5%B0%81%E6%97%B6%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%EF%BC%9F"><span class="nav-number">1.6.</span> <span class="nav-text">Step 5：IP 被封时如何处理？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%B3%A8%E5%86%8C%E6%97%A5%E5%8C%BA-Apple-ID-%E5%B9%B6%E5%AE%8C%E6%88%90%E8%AE%A2%E9%98%85"><span class="nav-number">2.</span> <span class="nav-text">二、注册日区 Apple ID 并完成订阅</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-1%EF%BC%9A%E6%B3%A8%E5%86%8C%E6%97%A5%E5%8C%BA-Apple-ID"><span class="nav-number">2.1.</span> <span class="nav-text">Step 1：注册日区 Apple ID</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-2%EF%BC%9A%E8%B4%AD%E4%B9%B0%E5%B9%B6%E5%85%91%E6%8D%A2%E7%A4%BC%E5%93%81%E5%8D%A1"><span class="nav-number">2.2.</span> <span class="nav-text">Step 2：购买并兑换礼品卡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-3%EF%BC%9A%E7%AD%89%E5%BE%85-48-%E5%B0%8F%E6%97%B6%E9%A3%8E%E6%8E%A7%E6%9C%9F"><span class="nav-number">2.3.</span> <span class="nav-text">Step 3：等待 48 小时风控期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-4%EF%BC%9A%E8%AE%A2%E9%98%85-Claude-Pro-%E5%92%8C-ChatGPT-Plus"><span class="nav-number">2.4.</span> <span class="nav-text">Step 4：订阅 Claude Pro 和 ChatGPT Plus</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">小结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李城"
+      src="/lc-icon.jpg">
+  <p class="site-author-name" itemprop="name">李城</p>
+  <div class="site-description" itemprop="description">知行合一</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">108</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">148</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/licheng-xd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;licheng-xd" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:licheng_xd@163.com" title="E-Mail → mailto:licheng_xd@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://500px.me/lchml" title="500px → https:&#x2F;&#x2F;500px.me&#x2F;lchml" rel="noopener" target="_blank"><i class="fab fa-500px fa-fw"></i>500px</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://jandan.net/" title="Jandan → https:&#x2F;&#x2F;jandan.net" rel="noopener" target="_blank"><i class="fa fa-transgender-alt fa-fw"></i>Jandan</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/4qg55j4w/home?wvr=5" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;4qg55j4w&#x2F;home?wvr&#x3D;5" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.qingtian16265.com/" title="晴天博客 → https:&#x2F;&#x2F;blog.qingtian16265.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-leanpub fa-fw"></i>晴天博客</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3437461276610909"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-3437461276610909"
+     data-ad-slot="5369128557"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://lchml.com/technology/subscribe-claude-gpt/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/lc-icon.jpg">
+      <meta itemprop="name" content="李城">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="旅行的代码">
+      <meta itemprop="description" content="知行合一">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="如何稳定订阅 Claude 和 ChatGPT | 旅行的代码">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          如何稳定订阅 Claude 和 ChatGPT
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-04-10 00:00:00" itemprop="dateCreated datePublished" datetime="2026-04-10T00:00:00+08:00">2026-04-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote>
+<p>本文记录了我订阅 Claude Pro 和 ChatGPT Plus 的完整流程，核心思路是：用自建梯子保证 IP 稳定，用日区 Apple ID 完成支付。整个过程一次配好，基本可以长期免维护。</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="一、搭建稳定的专属梯子"><a href="#一、搭建稳定的专属梯子" class="headerlink" title="一、搭建稳定的专属梯子"></a>一、搭建稳定的专属梯子</h2><h3 id="为什么不用市售梯子？"><a href="#为什么不用市售梯子？" class="headerlink" title="为什么不用市售梯子？"></a>为什么不用市售梯子？</h3><p>市面上的梯子服务共享 IP 池，IP 质量参差不齐，极易被 Claude&#x2F;OpenAI 检测并封锁账号。自建梯子虽然前期需要折腾一次，但 IP 完全自己掌控，稳定性更高。</p>
+<p>我的方案：<strong>AWS Lightsail 云主机 + ShadowsocksR + BBR 加速</strong>，月费约 4～5 美元，用了三四年从未换过 IP。</p>
+<hr>
+<h3 id="Step-1：登录-AWS-国际站"><a href="#Step-1：登录-AWS-国际站" class="headerlink" title="Step 1：登录 AWS 国际站"></a>Step 1：登录 AWS 国际站</h3><p>访问 <a target="_blank" rel="noopener" href="https://aws.amazon.com/">aws.amazon.com</a>（注意：不是 AWS 中国站），注册或登录账号。</p>
+<p><img src="/technology/subscribe-claude-gpt/aws-login.png"></p>
+<hr>
+<h3 id="Step-2：创建-Lightsail-实例"><a href="#Step-2：创建-Lightsail-实例" class="headerlink" title="Step 2：创建 Lightsail 实例"></a>Step 2：创建 Lightsail 实例</h3><p>进入 Lightsail 控制台，选择最便宜的套餐（$3.5 ~ $5&#x2F;月），推荐选择<strong>东京</strong>节点，延迟更低。</p>
+<p><img src="/technology/subscribe-claude-gpt/lightsail-create.png"></p>
+<hr>
+<h3 id="Step-3：安装-ShadowsocksR-服务端"><a href="#Step-3：安装-ShadowsocksR-服务端" class="headerlink" title="Step 3：安装 ShadowsocksR 服务端"></a>Step 3：安装 ShadowsocksR 服务端</h3><p>登录 Lightsail 实例后，使用以下脚本一键完成安装：</p>
+<p>📦 脚本仓库：<a target="_blank" rel="noopener" href="https://github.com/licheng-xd/gfw-ladder">https://github.com/licheng-xd/gfw-ladder</a></p>
+<p>将 <code>ss.sh</code> 和 <code>bbr.sh</code> 两个文件上传到服务器（最简单的方式是直接复制脚本内容，在服务器上用 <code>vi</code> 新建文件并粘贴），然后赋予执行权限：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x *.sh</span><br></pre></td></tr></table></figure>
+
+<p><img src="/technology/subscribe-claude-gpt/ssr-scripts.png"></p>
+<p>切换到 root 账号：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo -i</span><br></pre></td></tr></table></figure>
+
+<p><strong>安装 ShadowsocksR：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./ss.sh</span><br></pre></td></tr></table></figure>
+
+<p>选择 ShadowsocksR，设置服务端口和密码。加密与混淆参数可自行选择，我的配置如下：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>加密方式</td>
+<td><code>aes-256-cfb</code></td>
+</tr>
+<tr>
+<td>混淆方式</td>
+<td><code>tls1.2_ticket_auth</code></td>
+</tr>
+<tr>
+<td>协议</td>
+<td><code>tls1.2_ticket_auth</code></td>
+</tr>
+</tbody></table>
+<p><strong>开启 BBR TCP 加速：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bbr.sh</span><br></pre></td></tr></table></figure>
+
+<p>全部选择默认即可，加速效果明显。</p>
+<hr>
+<h3 id="Step-4：安装-Shadowrocket-客户端"><a href="#Step-4：安装-Shadowrocket-客户端" class="headerlink" title="Step 4：安装 Shadowrocket 客户端"></a>Step 4：安装 Shadowrocket 客户端</h3><p><strong>Shadowrocket</strong>（小火箭）在非大陆区 App Store 均可下载，价格约 30 港币，支持 Mac 和 iPhone 同时使用，买一次终生可用。</p>
+<p>安装完成后，添加新节点，填写以下信息：</p>
+<ul>
+<li><strong>服务器地址</strong>：Lightsail 实例的<strong>公网 IP</strong>（非内网 IP）</li>
+<li><strong>端口 &#x2F; 密码 &#x2F; 加密方式</strong>：与 Step 3 中设置保持一致</li>
+</ul>
+<p>配置完成后测试连接速度，梯子即搭建成功。</p>
+<p><img src="/technology/subscribe-claude-gpt/shadowrocket-icon.png"></p>
+<p><img src="/technology/subscribe-claude-gpt/shadowrocket-config1.png"></p>
+<p><img src="/technology/subscribe-claude-gpt/shadowrocket-config2.png"></p>
+<hr>
+<h3 id="Step-5：IP-被封时如何处理？"><a href="#Step-5：IP-被封时如何处理？" class="headerlink" title="Step 5：IP 被封时如何处理？"></a>Step 5：IP 被封时如何处理？</h3><p>加上混淆算法后，IP 被封的概率极低（我三四年未换过）。万一遇到 IP 被封的情况，处理方式非常简单：</p>
+<ol>
+<li>在 Lightsail 控制台<strong>重启实例</strong>，系统会自动分配新的公网 IP</li>
+<li>在 Shadowrocket 的节点配置中，将服务器地址更新为新 IP</li>
+</ol>
+<p>整个过程 5 分钟内完成。</p>
+<hr>
+<h2 id="二、注册日区-Apple-ID-并完成订阅"><a href="#二、注册日区-Apple-ID-并完成订阅" class="headerlink" title="二、注册日区 Apple ID 并完成订阅"></a>二、注册日区 Apple ID 并完成订阅</h2><p>Claude 和 ChatGPT 的移动端订阅均通过 App Store 内购完成，需要一个<strong>非大陆区的 Apple ID</strong>。推荐使用<strong>日区</strong>，礼品卡购买便捷，且支持人民币购买。</p>
+<hr>
+<h3 id="Step-1：注册日区-Apple-ID"><a href="#Step-1：注册日区-Apple-ID" class="headerlink" title="Step 1：注册日区 Apple ID"></a>Step 1：注册日区 Apple ID</h3><p>网上教程较多，此处不再赘述，搜索「日区 Apple ID 注册」按教程操作即可。</p>
+<hr>
+<h3 id="Step-2：购买并兑换礼品卡"><a href="#Step-2：购买并兑换礼品卡" class="headerlink" title="Step 2：购买并兑换礼品卡"></a>Step 2：购买并兑换礼品卡</h3><p>前往苹果日本官网购买礼品卡：</p>
+<p>🔗 <a target="_blank" rel="noopener" href="https://www.apple.com/jp/shop/buy-giftcard/giftcard/10000%E5%86%86">https://www.apple.com/jp/shop/buy-giftcard/giftcard/10000%E5%86%86</a></p>
+<p>根据需要选择面额，购买后兑换码会发送至邮箱。看不懂日文没关系，用 Chrome 打开邮件直接翻译即可。</p>
+<p><img src="/technology/subscribe-claude-gpt/giftcard-email.png"></p>
+<hr>
+<h3 id="Step-3：等待-48-小时风控期"><a href="#Step-3：等待-48-小时风控期" class="headerlink" title="Step 3：等待 48 小时风控期"></a>Step 3：等待 48 小时风控期</h3><p>苹果对新账号有 <strong>48 小时支付风控期</strong>，期间无法使用 Apple Pay 内购。</p>
+<p>若 48 小时后仍无法支付，可联系苹果客服（在线聊天即可），说明情况，客服会转接国际客服进行人工确认，解除风控。</p>
+<hr>
+<h3 id="Step-4：订阅-Claude-Pro-和-ChatGPT-Plus"><a href="#Step-4：订阅-Claude-Pro-和-ChatGPT-Plus" class="headerlink" title="Step 4：订阅 Claude Pro 和 ChatGPT Plus"></a>Step 4：订阅 Claude Pro 和 ChatGPT Plus</h3><p>风控解除后，在手机 App 内即可正常订阅。建议先从基础套餐（ChatGPT Plus &#x2F; Claude Pro）开始体验，确认使用需求后再考虑升级更高套餐。</p>
+<div style="display: flex; gap: 20px; justify-content: center; align-items: flex-start;">
+  <img src="chatgpt-subscribe.png" style="width: 48%; max-width: 360px;">
+  <img src="claude-subscribe.png" style="width: 48%; max-width: 360px;">
+</div>
+
+<hr>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><table>
+<thead>
+<tr>
+<th>环节</th>
+<th>工具</th>
+<th>费用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>梯子</td>
+<td>AWS Lightsail + ShadowsocksR</td>
+<td>~$5&#x2F;月</td>
+</tr>
+<tr>
+<td>客户端</td>
+<td>Shadowrocket</td>
+<td>~¥30（一次性）</td>
+</tr>
+<tr>
+<td>支付方式</td>
+<td>日区 Apple ID + 礼品卡</td>
+<td>按需购买</td>
+</tr>
+<tr>
+<td>订阅</td>
+<td>ChatGPT Plus &#x2F; Claude Pro</td>
+<td>按套餐定价</td>
+</tr>
+</tbody></table>
+<p>整套方案初次配置约需 1～2 小时，之后基本免维护，是目前最稳定的订阅方式之一。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/donate-page/simple/images/wechat.jpg" alt="李城 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/donate-page/simple/images/alipay.jpg" alt="李城 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag"><i class="fa fa-tag"></i> 工具</a>
+              <a href="/tags/Claude/" rel="tag"><i class="fa fa-tag"></i> Claude</a>
+              <a href="/tags/ChatGPT/" rel="tag"><i class="fa fa-tag"></i> ChatGPT</a>
+              <a href="/tags/%E6%A2%AF%E5%AD%90/" rel="tag"><i class="fa fa-tag"></i> 梯子</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/book/read/" rel="prev" title="阅过留痕">
+                  <i class="fa fa-chevron-left"></i> 阅过留痕
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3437461276610909"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-3437461276610909"
+     data-ad-slot="4281038472"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa-solid fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李城</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"cdn":"//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML","tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"lchml","count":false,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>
